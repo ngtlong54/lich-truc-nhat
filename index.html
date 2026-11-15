@@ -1,777 +1,543 @@
 <!DOCTYPE html>
 <html lang="vi" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lịch Trực Nhật 12A1 - Cyber Version</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    },
-                    colors: {
-                        cyber: {
-                            bg: '#0b0f19',
-                            card: 'rgba(17, 24, 39, 0.7)',
-                            border: 'rgba(255, 255, 255, 0.08)',
-                            accent: '#06b6d4',
-                            purple: '#8b5cf6',
-                            emerald: '#10b981',
-                            amber: '#f59e0b',
-                            rose: '#f43f5e'
-                        }
-                    },
-                    boxShadow: {
-                        'neon-cyan': '0 0 20px rgba(6, 182, 212, 0.35)',
-                        'neon-purple': '0 0 20px rgba(139, 92, 246, 0.35)',
-                        'neon-rose': '0 0 20px rgba(244, 63, 94, 0.35)',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            background-color: #07090e;
-            background-image: 
-                radial-gradient(at 10% 10%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
-                radial-gradient(at 90% 20%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
-                radial-gradient(at 50% 80%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
-            background-attachment: fixed;
-        }
-
-        .glass-panel {
-            background: rgba(15, 23, 42, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .pulse-glow {
-            animation: pulseGlow 2s infinite alternate;
-        }
-
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 8px rgba(244, 63, 94, 0.4); }
-            100% { box-shadow: 0 0 22px rgba(244, 63, 94, 0.8); }
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0b0f19;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #334155;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lịch Trực Nhật 12A1 Bản Web</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+(function(){
+  try { document.documentElement.classList.toggle('dark', localStorage.getItem('theme') !== 'light'); } catch(e){}
+  // [dark, light] - kênh RGB. Light = đảo/ làm đậm để chữ đọc được trên nền sáng
+  var P = {
+    slate:{100:['241 245 249','15 23 42'],200:['226 232 240','30 41 59'],300:['203 213 225','51 65 85'],400:['148 163 184','100 116 139'],500:['100 116 139','100 116 139'],600:['71 85 105','148 163 184'],700:['51 65 85','203 213 225'],800:['30 41 59','226 232 240'],900:['15 23 42','248 250 252']},
+    cyan:{100:['207 250 254','21 94 117'],200:['165 243 252','14 116 144'],300:['103 232 249','14 116 144'],400:['34 211 238','8 145 178']},
+    purple:{100:['243 232 255','107 33 168'],200:['233 213 255','126 34 206'],300:['216 180 254','126 34 206'],400:['192 132 252','147 51 234']},
+    emerald:{100:['209 250 229','6 95 70'],200:['167 243 208','4 120 87'],300:['110 231 183','4 120 87'],400:['52 211 153','5 150 105']},
+    blue:{100:['219 234 254','30 64 175'],200:['191 219 254','29 78 216'],300:['147 197 253','29 78 216'],400:['96 165 250','37 99 235']},
+    amber:{100:['254 243 199','146 64 14'],200:['253 230 138','180 83 9'],300:['252 211 77','180 83 9'],400:['251 191 36','217 119 6']},
+    rose:{100:['255 228 230','159 18 57'],200:['254 205 211','190 18 60'],300:['253 164 175','190 18 60'],400:['251 113 133','225 29 72'],900:['136 19 55','255 228 230'],950:['76 5 25','255 241 242']}
+  };
+  var dark = '', light = '', colors = {};
+  for (var h in P) { colors[h] = {};
+    for (var n in P[h]) { var v = '--c-' + h + '-' + n;
+      dark += v + ':' + P[h][n][0] + ';'; light += v + ':' + P[h][n][1] + ';';
+      colors[h][n] = 'rgb(var(' + v + ') / <alpha-value>)'; } }
+  var st = document.createElement('style');
+  st.textContent = ':root{' + dark + '}html:not(.dark){' + light + '}';
+  document.head.appendChild(st);
+  tailwind.config = { darkMode:'class', theme:{ extend:{ colors:colors, fontFamily:{ sans:['Plus Jakarta Sans','sans-serif'] },
+    boxShadow:{ 'neon-cyan':'0 0 20px rgba(6,182,212,0.35)','neon-rose':'0 0 20px rgba(244,63,94,0.35)' } } } };
+})();
+</script>
+<style>
+@property --bg{syntax:'<color>';inherits:true;initial-value:#07090e}
+@property --g1{syntax:'<color>';inherits:true;initial-value:rgba(139,92,246,.15)}
+@property --g2{syntax:'<color>';inherits:true;initial-value:rgba(6,182,212,.15)}
+@property --g3{syntax:'<color>';inherits:true;initial-value:rgba(16,185,129,.1)}
+@property --glass{syntax:'<color>';inherits:true;initial-value:rgba(15,23,42,.65)}
+:root{--bg:#07090e;--g1:rgba(139,92,246,.15);--g2:rgba(6,182,212,.15);--g3:rgba(16,185,129,.1);--glass:rgba(15,23,42,.65);--glass-b:rgba(255,255,255,.08);--sb-track:#0b0f19;--sb-thumb:#1e293b;color-scheme:dark}
+html:not(.dark){--bg:#eef2f7;--g1:rgba(139,92,246,.13);--g2:rgba(6,182,212,.16);--g3:rgba(16,185,129,.11);--glass:rgba(255,255,255,.78);--glass-b:rgba(15,23,42,.09);--sb-track:#e2e8f0;--sb-thumb:#cbd5e1;color-scheme:light}
+body{background-color:var(--bg);background-image:radial-gradient(at 10% 10%,var(--g1) 0,transparent 50%),radial-gradient(at 90% 20%,var(--g2) 0,transparent 50%),radial-gradient(at 50% 80%,var(--g3) 0,transparent 50%);background-attachment:fixed}
+html:not(.dark) .glass-panel{box-shadow:0 1px 3px rgba(15,23,42,.06),0 8px 24px -12px rgba(15,23,42,.12)}
+/* Hiệu ứng đổi giao diện: loang tròn (View Transitions) */
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}::view-transition-new(root){z-index:2}
+/* Dự phòng cho trình duyệt không hỗ trợ: mờ dần */
+html.theme-anim,html.theme-anim *,html.theme-anim *::before,html.theme-anim *::after{transition:background-color .5s ease,color .5s ease,border-color .5s ease,box-shadow .5s ease,--bg .5s ease,--g1 .5s ease,--g2 .5s ease,--g3 .5s ease,--glass .5s ease!important}
+.theme-ico{position:absolute;transition:transform .55s cubic-bezier(.4,0,.2,1),opacity .4s ease}
+html.dark .theme-ico.sun{opacity:0;transform:rotate(-90deg) scale(.3)}
+html.dark .theme-ico.moon{opacity:1;transform:rotate(0) scale(1)}
+html:not(.dark) .theme-ico.moon{opacity:0;transform:rotate(90deg) scale(.3)}
+html:not(.dark) .theme-ico.sun{opacity:1;transform:rotate(0) scale(1)}
+.glass-panel{background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--glass-b)}
+.pulse-glow{animation:pulseGlow 2s infinite alternate}
+@keyframes pulseGlow{0%{box-shadow:0 0 8px rgba(244,63,94,.4)}100%{box-shadow:0 0 22px rgba(244,63,94,.8)}}
+.duty-select option{background:rgb(var(--c-slate-900));color:rgb(var(--c-slate-200))}
+.duty-select:disabled{pointer-events:none}
+.duty-select[data-v="sáng"]{color:rgb(var(--c-amber-300))}
+.duty-select[data-v="chiều"]{color:rgb(var(--c-blue-300))}
+.duty-select[data-v="cả hai"]{color:rgb(var(--c-emerald-300))}
+.duty-select[data-v="miễn"]{color:rgb(var(--c-purple-300))}
+.duty-select[data-v="vắng"]{color:rgb(var(--c-rose-300))}
+.day-card.locked .duty-select{opacity:.5;cursor:not-allowed}
+.day-card.locked .duty-opts{background:transparent;border-color:rgba(100,116,139,.2)}
+.day-card.locked .day-foot{opacity:.35}
+.day-card.locked .student-name .fa-star,.day-card.locked .student-name .fa-user-check{opacity:1}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:var(--sb-track)}::-webkit-scrollbar-thumb{background:var(--sb-thumb);border-radius:4px}
+</style>
 </head>
 <body class="text-slate-200 font-sans min-h-screen pb-12 antialiased selection:bg-cyan-500 selection:text-black">
 
-    <!-- Header / Navigation -->
-    <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80 mb-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center text-white shadow-neon-cyan font-black text-xl tracking-wider">
-                    12A1
-                </div>
-                <div>
-                    <h1 class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-white via-cyan-200 to-purple-300 bg-clip-text text-transparent">
-                        LỊCH TRỰC NHẬT
-                    </h1>
-                    <p class="text-xs font-semibold text-cyan-400/90 tracking-widest uppercase flex items-center gap-1.5">
-                        <i class="fa-regular fa-calendar-alt"></i> Thời Gian: 09/10 - 14/11
-                    </p>
-                </div>
-            </div>
+<header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80 mb-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center text-white shadow-neon-cyan font-black text-xl tracking-wider">12A1</div>
+      <div>
+        <h1 class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-slate-100 via-cyan-200 to-purple-300 bg-clip-text text-transparent">LỊCH TRỰC NHẬT</h1>
+        <p class="text-xs font-semibold text-cyan-400/90 tracking-widest uppercase flex items-center gap-1.5"><i class="fa-regular fa-calendar-alt"></i> Thời Gian: <span id="headRange"></span></p>
+      </div>
+    </div>
+    <div class="flex items-center gap-4"><div class="hidden md:flex items-center space-x-6">
+      <div class="glass-panel px-4 py-2 rounded-xl border border-cyan-500/20 flex items-center space-x-3">
+        <div class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></div>
+        <div><div class="text-[10px] text-slate-400 uppercase font-semibold">Hôm Nay</div><div id="today-display" class="text-xs font-bold text-cyan-300">Đang tải...</div></div>
+      </div>
+      <div class="glass-panel px-4 py-2 rounded-xl border border-rose-500/30 flex items-center space-x-3 bg-rose-950/20">
+        <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg animate-bounce"></i>
+        <div><div class="text-[10px] text-rose-400 uppercase font-bold">Phạt Trực Nhật</div><div id="headPenalty" class="text-xs font-extrabold text-rose-200"></div></div>
+      </div>
+    </div>
+    <button id="themeBtn" type="button" aria-label="Chuyển giao diện sáng / tối" title="Chuyển giao diện sáng / tối" class="relative w-10 h-10 shrink-0 rounded-xl border flex items-center justify-center overflow-hidden transition-colors bg-slate-800/80 hover:bg-slate-700/80 border-slate-700/60">
+      <i class="theme-ico sun fa-solid fa-sun text-amber-400 text-base"></i>
+      <i class="theme-ico moon fa-solid fa-moon text-cyan-300 text-base"></i>
+    </button>
+    <button id="editBtn" type="button" class="px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition-all bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700/60"></button>
+    </div>
+  </div>
+</header>
 
-            <!-- Header Quick Stats -->
-            <div class="hidden md:flex items-center space-x-6">
-                <div class="glass-panel px-4 py-2 rounded-xl border border-cyan-500/20 flex items-center space-x-3">
-                    <div class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></div>
-                    <div>
-                        <div class="text-[10px] text-slate-400 uppercase font-semibold">Hôm Nay</div>
-                        <div id="today-display" class="text-xs font-bold text-cyan-300">Đang tải...</div>
-                    </div>
-                </div>
-                <div class="glass-panel px-4 py-2 rounded-xl border border-rose-500/30 flex items-center space-x-3 bg-rose-950/20">
-                    <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg animate-bounce"></i>
-                    <div>
-                        <div class="text-[10px] text-rose-400 uppercase font-bold">Phạt Trực Nhật</div>
-                        <div class="text-xs font-extrabold text-rose-200">Lê Đình Trường</div>
-                    </div>
-                </div>
-            </div>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+
+  <!-- Week tabs -->
+  <section class="glass-panel p-3 sm:p-4 rounded-2xl">
+    <div class="flex items-center gap-2 mb-2 text-[11px] font-bold uppercase tracking-widest text-slate-400"><i class="fa-solid fa-layer-group text-cyan-400"></i> Chọn tuần <span id="syncStatus" class="ml-auto normal-case tracking-normal font-semibold text-slate-500"><i class="fa-solid fa-circle text-[7px] mr-1"></i>Đang kết nối...</span></div>
+    <div id="weekTabs" class="flex flex-wrap gap-2"></div>
+  </section>
+
+  <!-- Search & day filter -->
+  <section class="glass-panel p-4 sm:p-6 rounded-2xl shadow-2xl relative overflow-hidden">
+    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="relative w-full md:w-96">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input type="text" id="searchInput" placeholder="Tìm tên học sinh (vd: Quang Minh, Phương...)" class="w-full pl-11 pr-4 py-3 bg-slate-900/80 border border-slate-700/80 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-sm text-slate-100 placeholder-slate-500 transition-all">
+        <button id="clearSearch" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end" id="dayFilters"></div>
+    </div>
+  </section>
+
+  <!-- Penalty banner -->
+  <section class="glass-panel p-5 rounded-2xl border-l-4 border-l-rose-500 bg-gradient-to-r from-rose-950/40 via-slate-900/80 to-transparent flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center space-x-4">
+      <div class="w-12 h-12 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center text-xl shrink-0 pulse-glow"><i class="fa-solid fa-user-xmark"></i></div>
+      <div>
+        <div class="flex items-center gap-2"><span class="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-extrabold text-[10px] border border-rose-500/40 uppercase tracking-widest">Phạt Trực Nhật</span><span id="penLabel" class="text-xs text-rose-400/80 italic font-semibold"></span></div>
+        <h3 class="text-base font-black text-slate-100 mt-1 flex items-center gap-2">Tên: <span id="penName" class="text-rose-400 underline decoration-rose-500/50 underline-offset-4"></span></h3>
+        <p class="text-xs text-slate-300 mt-0.5">Vi phạm nội quy / Ghi sổ đầu bài.</p>
+        <p id="penNote" class="text-[11px] text-amber-300/90 italic mt-1"><i class="fa-solid fa-circle-info mr-1"></i><span></span></p>
+      </div>
+    </div>
+    <div class="px-5 py-2.5 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-200 font-black text-sm tracking-wide flex items-center gap-2.5 shrink-0 shadow-lg shadow-rose-950/50"><i class="fa-solid fa-gavel text-rose-400 text-base"></i> <span id="penUntil"></span></div>
+  </section>
+
+  <!-- Cards -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="cardsGrid"></section>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Tasks (no checkboxes) -->
+    <section class="lg:col-span-2 glass-panel p-6 rounded-2xl relative overflow-hidden">
+      <div class="flex items-center space-x-3 mb-5 border-b border-slate-800 pb-4">
+        <div class="w-9 h-9 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center"><i class="fa-solid fa-list-check"></i></div>
+        <div><h2 class="text-lg font-bold text-slate-100">Những Việc Cần Làm</h2><p class="text-xs text-slate-400">Danh sách nhiệm vụ cần hoàn thành trước khi rời lớp</p></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-chair text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">Kê bàn ghế</span></div>
+        <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-chalkboard text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">Lau bảng</span></div>
+        <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-table text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">Dọn bàn giáo viên</span></div>
+        <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-broom text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">Quét nhà</span></div>
+        <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-door-closed text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">Đóng cửa / cửa sổ</span></div>
+        <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-soap text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">Lau lớp (Chỉ Thứ 7)</span></div>
+      </div>
+      <div class="mt-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-between pulse-glow">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg font-black shrink-0"><i class="fa-solid fa-bolt-lightning"></i></div>
+          <div><span class="text-xs font-bold text-rose-400 uppercase tracking-widest block">Yêu Cầu An Toàn Điện</span><span class="text-sm font-extrabold text-slate-100">TẮT ĐIỆN & NGẮT CẦU DAO KHI RỜI LỚP</span></div>
         </div>
-    </header>
+        <span class="px-3 py-1 rounded-full bg-rose-500 text-white font-bold text-xs shadow-neon-rose hidden sm:inline-block">BẮT BUỘC</span>
+      </div>
+    </section>
 
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-
-        <!-- Search & Filter Controls -->
-        <section class="glass-panel p-4 sm:p-6 rounded-2xl shadow-2xl relative overflow-hidden">
-            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                <!-- Search Input -->
-                <div class="relative w-full md:w-96">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="searchInput" placeholder="Tìm tên học sinh (vd: Quỳnh Anh, Hiếu...)" 
-                           class="w-full pl-11 pr-4 py-3 bg-slate-900/80 border border-slate-700/80 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-sm text-slate-100 placeholder-slate-500 transition-all">
-                    <button id="clearSearch" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-
-                <!-- Day Filter Buttons -->
-                <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end" id="dayFilters">
-                    <button data-day="all" class="filter-btn active px-4 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg transition-all">
-                        Tất cả
-                    </button>
-                    <button data-day="2" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50 transition-all">
-                        Thứ 2
-                    </button>
-                    <button data-day="3" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50 transition-all">
-                        Thứ 3
-                    </button>
-                    <button data-day="4" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50 transition-all">
-                        Thứ 4
-                    </button>
-                    <button data-day="5" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50 transition-all">
-                        Thứ 5
-                    </button>
-                    <button data-day="6" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50 transition-all">
-                        Thứ 6
-                    </button>
-                    <button data-day="7" class="filter-btn px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50 transition-all">
-                        Thứ 7
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Penalized / Extra Duty Banner (Lê Đình Trường) -->
-        <section class="glass-panel p-5 rounded-2xl border-l-4 border-l-rose-500 bg-gradient-to-r from-rose-950/40 via-slate-900/80 to-transparent flex flex-col sm:flex-row items-center justify-between gap-4 shadow-neon-rose/20">
-            <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center text-xl shrink-0 pulse-glow">
-                    <i class="fa-solid fa-user-xmark"></i>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <span class="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-extrabold text-[10px] border border-rose-500/40 uppercase tracking-widest">
-                            Phạt Trực Nhật
-                        </span>
-                        <span class="text-xs text-rose-400/80 italic font-semibold">(Trực Cả Tuần)</span>
-                    </div>
-                    <h3 class="text-base font-black text-white mt-1 flex items-center gap-2">
-                        Tên: <span class="text-rose-400 underline decoration-rose-500/50 underline-offset-4">Lê Đình Trường</span>
-                    </h3>
-                    <p class="text-xs text-slate-300 mt-0.5">Vi phạm nội quy / Ghi sổ đầu bài.</p>
-                </div>
-            </div>
-            <div class="px-5 py-2.5 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-200 font-black text-sm tracking-wide flex items-center gap-2.5 shrink-0 shadow-lg shadow-rose-950/50">
-                <i class="fa-solid fa-gavel text-rose-400 text-base"></i> ĐẾN HẾT 14/11/2026
-            </div>
-        </section>
-
-        <!-- Weekly Duty Grid (3 Columns on Large Displays for Spacious Fit) -->
-        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="cardsGrid">
-            <!-- T2 -->
-            <div class="day-card glass-panel rounded-2xl p-5 flex flex-col justify-between border-t-4 border-t-cyan-500" data-day-num="2">
-                <div>
-                    <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-                        <span class="text-sm font-extrabold px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 tracking-wider">THỨ 2</span>
-                        <span class="text-xs text-slate-400">3 Thành viên</span>
-                    </div>
-                    <ul class="space-y-3 text-slate-200">
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-cyan-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Lê Quỳnh Anh</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-cyan-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t2_1" value="sáng" class="accent-cyan-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-cyan-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t2_1" value="chiều" class="accent-cyan-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-cyan-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t2_1" value="cả hai" class="accent-cyan-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t2_1" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-cyan-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Đào Thị Ngọc Anh</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-cyan-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t2_2" value="sáng" class="accent-cyan-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-cyan-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t2_2" value="chiều" class="accent-cyan-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-cyan-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t2_2" value="cả hai" class="accent-cyan-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t2_2" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-cyan-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Nguyễn Quốc Bảo</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-cyan-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t2_3" value="sáng" class="accent-cyan-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-cyan-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t2_3" value="chiều" class="accent-cyan-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-cyan-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t2_3" value="cả hai" class="accent-cyan-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t2_3" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="mt-5 pt-3 border-t border-slate-800/80 text-xs text-slate-400 italic">
-                    <i class="fa-solid fa-flag text-amber-400 mr-1.5"></i> (Nếu có) Chào cờ: bê ghế
-                </div>
-            </div>
-
-            <!-- T3 -->
-            <div class="day-card glass-panel rounded-2xl p-5 flex flex-col justify-between border-t-4 border-t-purple-500" data-day-num="3">
-                <div>
-                    <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-                        <span class="text-sm font-extrabold px-3 py-1 rounded-lg bg-purple-500/20 text-purple-300 tracking-wider">THỨ 3</span>
-                        <span class="text-xs text-slate-400">3 Thành viên</span>
-                    </div>
-                    <ul class="space-y-3 text-slate-200">
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-purple-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Nguyễn Thái Bảo</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-purple-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t3_1" value="sáng" class="accent-purple-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-purple-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t3_1" value="chiều" class="accent-purple-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-purple-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t3_1" value="cả hai" class="accent-purple-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t3_1" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-purple-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Vũ Trí Dũng</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-purple-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t3_2" value="sáng" class="accent-purple-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-purple-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t3_2" value="chiều" class="accent-purple-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-purple-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t3_2" value="cả hai" class="accent-purple-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t3_2" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-purple-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Nguyễn Tùng Dương</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-purple-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t3_3" value="sáng" class="accent-purple-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-purple-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t3_3" value="chiều" class="accent-purple-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-purple-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t3_3" value="cả hai" class="accent-purple-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t3_3" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="mt-5 pt-3 border-t border-slate-800/80 text-xs text-slate-400 italic">
-                    <i class="fa-solid fa-broom text-purple-400 mr-1.5"></i> Trực nhật như bình thường
-                </div>
-            </div>
-
-            <!-- T4 -->
-            <div class="day-card glass-panel rounded-2xl p-5 flex flex-col justify-between border-t-4 border-t-emerald-500" data-day-num="4">
-                <div>
-                    <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-                        <span class="text-sm font-extrabold px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 tracking-wider">THỨ 4</span>
-                        <span class="text-xs text-slate-400">3 Thành viên</span>
-                    </div>
-                    <ul class="space-y-3 text-slate-200">
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-emerald-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Văn Bạch Dương</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-emerald-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t4_1" value="sáng" class="accent-emerald-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-emerald-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t4_1" value="chiều" class="accent-emerald-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-emerald-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t4_1" value="cả hai" class="accent-emerald-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t4_1" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-emerald-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Đinh Nhất Dương</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-emerald-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t4_2" value="sáng" class="accent-emerald-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-emerald-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t4_2" value="chiều" class="accent-emerald-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-emerald-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t4_2" value="cả hai" class="accent-emerald-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t4_2" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-emerald-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Đỗ Chí Hiếu</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-emerald-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t4_3" value="sáng" class="accent-emerald-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-emerald-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t4_3" value="chiều" class="accent-emerald-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-emerald-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t4_3" value="cả hai" class="accent-emerald-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t4_3" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="mt-5 pt-3 border-t border-slate-800/80 text-xs text-slate-400 italic">
-                    <i class="fa-solid fa-broom text-emerald-400 mr-1.5"></i> Trực nhật như bình thường
-                </div>
-            </div>
-
-            <!-- T5 -->
-            <div class="day-card glass-panel rounded-2xl p-5 flex flex-col justify-between border-t-4 border-t-blue-500" data-day-num="5">
-                <div>
-                    <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-                        <span class="text-sm font-extrabold px-3 py-1 rounded-lg bg-blue-500/20 text-blue-300 tracking-wider">THỨ 5</span>
-                        <span class="text-xs text-slate-400">3 Thành viên</span>
-                    </div>
-                    <ul class="space-y-3 text-slate-200">
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-blue-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Đỗ Vũ Mạnh Hiển</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-blue-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t5_1" value="sáng" class="accent-blue-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-blue-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t5_1" value="chiều" class="accent-blue-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-blue-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t5_1" value="cả hai" class="accent-blue-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t5_1" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-blue-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Hoàng Trung Huy</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-blue-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t5_2" value="sáng" class="accent-blue-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-blue-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t5_2" value="chiều" class="accent-blue-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-blue-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t5_2" value="cả hai" class="accent-blue-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t5_2" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-blue-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Lương Gia Hân</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-blue-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t5_3" value="sáng" class="accent-blue-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-blue-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t5_3" value="chiều" class="accent-blue-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-blue-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t5_3" value="cả hai" class="accent-blue-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t5_3" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="mt-5 pt-3 border-t border-slate-800/80 text-xs text-slate-400 italic">
-                    <i class="fa-solid fa-broom text-blue-400 mr-1.5"></i> Trực nhật như bình thường
-                </div>
-            </div>
-
-            <!-- T6 -->
-            <div class="day-card glass-panel rounded-2xl p-5 flex flex-col justify-between border-t-4 border-t-amber-500" data-day-num="6">
-                <div>
-                    <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-                        <span class="text-sm font-extrabold px-3 py-1 rounded-lg bg-amber-500/20 text-amber-300 tracking-wider">THỨ 6</span>
-                        <span class="text-xs text-slate-400">3 Thành viên</span>
-                    </div>
-                    <ul class="space-y-3 text-slate-200">
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-amber-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Đinh Ngọc Hưng</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-amber-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t6_1" value="sáng" class="accent-amber-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-amber-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t6_1" value="chiều" class="accent-amber-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-amber-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t6_1" value="cả hai" class="accent-amber-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t6_1" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-amber-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Cao Thanh Long</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-amber-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t6_2" value="sáng" class="accent-amber-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-amber-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t6_2" value="chiều" class="accent-amber-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-amber-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t6_2" value="cả hai" class="accent-amber-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t6_2" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="student-name p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 hover:bg-slate-700/50 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-user-check text-amber-400 text-xs"></i>
-                                <span class="text-sm font-semibold">Hà Đức Kiên</span>
-                            </div>
-                            <div class="text-xs text-slate-400 space-y-1 pt-1 border-t border-slate-700/40">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-slate-400 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-slate-700/40">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-amber-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t6_3" value="sáng" class="accent-amber-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-amber-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t6_3" value="chiều" class="accent-amber-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-amber-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t6_3" value="cả hai" class="accent-amber-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t6_3" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="mt-5 pt-3 border-t border-slate-800/80 text-xs text-slate-400 italic">
-                    <i class="fa-solid fa-broom text-amber-400 mr-1.5"></i> Trực nhật như bình thường
-                </div>
-            </div>
-
-            <!-- T7 -->
-            <div class="day-card glass-panel rounded-2xl p-5 flex flex-col justify-between border-t-4 border-t-rose-500 bg-rose-950/10" data-day-num="7">
-                <div>
-                    <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-                        <span class="text-sm font-extrabold px-3 py-1 rounded-lg bg-rose-500/20 text-rose-300 tracking-wider">THỨ 7</span>
-                        <span class="text-xs text-rose-400 font-bold">Lau Lớp</span>
-                    </div>
-                    <ul class="space-y-3 text-slate-200">
-                        <li class="student-name p-3 rounded-xl bg-rose-900/20 border border-rose-500/30 hover:bg-rose-900/40 transition-colors">
-                            <div class="flex items-center space-x-2.5 mb-2">
-                                <i class="fa-solid fa-star text-rose-400 text-xs"></i>
-                                <span class="text-sm font-bold text-rose-100">Nguyễn Trung Kiên</span>
-                            </div>
-                            <div class="text-xs text-rose-300/80 space-y-1 pt-1 border-t border-rose-500/20">
-                                <span class="text-[10px] font-bold uppercase tracking-wider block text-rose-400/80 mb-1">Trực:</span>
-                                <div class="flex flex-wrap items-center gap-1.5 bg-slate-900/60 p-1.5 rounded-lg border border-rose-500/30">
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t7_1" value="sáng" class="accent-rose-500"> <span>Sáng</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t7_1" value="chiều" class="accent-rose-500"> <span>Chiều</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t7_1" value="cả hai" class="accent-rose-500"> <span>Cả</span></label>
-                                    <label class="cursor-pointer px-2 py-0.5 rounded hover:bg-rose-500/20 text-rose-300 transition-all flex items-center space-x-1 text-xs"><input type="radio" name="t7_1" value="vắng" class="accent-rose-500"> <span>Vắng</span></label>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="mt-5 pt-3 border-t border-rose-500/30 text-xs text-rose-300 font-semibold flex items-center gap-1.5">
-                    <i class="fa-solid fa-soap text-rose-400"></i> Trực nhật như bình thường + Lau Lớp
-                </div>
-            </div>
-        </section>
-
-        <!-- Tasks & Warnings Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Checklist / Tasks -->
-            <section class="lg:col-span-2 glass-panel p-6 rounded-2xl relative overflow-hidden">
-                <div class="flex items-center space-x-3 mb-5 border-b border-slate-800 pb-4">
-                    <div class="w-9 h-9 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
-                        <i class="fa-solid fa-list-check"></i>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-bold text-slate-100">Những Việc Cần Làm</h2>
-                        <p class="text-xs text-slate-400">Danh sách nhiệm vụ cần hoàn thành trước khi rời lớp</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="taskList">
-                    <div class="task-item p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 flex items-center space-x-3 cursor-pointer select-none transition-all">
-                        <input type="checkbox" class="w-4 h-4 accent-cyan-500 rounded cursor-pointer">
-                        <span class="text-sm text-slate-300 font-medium">Kê bàn ghế</span>
-                    </div>
-                    <div class="task-item p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 flex items-center space-x-3 cursor-pointer select-none transition-all">
-                        <input type="checkbox" class="w-4 h-4 accent-cyan-500 rounded cursor-pointer">
-                        <span class="text-sm text-slate-300 font-medium">Lau bảng</span>
-                    </div>
-                    <div class="task-item p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 flex items-center space-x-3 cursor-pointer select-none transition-all">
-                        <input type="checkbox" class="w-4 h-4 accent-cyan-500 rounded cursor-pointer">
-                        <span class="text-sm text-slate-300 font-medium">Dọn bàn giáo viên</span>
-                    </div>
-                    <div class="task-item p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 flex items-center space-x-3 cursor-pointer select-none transition-all">
-                        <input type="checkbox" class="w-4 h-4 accent-cyan-500 rounded cursor-pointer">
-                        <span class="text-sm text-slate-300 font-medium">Quét nhà</span>
-                    </div>
-                    <div class="task-item p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 flex items-center space-x-3 cursor-pointer select-none transition-all">
-                        <input type="checkbox" class="w-4 h-4 accent-cyan-500 rounded cursor-pointer">
-                        <span class="text-sm text-slate-300 font-medium">Đóng cửa / cửa sổ</span>
-                    </div>
-                    <div class="task-item p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 hover:border-slate-700 flex items-center space-x-3 cursor-pointer select-none transition-all">
-                        <input type="checkbox" class="w-4 h-4 accent-cyan-500 rounded cursor-pointer">
-                        <span class="text-sm text-slate-300 font-medium">Lau lớp (Chỉ Thứ 7)</span>
-                    </div>
-                </div>
-
-                <!-- Critical Warning Banner -->
-                <div class="mt-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-between pulse-glow">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg font-black shrink-0">
-                            <i class="fa-solid fa-bolt-lightning"></i>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-rose-400 uppercase tracking-widest block">Yêu Cầu An Toàn Điện</span>
-                            <span class="text-sm font-extrabold text-white">TẮT ĐIỆN & NGẮT CẦU DAO KHI RỜI LỚP</span>
-                        </div>
-                    </div>
-                    <span class="px-3 py-1 rounded-full bg-rose-500 text-white font-bold text-xs shadow-neon-rose hidden sm:inline-block">
-                        BẮT BUỘC
-                    </span>
-                </div>
-            </section>
-
-            <!-- Rules & Notes -->
-            <section class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center space-x-3 mb-5 border-b border-slate-800 pb-4">
-                        <div class="w-9 h-9 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center">
-                            <i class="fa-solid fa-clipboard-list"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-lg font-bold text-slate-100">Ghi Chú & Quy Định</h2>
-                            <p class="text-xs text-slate-400">Nội quy trực nhật lớp 12A1</p>
-                        </div>
-                    </div>
-
-                    <ul class="space-y-3 text-xs text-slate-300">
-                        <li class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start space-x-2.5">
-                            <i class="fa-solid fa-shield-halved text-emerald-400 mt-0.5"></i>
-                            <div>
-                                <span class="font-bold text-emerald-300">Miễn trực nhật:</span> Lớp trưởng, Lớp phó, Bí thư được miễn trực nhật (nếu KHÔNG vi phạm lỗi).
-                            </div>
-                        </li>
-
-                        <li class="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-start space-x-2.5">
-                            <i class="fa-solid fa-triangle-exclamation text-rose-400 mt-0.5"></i>
-                            <div>
-                                <span class="font-bold text-rose-300">Xử phạt vi phạm:</span> Vi phạm nhiều lỗi sẽ phải <span class="underline font-semibold">trực nhiều ngày</span>.
-                            </div>
-                        </li>
-
-                        <li class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-start space-x-2.5">
-                            <i class="fa-solid fa-book-bookmark text-amber-400 mt-0.5"></i>
-                            <div>
-                                <span class="font-bold text-amber-300">Sổ đầu bài:</span> Vi phạm nội quy hoặc bị ghi sổ đầu bài sẽ bị phạt trực nhật từ 2 ngày đến 1 tuần.
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="mt-6 pt-4 border-t border-slate-800 text-center">
-                    <p class="text-[11px] text-slate-500">Lịch trực nhật lớp 12A1.1</p>
-                </div>
-            </section>
+    <!-- Rules -->
+    <section class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
+      <div>
+        <div class="flex items-center space-x-3 mb-5 border-b border-slate-800 pb-4">
+          <div class="w-9 h-9 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center"><i class="fa-solid fa-clipboard-list"></i></div>
+          <div><h2 class="text-lg font-bold text-slate-100">Ghi Chú & Quy Định</h2><p class="text-xs text-slate-400">Nội quy trực nhật lớp 12A1</p></div>
         </div>
-    </main>
+        <ul class="space-y-3 text-xs text-slate-300">
+          <li class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start space-x-2.5"><i class="fa-solid fa-shield-halved text-emerald-400 mt-0.5"></i><div><span class="font-bold text-emerald-300">Miễn trực nhật:</span> Lớp trưởng, Lớp phó, Bí thư được miễn trực nhật (nếu KHÔNG vi phạm lỗi).</div></li>
+          <li class="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-start space-x-2.5"><i class="fa-solid fa-triangle-exclamation text-rose-400 mt-0.5"></i><div><span class="font-bold text-rose-300">Xử phạt vi phạm:</span> Vi phạm nhiều lỗi sẽ phải <span class="underline font-semibold">trực nhiều ngày</span>.</div></li>
+          <li class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-start space-x-2.5"><i class="fa-solid fa-book-bookmark text-amber-400 mt-0.5"></i><div><span class="font-bold text-amber-300">Sổ đầu bài:</span> Vi phạm nội quy hoặc bị ghi sổ đầu bài sẽ bị phạt trực nhật từ 2 ngày đến 1 tuần.</div></li>
+          <li class="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-start space-x-2.5"><i class="fa-solid fa-lock text-cyan-400 mt-0.5"></i><div><span class="font-bold text-cyan-300">Khóa lựa chọn:</span> Bấm biểu tượng ổ khóa ở góc trái mỗi thứ để khóa / mở khóa chỉnh sửa của ngày đó.</div></li>
+        </ul>
+      </div>
+      <div class="mt-6 pt-4 border-t border-slate-800 text-center"><p class="text-[11px] text-slate-500">Lịch trực nhật lớp 12A1.1</p></div>
+    </section>
+  </div>
+</main>
 
-    <!-- Footer -->
-    <footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6">
-        <p>© Nguyễn Tiến Long - 12A1 - MC I</p>
-    </footer>
+<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© Nguyễn Tiến Long - 12A1 - MC I</p></footer>
 
-    <!-- Interactive Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchInput = document.getElementById('searchInput');
-            const clearSearchBtn = document.getElementById('clearSearch');
-            const filterBtns = document.querySelectorAll('.filter-btn');
-            const dayCards = document.querySelectorAll('.day-card');
-            const todayDisplay = document.getElementById('today-display');
-            const taskItems = document.querySelectorAll('.task-item');
+<!-- Password modal -->
+<div id="pwModal" class="hidden fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="glass-panel rounded-2xl p-6 w-full max-w-sm border border-cyan-500/30 shadow-neon-cyan">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center"><i class="fa-solid fa-key"></i></div>
+      <div><h3 class="text-base font-extrabold text-slate-100">Nhập mật khẩu chỉnh sửa</h3><p class="text-xs text-slate-400">Chỉ người có mật khẩu mới sửa được lịch</p></div>
+    </div>
+    <input id="pwInput" type="password" inputmode="numeric" autocomplete="off" placeholder="Mật khẩu" class="w-full px-4 py-3 bg-slate-900/80 border border-slate-700/80 rounded-xl focus:ring-2 focus:ring-cyan-500 outline-none text-sm text-slate-100 placeholder-slate-500">
+    <p id="pwError" class="hidden text-xs text-rose-400 font-semibold mt-2"><i class="fa-solid fa-circle-exclamation mr-1"></i>Sai mật khẩu, thử lại.</p>
+    <div class="flex justify-end gap-2 mt-5">
+      <button id="pwCancel" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60">Hủy</button>
+      <button id="pwOk" type="button" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white">Xác nhận</button>
+    </div>
+  </div>
+</div>
 
-            // 1. Display Current Day Info & Auto Highlight Today
-            const daysOfWeek = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
-            const now = new Date();
-            const currentDayIndex = now.getDay();
-            
-            if (todayDisplay) {
-                todayDisplay.textContent = daysOfWeek[currentDayIndex] + ` (${now.getDate()}/${now.getMonth() + 1})`;
-            }
+<script>
+/* ================== DỮ LIỆU CÁC TUẦN ==================
+   Thêm tuần mới: copy 1 khối trong WEEKS, đổi id/prefix/start/label/days.
+   start = [năm, tháng(0-11), ngày] của THỨ 2. Tháng 11 => số 10.
+   holiday: 'lý do' => ngày nghỉ, không có ô chọn.
+   prefix '' của tuần 09/11 giữ nguyên khóa lưu cũ để không mất lựa chọn đã chọn. */
+const WEEKS = [
+  { id:'w46', prefix:'', start:[2026,10,9], label:'09/11 - 14/11',
+    penalty:{ name:'Lê Đình Trường', label:'(Trực Hết Năm 2026)', until:'ĐẾN HẾT NĂM 2026', note:'Có thể tăng hoặc giảm so với dự kiến' },
+    days:{
+      2:['Lê Quỳnh Anh','Đào Thị Ngọc Anh','Nguyễn Quốc Bảo'],
+      3:['Nguyễn Thái Bảo','Vũ Trí Dũng','Nguyễn Tùng Dương'],
+      4:['Văn Bạch Dương','Đinh Nhất Dương','Đỗ Chí Hiếu'],
+      5:['Đỗ Vũ Mạnh Hiển','Hoàng Trung Huy','Lương Gia Hân'],
+      6:['Đinh Ngọc Hưng','Cao Thanh Long','Hà Đức Kiên'],
+      7:['Nguyễn Trung Kiên']
+    } },
+  { id:'w47', prefix:'w47_', start:[2026,10,16], label:'16/11 - 21/11',
+    penalty:{ name:'Lê Đình Trường', label:'(Trực Hết Năm 2026)', until:'ĐẾN HẾT NĂM 2026', note:'Có thể tăng hoặc giảm so với dự kiến' },
+    days:{
+      2:['Nguyễn Ngọc Xuân Mai','Nguyễn Thanh Mai','Nguyễn Vũ Quang Minh'],
+      3:['Nguyễn Quang Minh','Đàm Nhật Minh','Phạm Văn Ninh'],
+      4:['Tô Minh Nguyệt','Hà Thảo Phương','Nguyễn Hoàng Quân'],
+      5:['Trần Quốc Thanh','Nguyễn Đắc Thành','Nghiêm Trọng'],
+      6:{ holiday:'Nghỉ lễ 20/11 - Ngày Nhà giáo Việt Nam' },
+      7:['Phạm Đăng Tùng']
+    } }
+];
+const META = {
+  2:{label:'THỨ 2',c:'cyan'}, 3:{label:'THỨ 3',c:'purple'}, 4:{label:'THỨ 4',c:'emerald'},
+  5:{label:'THỨ 5',c:'blue'}, 6:{label:'THỨ 6',c:'amber'}, 7:{label:'THỨ 7',c:'rose'}
+};
 
-            if (currentDayIndex >= 1 && currentDayIndex <= 6) {
-                const mapDay = currentDayIndex + 1;
-                const targetCard = document.querySelector(`.day-card[data-day-num="${mapDay}"]`);
-                if (targetCard) {
-                    targetCard.classList.add('ring-2', 'ring-cyan-400', 'shadow-neon-cyan');
-                    const badge = targetCard.querySelector('span');
-                    if (badge) {
-                        badge.innerHTML += ' <span class="ml-1 text-[9px] bg-cyan-400 text-black px-1.5 py-0.5 rounded-full uppercase">Hôm nay</span>';
-                    }
-                }
-            }
+document.addEventListener('DOMContentLoaded', () => {
+  const $ = id => document.getElementById(id);
+  const grid = $('cardsGrid'), tabsEl = $('weekTabs'), filtersEl = $('dayFilters');
+  const searchInput = $('searchInput'), clearBtn = $('clearSearch');
+  const store = {
+    get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+    set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+  };
+  /* ---------- Chế độ chỉnh sửa (cần mật khẩu) ---------- */
+  const EDIT_PASSWORD = '170109';
+  let editMode = false;
+  try { editMode = sessionStorage.getItem('editMode') === '1'; } catch(e){}
+  const pwModal = $('pwModal'), pwInput = $('pwInput'), pwError = $('pwError'), editBtn = $('editBtn');
+  function openPw(){
+    pwError.classList.add('hidden'); pwInput.value = '';
+    pwModal.classList.remove('hidden'); setTimeout(() => pwInput.focus(), 50);
+  }
+  function closePw(){ pwModal.classList.add('hidden'); }
+  function updateEditBtn(){
+    if (editMode){
+      editBtn.className = 'px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition-all bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/50';
+      editBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i><span class="hidden sm:inline">Đang chỉnh sửa · Thoát</span>';
+    } else {
+      editBtn.className = 'px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition-all bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700/60';
+      editBtn.innerHTML = '<i class="fa-solid fa-key"></i><span class="hidden sm:inline">Chỉnh sửa</span>';
+    }
+  }
+  function setEdit(v){
+    editMode = v;
+    try { sessionStorage.setItem('editMode', v ? '1' : '0'); } catch(e){}
+    updateEditBtn();
+    const w = WEEKS[current];
+    grid.querySelectorAll('.day-card').forEach(card => setLockUI(card, getLock(lockKey(w, card.dataset.day))));
+  }
+  editBtn.addEventListener('click', () => { if (editMode) setEdit(false); else openPw(); });
+  $('pwCancel').addEventListener('click', closePw);
+  pwModal.addEventListener('click', e => { if (e.target === pwModal) closePw(); });
+  const submitPw = () => {
+    if (pwInput.value === EDIT_PASSWORD){ closePw(); setEdit(true); }
+    else { pwError.classList.remove('hidden'); pwInput.select(); }
+  };
+  $('pwOk').addEventListener('click', submitPw);
+  pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitPw(); if (e.key === 'Escape') closePw(); });
 
-            // 2. Search Functionality
-            if (searchInput) {
-                searchInput.addEventListener('input', (e) => {
-                    const term = e.target.value.toLowerCase().trim();
-                    if (term.length > 0) {
-                        clearSearchBtn.classList.remove('hidden');
-                    } else {
-                        clearSearchBtn.classList.add('hidden');
-                    }
+  /* ---------- Đổi giao diện sáng / tối ---------- */
+  const root = document.documentElement, themeBtn = $('themeBtn');
+  function applyTheme(dark){
+    root.classList.toggle('dark', dark);
+    try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch(e){}
+  }
+  themeBtn.addEventListener('click', () => {
+    const toDark = !root.classList.contains('dark');
+    const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!document.startViewTransition || reduce) {
+      root.classList.add('theme-anim');
+      applyTheme(toDark);
+      setTimeout(() => root.classList.remove('theme-anim'), 650);
+      return;
+    }
+    const r = themeBtn.getBoundingClientRect();
+    const x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    const t = document.startViewTransition(() => applyTheme(toDark));
+    t.ready.then(() => root.animate(
+      { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+      { duration: 650, easing: 'cubic-bezier(.4,0,.2,1)', pseudoElement: '::view-transition-new(root)' }
+    )).catch(() => {});
+  });
 
-                    dayCards.forEach(card => {
-                        const students = card.querySelectorAll('.student-name');
-                        let cardMatch = false;
-                        students.forEach(student => {
-                            const nameText = student.textContent.toLowerCase();
-                            if (nameText.includes(term)) {
-                                student.style.display = '';
-                                cardMatch = true;
-                            } else {
-                                student.style.display = term ? 'none' : '';
-                            }
-                        });
-                        if (cardMatch || !term) {
-                            card.style.opacity = '1';
-                        } else {
-                            card.style.opacity = '0.3';
-                        }
-                    });
-                });
-            }
+  /* ---------- Firebase Realtime Database (dữ liệu dùng chung) ---------- */
+  const firebaseConfig = {
+    apiKey: "AIzaSyDGXntxLwBZXa0kqBOQHuRsSIW16ZoozsU",
+    authDomain: "lich-truc-nhat-12a1.firebaseapp.com",
+    databaseURL: "https://lich-truc-nhat-12a1-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "lich-truc-nhat-12a1",
+    storageBucket: "lich-truc-nhat-12a1.firebasestorage.app",
+    messagingSenderId: "213763956147",
+    appId: "1:213763956147:web:9092b8f383163a841b3fc6"
+  };
+  let db = null;
+  try { if (window.firebase) { firebase.initializeApp(firebaseConfig); db = firebase.database(); } }
+  catch (e) { console.warn('Firebase lỗi:', e); db = null; }
+  const state = { choices:{}, locks:{} };
+  const setStatus = (ok, text) => {
+    const el = $('syncStatus'); if (!el) return;
+    el.className = 'ml-auto normal-case tracking-normal font-semibold ' + (ok ? 'text-emerald-400' : 'text-amber-400');
+    el.innerHTML = '<i class="fa-solid fa-circle text-[7px] mr-1"></i>' + text;
+  };
+  const getChoice = n => db ? state.choices[n] : store.get(n);
+  const saveChoice = (n, v) => {
+    store.set(n, v);
+    if (db) { if (v) state.choices[n] = v; else delete state.choices[n]; db.ref('duty/choices/' + n).set(v || null).catch(e => console.warn(e)); }
+  };
+  const getLock = k => db ? !!state.locks[k] : store.get(k) === '1';
+  const saveLock = (k, v) => {
+    store.set(k, v ? '1' : '0');
+    if (db) { if (v) state.locks[k] = true; else delete state.locks[k]; db.ref('duty/locks/' + k).set(v ? true : null).catch(e => console.warn(e)); }
+  };
 
-            if (clearSearchBtn) {
-                clearSearchBtn.addEventListener('click', () => {
-                    searchInput.value = '';
-                    clearSearchBtn.classList.add('hidden');
-                    dayCards.forEach(card => {
-                        card.style.opacity = '1';
-                        card.querySelectorAll('.student-name').forEach(s => s.style.display = '');
-                    });
-                });
-            }
+  const pad = n => String(n).padStart(2,'0');
+  const startOfToday = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
+  const dayDate = (w, d) => new Date(w.start[0], w.start[1], w.start[2] + (d - 2));
+  const fmt = dt => pad(dt.getDate()) + '/' + pad(dt.getMonth()+1);
+  const weekEnd = w => dayDate(w, 7);
+  const weekLocked = w => weekEnd(w) < startOfToday();
+  const weekCurrent = w => { const t = startOfToday(); return dayDate(w,2) <= t && t <= weekEnd(w); };
 
-            // 3. Day Filtering
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    filterBtns.forEach(b => {
-                        b.classList.remove('active', 'bg-gradient-to-r', 'from-cyan-500', 'to-blue-600', 'text-white', 'shadow-lg');
-                        b.classList.add('bg-slate-800/80', 'text-slate-300');
-                    });
-                    btn.classList.add('active', 'bg-gradient-to-r', 'from-cyan-500', 'to-blue-600', 'text-white', 'shadow-lg');
-                    btn.classList.remove('bg-slate-800/80', 'text-slate-300');
+  let current = WEEKS.findIndex(weekCurrent);
+  if (current < 0) current = startOfToday() < dayDate(WEEKS[0],2) ? 0 : WEEKS.length - 1;
+  let dayFilter = 'all';
 
-                    const selectedDay = btn.getAttribute('data-day');
-                    dayCards.forEach(card => {
-                        if (selectedDay === 'all' || card.getAttribute('data-day-num') === selectedDay) {
-                            card.style.display = '';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
-            });
+  // Hôm nay
+  const dn = ['Chủ Nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
+  const now = new Date();
+  $('today-display').textContent = dn[now.getDay()] + ` (${now.getDate()}/${now.getMonth()+1})`;
 
-            // 4. Task Checklist Interaction & Persistence
-            taskItems.forEach((item, index) => {
-                const checkbox = item.querySelector('input[type="checkbox"]');
-                const storageKey = 'task_checkbox_' + index;
-                const savedState = localStorage.getItem(storageKey);
+  /* ---------- Tabs tuần ---------- */
+  function renderTabs(){
+    tabsEl.innerHTML = '';
+    WEEKS.forEach((w, i) => {
+      const active = i === current;
+      const b = document.createElement('button');
+      b.className = 'px-4 py-2.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-2 ' +
+        (active ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-transparent shadow-lg'
+                : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border-slate-700/50');
+      const tag = weekCurrent(w) ? '<span class="text-[9px] bg-emerald-400 text-black px-1.5 py-0.5 rounded-full uppercase">Hiện tại</span>'
+                : '';
+      b.innerHTML = `<i class="fa-regular fa-calendar"></i> ${w.label} ${tag}`;
+      b.addEventListener('click', () => { current = i; dayFilter = 'all'; searchInput.value=''; clearBtn.classList.add('hidden'); render(); });
+      tabsEl.appendChild(b);
+    });
+  }
 
-                if (savedState === 'true') {
-                    checkbox.checked = true;
-                    item.classList.add('bg-cyan-950/35', 'border-cyan-500/40');
-                    const span = item.querySelector('span');
-                    if (span) span.classList.add('line-through', 'text-cyan-200');
-                }
+  /* ---------- Bộ lọc ngày ---------- */
+  function renderFilters(){
+    filtersEl.innerHTML = '';
+    const mk = (val, text) => {
+      const on = dayFilter === val;
+      const b = document.createElement('button');
+      b.className = 'px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ' +
+        (on ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg' : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50');
+      b.textContent = text;
+      b.addEventListener('click', () => { dayFilter = val; renderFilters(); applyFilter(); });
+      filtersEl.appendChild(b);
+    };
+    mk('all','Tất cả');
+    for (let d = 2; d <= 7; d++) mk(String(d), 'Thứ ' + d);
+  }
+  function applyFilter(){
+    grid.querySelectorAll('.day-card').forEach(c => {
+      c.style.display = (dayFilter === 'all' || c.dataset.day === dayFilter) ? '' : 'none';
+    });
+  }
 
-                item.addEventListener('click', (e) => {
-                    if (e.target !== checkbox) {
-                        checkbox.checked = !checkbox.checked;
-                    }
-                    localStorage.setItem(storageKey, checkbox.checked);
-                    if (checkbox.checked) {
-                        item.classList.add('bg-cyan-950/35', 'border-cyan-500/40');
-                        const span = item.querySelector('span');
-                        if (span) span.classList.add('line-through', 'text-cyan-200');
-                    } else {
-                        item.classList.remove('bg-cyan-950/35', 'border-cyan-500/40');
-                        const span = item.querySelector('span');
-                        if (span) span.classList.remove('line-through', 'text-cyan-200');
-                    }
-                });
-            });
+  /* ---------- Thẻ ngày ---------- */
+  function studentLi(w, d, i, name, c){
+    const rose = c === 'rose';
+    const nameAttr = w.prefix + 't' + d + '_' + (i+1);
+    const options = [['','-- Chọn --'],['sáng','Chỉ buổi sáng'],['chiều','Chỉ buổi chiều'],['cả hai','Cả ngày'],['miễn','Miễn'],['vắng','Vắng']]
+      .map(([v,t]) => `<option value="${v}">${t}</option>`).join('');
+    return `<li class="student-name p-3 rounded-xl ${rose ? 'bg-rose-900/20 border border-rose-500/30' : 'bg-slate-800/50 border border-slate-700/50'} transition-colors">
+      <div class="flex items-center space-x-2.5 mb-2"><i class="fa-solid ${rose?'fa-star':'fa-user-check'} text-${c}-400 text-xs"></i><span class="${rose?'text-sm font-bold text-rose-100':'text-sm font-semibold'}">${name}</span></div>
+      <div class="text-xs text-slate-400 space-y-1 pt-1 border-t ${rose?'border-rose-500/20':'border-slate-700/40'}">
+        <span class="text-[10px] font-bold uppercase tracking-wider block ${rose?'text-rose-400/80':'text-slate-400'} mb-1">Buổi trực:</span>
+        <div class="duty-opts bg-slate-900/60 p-1.5 rounded-lg border ${rose?'border-rose-500/30':'border-slate-700/40'}">
+          <select name="${nameAttr}" data-v="" aria-label="Buổi trực của ${name}" class="duty-select w-full px-2.5 py-1.5 rounded-md bg-transparent text-xs font-semibold text-slate-300 outline-none cursor-pointer focus:ring-2 focus:ring-${c}-500">${options}</select>
+        </div></div></li>`;
+  }
 
-            // 5. Student Radio Buttons Persistence (LocalStorage)
-            const radioInputs = document.querySelectorAll('input[type="radio"]');
-            radioInputs.forEach(radio => {
-                const savedValue = localStorage.getItem(radio.name);
-                if (savedValue === radio.value) {
-                    radio.checked = true;
-                }
+  function cardHtml(w, d){
+    const m = META[d], c = m.c, data = w.days[d], date = dayDate(w, d);
+    let right, body, foot;
+    if (data && data.holiday){
+      right = '<span class="text-xs text-amber-400 font-bold">Nghỉ</span>';
+      body = `<div class="p-6 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center"><i class="fa-solid fa-champagne-glasses text-amber-400 text-3xl mb-2"></i><div class="text-base font-black text-amber-200">${data.holiday}</div><div class="text-xs text-slate-300 mt-1">Học sinh được nghỉ, không trực nhật.</div></div>`;
+      foot = '<i class="fa-solid fa-bed text-amber-400 mr-1.5"></i> Không trực nhật';
+    } else {
+      right = d === 7 ? '<span class="text-xs text-rose-400 font-bold">Lau Lớp</span>' : `<span class="text-xs text-slate-400">${data.length} Thành viên</span>`;
+      body = '<ul class="space-y-3 text-slate-200">' + data.map((n,i) => studentLi(w,d,i,n,c)).join('') + '</ul>';
+      foot = d === 2 ? '<i class="fa-solid fa-flag text-amber-400 mr-1.5"></i> (Nếu có) Chào cờ: bê ghế sau'
+           : d === 7 ? '<i class="fa-solid fa-soap text-rose-400 mr-1.5"></i> Trực nhật như bình thường + Lau Lớp'
+           : `<i class="fa-solid fa-broom text-${c}-400 mr-1.5"></i> Trực nhật như bình thường`;
+    }
+    return `<div class="day-card glass-panel rounded-2xl p-5 flex flex-col justify-between border-t-4 border-t-${c}-500 ${d===7?'bg-rose-950/10':''}" data-day="${d}" data-ts="${date.getTime()}">
+      <div>
+        <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
+          <span class="flex items-center gap-2"><button type="button" class="lock-btn w-8 h-8 rounded-lg flex items-center justify-center border border-slate-700/60 bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition-all" title="Khóa / mở khóa chỉnh sửa ngày này"><i class="fa-solid fa-lock-open"></i></button><span class="day-head text-sm font-extrabold px-3 py-1 rounded-lg bg-${c}-500/20 text-${c}-300 tracking-wider">${m.label} <span class="text-[10px] font-semibold opacity-70 ml-1">${fmt(date)}</span></span></span>
+          <span class="flex items-center gap-2"><span class="status-badge"></span>${right}</span>
+        </div>${body}
+      </div>
+      <div class="day-foot mt-5 pt-3 border-t ${d===7?'border-rose-500/30 text-rose-300 font-semibold':'border-slate-800/80 text-slate-400 italic'} text-xs">${foot}</div></div>`;
+  }
 
-                radio.addEventListener('change', () => {
-                    if (radio.checked) {
-                        localStorage.setItem(radio.name, radio.value);
-                    }
-                });
-            });
-        });
-    </script>
+  /* ---------- Khóa thủ công từng ngày ---------- */
+  const lockKey = (w, d) => w.prefix + 'lock_t' + d;
+  function setLockUI(card, locked){
+    const today = startOfToday().getTime(), ts = +card.dataset.ts;
+    card.classList.toggle('locked', locked);
+    card.querySelectorAll('.duty-select').forEach(el => { el.disabled = locked || !editMode; });
+    const btn = card.querySelector('.lock-btn');
+    btn.classList.toggle('opacity-50', !editMode);
+    btn.innerHTML = locked ? '<i class="fa-solid fa-lock"></i>' : '<i class="fa-solid fa-lock-open"></i>';
+    btn.classList.toggle('bg-rose-500/20', locked);
+    btn.classList.toggle('text-rose-300', locked);
+    btn.classList.toggle('border-rose-500/50', locked);
+    const badge = card.querySelector('.status-badge');
+    if (locked) badge.innerHTML = '<span class="text-[9px] bg-slate-700 text-slate-200 px-1.5 py-0.5 rounded-full uppercase"><i class="fa-solid fa-lock mr-1"></i>Đã khóa</span>';
+    else if (ts === today) badge.innerHTML = '<span class="text-[9px] bg-cyan-400 text-black px-1.5 py-0.5 rounded-full uppercase">Hôm nay</span>';
+    else badge.innerHTML = '';
+    card.classList.toggle('ring-2', ts === today);
+    card.classList.toggle('ring-cyan-400', ts === today);
+  }
+  function initLocks(w){
+    grid.querySelectorAll('.day-card').forEach(card => {
+      const d = card.dataset.day, key = lockKey(w, d);
+      const btn = card.querySelector('.lock-btn');
+      setLockUI(card, getLock(key));
+      btn.addEventListener('click', () => {
+        if (!editMode) { openPw(); return; }
+        const nowLocked = !card.classList.contains('locked');
+        saveLock(key, nowLocked);
+        setLockUI(card, nowLocked);
+      });
+    });
+  }
+
+  /* ---------- Render tuần ---------- */
+  function render(){
+    const w = WEEKS[current];
+    $('headRange').textContent = w.label;
+    $('headPenalty').textContent = w.penalty.name;
+    $('penName').textContent = w.penalty.name;
+    $('penUntil').textContent = w.penalty.until;
+    $('penLabel').textContent = w.penalty.label;
+    $('penNote').querySelector('span').textContent = w.penalty.note;
+    grid.innerHTML = [2,3,4,5,6,7].map(d => cardHtml(w, d)).join('');
+    grid.querySelectorAll('.duty-opts').forEach(el => el.addEventListener('click', () => { if (!editMode) openPw(); }));
+    grid.querySelectorAll('.duty-select').forEach(el => {
+      el.value = getChoice(el.name) || ''; el.dataset.v = el.value;
+      el.addEventListener('change', () => {
+        el.dataset.v = el.value;
+        if (!el.disabled) saveChoice(el.name, el.value);
+      });
+    });
+    renderTabs(); renderFilters(); applyFilter(); initLocks(w);
+  }
+
+  /* ---------- Tìm kiếm ---------- */
+  searchInput.addEventListener('input', e => {
+    const term = e.target.value.toLowerCase().trim();
+    clearBtn.classList.toggle('hidden', !term);
+    grid.querySelectorAll('.day-card').forEach(card => {
+      let match = false;
+      card.querySelectorAll('.student-name').forEach(s => {
+        const ok = s.textContent.toLowerCase().includes(term);
+        s.style.display = (ok || !term) ? '' : 'none';
+        if (ok) match = true;
+      });
+      card.style.opacity = (match || !term) ? '1' : '0.3';
+    });
+  });
+  clearBtn.addEventListener('click', () => { searchInput.value=''; searchInput.dispatchEvent(new Event('input')); });
+
+  render();
+  updateEditBtn();
+
+  /* ---------- Đồng bộ thời gian thực ---------- */
+  function syncUI(){
+    const w = WEEKS[current];
+    grid.querySelectorAll('.duty-select').forEach(el => { el.value = getChoice(el.name) || ''; el.dataset.v = el.value; });
+    grid.querySelectorAll('.day-card').forEach(card => setLockUI(card, getLock(lockKey(w, card.dataset.day))));
+  }
+  function migrateLocal(){
+    // Đẩy dữ liệu đã lưu trên máy này lên chung (chỉ 1 lần mỗi máy)
+    if (store.get('migrated_v1') === '1') return;
+    WEEKS.forEach(w => [2,3,4,5,6,7].forEach(d => {
+      const list = w.days[d];
+      if (Array.isArray(list)) list.forEach((_, i) => {
+        const n = w.prefix + 't' + d + '_' + (i+1), v = store.get(n);
+        if (v && state.choices[n] === undefined) db.ref('duty/choices/' + n).set(v);
+      });
+      const k = lockKey(w, d);
+      if (store.get(k) === '1' && state.locks[k] === undefined) db.ref('duty/locks/' + k).set(true);
+    }));
+    store.set('migrated_v1', '1');
+  }
+  if (db) {
+    let first = true;
+    db.ref('.info/connected').on('value', s => setStatus(!!s.val(), s.val() ? 'Đã đồng bộ trực tuyến' : 'Mất kết nối'));
+    db.ref('duty').on('value', snap => {
+      const v = snap.val() || {};
+      state.choices = v.choices || {};
+      state.locks = v.locks || {};
+      if (first) { first = false; migrateLocal(); }
+      syncUI();
+    }, err => {
+      console.warn('Không đọc được database:', err);
+      db = null; setStatus(false, 'Chưa đồng bộ (kiểm tra Rules)'); render();
+    });
+  } else {
+    setStatus(false, 'Chế độ offline (chỉ lưu trên máy này)');
+  }
+});
+</script>
 </body>
 </html>
