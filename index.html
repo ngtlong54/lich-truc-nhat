@@ -129,7 +129,7 @@ html:not(.dark) .field{background:rgba(255,255,255,.9)}
   <div id="testBanner" role="status" class="hidden glass-panel rounded-2xl p-4 border border-amber-500/50 bg-amber-500/10 items-center gap-3">
     <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0"><i class="fa-solid fa-flask"></i></div>
     <div>
-      <div class="text-sm font-extrabold text-amber-300">Đang ở chế độ TEST</div>
+      <div class="text-sm font-extrabold text-amber-300">Đang ở chế độ Thử Nghiệm</div>
       <div class="text-xs text-amber-200/80">Tất cả các thay đổi không có tác dụng</div>
     </div>
   </div>
@@ -377,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
     note.textContent = '';
     if (kind === 'test') {
       $('imIconI').className = 'fa-solid fa-flask';
-      $('imTitle').textContent = 'Đang ở chế độ TEST';
+      $('imTitle').textContent = 'Đang ở chế độ Thử Nghiệm';
       note.textContent = 'Tất cả các thay đổi không có tác dụng';
     } else {
       $('imIconI').className = 'fa-solid fa-face-grin-tears';
@@ -407,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ? 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/50'
         : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700/60');
     editBtn.innerHTML = testMode
-      ? '<i class="fa-solid fa-flask"></i><span class="hidden sm:inline">Thoát TEST</span>'
+      ? '<i class="fa-solid fa-flask"></i><span class="hidden sm:inline">Thoát TN</span>'
       : editMode
         ? '<i class="fa-solid fa-lock-open"></i><span class="hidden sm:inline">Khóa lại</span>'
         : '<i class="fa-solid fa-key"></i><span class="hidden sm:inline">Chỉnh sửa</span>';
