@@ -4,17 +4,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lịch Trực Nhật 12A1 Bản Web</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
+<link rel="preconnect" href="https://cdn.tailwindcss.com">
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" onerror="this.onerror=null;this.media='all';this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+</noscript>
+<script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script>
+/* Theme + bảng màu tự đổi theo sáng/tối */
 (function(){
   try { document.documentElement.classList.toggle('dark', localStorage.getItem('theme') !== 'light'); } catch(e){}
-  // [dark, light] - kênh RGB. Light = đảo/ làm đậm để chữ đọc được trên nền sáng
   var P = {
     slate:{100:['241 245 249','15 23 42'],200:['226 232 240','30 41 59'],300:['203 213 225','51 65 85'],400:['148 163 184','100 116 139'],500:['100 116 139','100 116 139'],600:['71 85 105','148 163 184'],700:['51 65 85','203 213 225'],800:['30 41 59','226 232 240'],900:['15 23 42','248 250 252']},
     cyan:{100:['207 250 254','21 94 117'],200:['165 243 252','14 116 144'],300:['103 232 249','14 116 144'],400:['34 211 238','8 145 178']},
@@ -22,6 +29,7 @@
     emerald:{100:['209 250 229','6 95 70'],200:['167 243 208','4 120 87'],300:['110 231 183','4 120 87'],400:['52 211 153','5 150 105']},
     blue:{100:['219 234 254','30 64 175'],200:['191 219 254','29 78 216'],300:['147 197 253','29 78 216'],400:['96 165 250','37 99 235']},
     amber:{100:['254 243 199','146 64 14'],200:['253 230 138','180 83 9'],300:['252 211 77','180 83 9'],400:['251 191 36','217 119 6']},
+    orange:{100:['255 237 213','154 52 18'],200:['254 215 170','194 65 12'],300:['253 186 116','194 65 12'],400:['251 146 60','234 88 12']},
     rose:{100:['255 228 230','159 18 57'],200:['254 205 211','190 18 60'],300:['253 164 175','190 18 60'],400:['251 113 133','225 29 72'],900:['136 19 55','255 228 230'],950:['76 5 25','255 241 242']}
   };
   var dark = '', light = '', colors = {};
@@ -44,157 +52,146 @@
 @property --glass{syntax:'<color>';inherits:true;initial-value:rgba(15,23,42,.65)}
 :root{--bg:#07090e;--g1:rgba(139,92,246,.15);--g2:rgba(6,182,212,.15);--g3:rgba(16,185,129,.1);--glass:rgba(15,23,42,.65);--glass-b:rgba(255,255,255,.08);--sb-track:#0b0f19;--sb-thumb:#1e293b;color-scheme:dark}
 html:not(.dark){--bg:#eef2f7;--g1:rgba(139,92,246,.13);--g2:rgba(6,182,212,.16);--g3:rgba(16,185,129,.11);--glass:rgba(255,255,255,.78);--glass-b:rgba(15,23,42,.09);--sb-track:#e2e8f0;--sb-thumb:#cbd5e1;color-scheme:light}
-body{background-color:var(--bg);background-image:radial-gradient(at 10% 10%,var(--g1) 0,transparent 50%),radial-gradient(at 90% 20%,var(--g2) 0,transparent 50%),radial-gradient(at 50% 80%,var(--g3) 0,transparent 50%);background-attachment:fixed}
+/* Nền gradient đặt trên lớp cố định riêng: cuộn trang không phải vẽ lại nền */
+body{background-color:var(--bg)}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:radial-gradient(at 10% 10%,var(--g1) 0,transparent 50%),radial-gradient(at 90% 20%,var(--g2) 0,transparent 50%),radial-gradient(at 50% 80%,var(--g3) 0,transparent 50%)}
 html:not(.dark) .glass-panel{box-shadow:0 1px 3px rgba(15,23,42,.06),0 8px 24px -12px rgba(15,23,42,.12)}
-/* Hiệu ứng đổi giao diện: loang tròn (View Transitions) */
+/* Thẻ nằm trên nền gradient mịn nên không cần blur; chỉ thanh header dính (nội dung cuộn dưới nó) mới dùng blur */
+.glass-panel{background:var(--glass);border:1px solid var(--glass-b)}
+.bf{backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
 ::view-transition-old(root){z-index:1}::view-transition-new(root){z-index:2}
-/* Dự phòng cho trình duyệt không hỗ trợ: mờ dần */
 html.theme-anim,html.theme-anim *,html.theme-anim *::before,html.theme-anim *::after{transition:background-color .5s ease,color .5s ease,border-color .5s ease,box-shadow .5s ease,--bg .5s ease,--g1 .5s ease,--g2 .5s ease,--g3 .5s ease,--glass .5s ease!important}
 .theme-ico{position:absolute;transition:transform .55s cubic-bezier(.4,0,.2,1),opacity .4s ease}
 html.dark .theme-ico.sun{opacity:0;transform:rotate(-90deg) scale(.3)}
 html.dark .theme-ico.moon{opacity:1;transform:rotate(0) scale(1)}
 html:not(.dark) .theme-ico.moon{opacity:0;transform:rotate(90deg) scale(.3)}
 html:not(.dark) .theme-ico.sun{opacity:1;transform:rotate(0) scale(1)}
-.glass-panel{background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--glass-b)}
-.pulse-glow{animation:pulseGlow 2s infinite alternate}
-@keyframes pulseGlow{0%{box-shadow:0 0 8px rgba(244,63,94,.4)}100%{box-shadow:0 0 22px rgba(244,63,94,.8)}}
-.duty-select option{background:rgb(var(--c-slate-900));color:rgb(var(--c-slate-200))}
-.duty-select:disabled{pointer-events:none}
+/* Hiệu ứng phát sáng: chỉ đổi opacity (chạy trên GPU) thay vì animate box-shadow */
+.pulse-glow{position:relative;box-shadow:0 0 8px rgba(244,63,94,.4)}
+.pulse-glow::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:0 0 22px rgba(244,63,94,.8);opacity:0;will-change:opacity;animation:pulseGlow 2s infinite alternate}
+@keyframes pulseGlow{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.pulse-glow::after,.animate-ping{animation:none}}
+.duty-select option,.ptype-select option,.field option{background:rgb(var(--c-slate-900));color:rgb(var(--c-slate-200))}
 .duty-select[data-v="sáng"]{color:rgb(var(--c-amber-300))}
 .duty-select[data-v="chiều"]{color:rgb(var(--c-blue-300))}
 .duty-select[data-v="cả hai"]{color:rgb(var(--c-emerald-300))}
 .duty-select[data-v="miễn"]{color:rgb(var(--c-purple-300))}
 .duty-select[data-v="vắng"]{color:rgb(var(--c-rose-300))}
-.day-card.locked .duty-select{opacity:.5;cursor:not-allowed}
-.day-card.locked .duty-opts{background:transparent;border-color:rgba(100,116,139,.2)}
-.day-card.locked .day-foot{opacity:.35}
-.day-card.locked .student-name .fa-star,.day-card.locked .student-name .fa-user-check{opacity:1}
+.ptype-select{width:100%;margin-top:.4rem;padding:.3rem .5rem;border-radius:.5rem;font-size:.7rem;font-weight:600;background:rgba(15,23,42,.8);border:1px solid rgba(100,116,139,.5);color:rgb(var(--c-slate-200));outline:none;cursor:pointer}
+html:not(.dark) .ptype-select{background:rgba(255,255,255,.9)}
+.ptype-select[data-t="penalty"]{color:rgb(var(--c-rose-300));border-color:rgba(244,63,94,.5)}
+.mini-btn{width:1.75rem;height:1.75rem;border-radius:.5rem;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;border:1px solid rgba(100,116,139,.35);background:rgba(30,41,59,.6);color:rgb(var(--c-slate-300));transition:all .2s}
+.mini-btn:hover{background:rgba(100,116,139,.35)}
+.mini-btn.danger{color:rgb(var(--c-rose-300));border-color:rgba(244,63,94,.4)}
+.mini-btn.danger:hover{background:rgba(244,63,94,.2)}
+.field{width:100%;padding:.65rem .9rem;background:rgba(15,23,42,.8);border:1px solid rgba(100,116,139,.5);border-radius:.75rem;font-size:.85rem;color:rgb(var(--c-slate-100));outline:none}
+textarea.field{resize:vertical;min-height:4.5rem}
+html:not(.dark) .field{background:rgba(255,255,255,.9)}
+.field:focus{box-shadow:0 0 0 2px rgb(6 182 212)}
 ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:var(--sb-track)}::-webkit-scrollbar-thumb{background:var(--sb-thumb);border-radius:4px}
 </style>
 </head>
 <body class="text-slate-200 font-sans min-h-screen pb-12 antialiased selection:bg-cyan-500 selection:text-black">
 
-<header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80 mb-8">
+<header class="sticky top-0 z-50 glass-panel bf border-b border-slate-800/80 mb-8">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
     <div class="flex items-center space-x-4">
       <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center text-white shadow-neon-cyan font-black text-xl tracking-wider">12A1</div>
       <div>
         <h1 class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-slate-100 via-cyan-200 to-purple-300 bg-clip-text text-transparent">LỊCH TRỰC NHẬT</h1>
-        <p class="text-xs font-semibold text-cyan-400/90 tracking-widest uppercase flex items-center gap-1.5"><i class="fa-regular fa-calendar-alt"></i> Thời Gian: <span id="headRange"></span></p>
+        <p class="text-xs font-semibold text-cyan-400/90"><i class="fa-regular fa-calendar-alt mr-1"></i><span id="headRange"></span></p>
       </div>
     </div>
-    <div class="flex items-center gap-4"><div class="hidden md:flex items-center space-x-6">
-      <div class="glass-panel px-4 py-2 rounded-xl border border-cyan-500/20 flex items-center space-x-3">
-        <div class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></div>
-        <div><div class="text-[10px] text-slate-400 uppercase font-semibold">Hôm Nay</div><div id="today-display" class="text-xs font-bold text-cyan-300">Đang tải...</div></div>
+    <div class="flex items-center gap-4">
+      <div class="hidden md:flex items-center space-x-6">
+        <div class="glass-panel px-4 py-2 rounded-xl border border-cyan-500/20 flex items-center space-x-3">
+          <div class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></div>
+          <div><div class="text-[10px] text-slate-400 font-semibold">Hôm nay</div><div id="todayDisplay" class="text-xs font-bold text-cyan-300"></div></div>
+        </div>
+        <div class="glass-panel px-4 py-2 rounded-xl border border-rose-500/30 flex items-center space-x-3 bg-rose-950/20">
+          <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i>
+          <div><div class="text-[10px] text-rose-400 font-bold">Phạt trực nhật</div><div id="headPenalty" class="text-xs font-extrabold text-rose-200"></div></div>
+        </div>
       </div>
-      <div class="glass-panel px-4 py-2 rounded-xl border border-rose-500/30 flex items-center space-x-3 bg-rose-950/20">
-        <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg animate-bounce"></i>
-        <div><div class="text-[10px] text-rose-400 uppercase font-bold">Phạt Trực Nhật</div><div id="headPenalty" class="text-xs font-extrabold text-rose-200"></div></div>
-      </div>
-    </div>
-    <button id="themeBtn" type="button" aria-label="Chuyển giao diện sáng / tối" title="Chuyển giao diện sáng / tối" class="relative w-10 h-10 shrink-0 rounded-xl border flex items-center justify-center overflow-hidden transition-colors bg-slate-800/80 hover:bg-slate-700/80 border-slate-700/60">
-      <i class="theme-ico sun fa-solid fa-sun text-amber-400 text-base"></i>
-      <i class="theme-ico moon fa-solid fa-moon text-cyan-300 text-base"></i>
-    </button>
-    <button id="editBtn" type="button" class="px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition-all bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700/60"></button>
+      <button id="themeBtn" type="button" aria-label="Chuyển giao diện sáng / tối" title="Chuyển giao diện sáng / tối" class="relative w-10 h-10 shrink-0 rounded-xl border flex items-center justify-center overflow-hidden transition-colors bg-slate-800/80 hover:bg-slate-700/80 border-slate-700/60">
+        <i class="theme-ico sun fa-solid fa-sun text-amber-400 text-base"></i>
+        <i class="theme-ico moon fa-solid fa-moon text-cyan-300 text-base"></i>
+      </button>
+      <button id="editBtn" type="button"></button>
     </div>
   </div>
 </header>
 
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
-  <!-- Week tabs -->
   <section class="glass-panel p-3 sm:p-4 rounded-2xl">
-    <div class="flex items-center gap-2 mb-2 text-[11px] font-bold uppercase tracking-widest text-slate-400"><i class="fa-solid fa-layer-group text-cyan-400"></i> Chọn tuần <span id="syncStatus" class="ml-auto normal-case tracking-normal font-semibold text-slate-500"><i class="fa-solid fa-circle text-[7px] mr-1"></i>Đang kết nối...</span></div>
+    <div class="flex items-center gap-2 mb-2 text-[11px] font-bold text-slate-400"><i class="fa-solid fa-layer-group text-cyan-400"></i> Chọn tuần <span id="syncStatus" class="ml-auto font-semibold text-slate-500"></span></div>
     <div id="weekTabs" class="flex flex-wrap gap-2"></div>
+    <div id="weekTools" class="hidden"></div>
   </section>
 
-  <!-- Search & day filter -->
-  <section class="glass-panel p-4 sm:p-6 rounded-2xl shadow-2xl relative overflow-hidden">
-    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+  <section class="glass-panel p-4 sm:p-6 rounded-2xl">
     <div class="flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="relative w-full md:w-96">
         <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-        <input type="text" id="searchInput" placeholder="Tìm tên học sinh (vd: Quang Minh, Phương...)" class="w-full pl-11 pr-4 py-3 bg-slate-900/80 border border-slate-700/80 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-sm text-slate-100 placeholder-slate-500 transition-all">
-        <button id="clearSearch" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"><i class="fa-solid fa-xmark"></i></button>
+        <input type="text" id="searchInput" placeholder="Tìm tên học sinh..." class="w-full pl-11 pr-10 py-3 bg-slate-900/80 border border-slate-700/80 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none text-sm text-slate-100 placeholder-slate-500">
+        <button id="clearSearch" type="button" aria-label="Xóa tìm kiếm" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end" id="dayFilters"></div>
     </div>
   </section>
 
-  <!-- Penalty banner -->
-  <section class="glass-panel p-5 rounded-2xl border-l-4 border-l-rose-500 bg-gradient-to-r from-rose-950/40 via-slate-900/80 to-transparent flex flex-col sm:flex-row items-center justify-between gap-4">
+  <section id="penSection" class="glass-panel p-5 rounded-2xl border-l-4 border-l-rose-500 bg-gradient-to-r from-rose-950/40 via-slate-900/80 to-transparent flex flex-col sm:flex-row items-center justify-between gap-4">
     <div class="flex items-center space-x-4">
       <div class="w-12 h-12 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center text-xl shrink-0 pulse-glow"><i class="fa-solid fa-user-xmark"></i></div>
       <div>
-        <div class="flex items-center gap-2"><span class="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-extrabold text-[10px] border border-rose-500/40 uppercase tracking-widest">Phạt Trực Nhật</span><span id="penLabel" class="text-xs text-rose-400/80 italic font-semibold"></span></div>
-        <h3 class="text-base font-black text-slate-100 mt-1 flex items-center gap-2">Tên: <span id="penName" class="text-rose-400 underline decoration-rose-500/50 underline-offset-4"></span></h3>
-        <p class="text-xs text-slate-300 mt-0.5">Vi phạm nội quy / Ghi sổ đầu bài.</p>
-        <p id="penNote" class="text-[11px] text-amber-300/90 italic mt-1"><i class="fa-solid fa-circle-info mr-1"></i><span></span></p>
+        <div class="flex items-center gap-2"><span class="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-extrabold text-[10px] border border-rose-500/40">Phạt trực nhật</span><span id="penLabel" class="text-xs text-rose-400/80 italic font-semibold"></span></div>
+        <h3 class="text-base font-black text-slate-100 mt-1">Tên: <span id="penName" class="text-rose-400 underline decoration-rose-500/50 underline-offset-4"></span></h3>
       </div>
     </div>
-    <div class="px-5 py-2.5 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-200 font-black text-sm tracking-wide flex items-center gap-2.5 shrink-0 shadow-lg shadow-rose-950/50"><i class="fa-solid fa-gavel text-rose-400 text-base"></i> <span id="penUntil"></span></div>
+    <div class="px-5 py-2.5 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-200 font-black text-sm flex items-center gap-2.5 shrink-0"><i class="fa-solid fa-gavel text-rose-400 text-base"></i><span id="penUntil"></span></div>
   </section>
 
-  <!-- Cards -->
   <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="cardsGrid"></section>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-    <!-- Tasks (no checkboxes) -->
-    <section class="lg:col-span-2 glass-panel p-6 rounded-2xl relative overflow-hidden">
+    <section class="lg:col-span-2 glass-panel p-6 rounded-2xl">
       <div class="flex items-center space-x-3 mb-5 border-b border-slate-800 pb-4">
         <div class="w-9 h-9 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center"><i class="fa-solid fa-list-check"></i></div>
-        <div><h2 class="text-lg font-bold text-slate-100">Những Việc Cần Làm</h2><p class="text-xs text-slate-400">Danh sách nhiệm vụ cần hoàn thành trước khi rời lớp</p></div>
+        <h2 class="text-lg font-bold text-slate-100">Những việc cần làm</h2>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-chair text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">Kê bàn ghế</span></div>
-        <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-chalkboard text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">Lau bảng</span></div>
-        <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-table text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">Dọn bàn giáo viên</span></div>
-        <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-broom text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">Quét nhà</span></div>
-        <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-door-closed text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">Đóng cửa / cửa sổ</span></div>
-        <div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-soap text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">Lau lớp (Chỉ Thứ 7)</span></div>
-      </div>
+      <div id="tasks" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
       <div class="mt-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center justify-between pulse-glow">
         <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg font-black shrink-0"><i class="fa-solid fa-bolt-lightning"></i></div>
-          <div><span class="text-xs font-bold text-rose-400 uppercase tracking-widest block">Yêu Cầu An Toàn Điện</span><span class="text-sm font-extrabold text-slate-100">TẮT ĐIỆN & NGẮT CẦU DAO KHI RỜI LỚP</span></div>
+          <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-lg shrink-0"><i class="fa-solid fa-bolt-lightning"></i></div>
+          <span class="text-sm font-extrabold text-slate-100">Tắt điện và ngắt cầu dao khi rời lớp</span>
         </div>
-        <span class="px-3 py-1 rounded-full bg-rose-500 text-white font-bold text-xs shadow-neon-rose hidden sm:inline-block">BẮT BUỘC</span>
+        <span class="px-3 py-1 rounded-full bg-rose-500 text-white font-bold text-xs shadow-neon-rose hidden sm:inline-block">Bắt buộc</span>
       </div>
     </section>
 
-    <!-- Rules -->
-    <section class="glass-panel p-6 rounded-2xl flex flex-col justify-between">
-      <div>
-        <div class="flex items-center space-x-3 mb-5 border-b border-slate-800 pb-4">
-          <div class="w-9 h-9 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center"><i class="fa-solid fa-clipboard-list"></i></div>
-          <div><h2 class="text-lg font-bold text-slate-100">Ghi Chú & Quy Định</h2><p class="text-xs text-slate-400">Nội quy trực nhật lớp 12A1</p></div>
-        </div>
-        <ul class="space-y-3 text-xs text-slate-300">
-          <li class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-start space-x-2.5"><i class="fa-solid fa-shield-halved text-emerald-400 mt-0.5"></i><div><span class="font-bold text-emerald-300">Miễn trực nhật:</span> Lớp trưởng, Lớp phó, Bí thư được miễn trực nhật (nếu KHÔNG vi phạm lỗi).</div></li>
-          <li class="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-start space-x-2.5"><i class="fa-solid fa-triangle-exclamation text-rose-400 mt-0.5"></i><div><span class="font-bold text-rose-300">Xử phạt vi phạm:</span> Vi phạm nhiều lỗi sẽ phải <span class="underline font-semibold">trực nhiều ngày</span>.</div></li>
-          <li class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-start space-x-2.5"><i class="fa-solid fa-book-bookmark text-amber-400 mt-0.5"></i><div><span class="font-bold text-amber-300">Sổ đầu bài:</span> Vi phạm nội quy hoặc bị ghi sổ đầu bài sẽ bị phạt trực nhật từ 2 ngày đến 1 tuần.</div></li>
-          <li class="p-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-start space-x-2.5"><i class="fa-solid fa-lock text-cyan-400 mt-0.5"></i><div><span class="font-bold text-cyan-300">Khóa lựa chọn:</span> Bấm biểu tượng ổ khóa ở góc trái mỗi thứ để khóa / mở khóa chỉnh sửa của ngày đó.</div></li>
-        </ul>
+    <section class="glass-panel p-6 rounded-2xl">
+      <div class="flex items-center space-x-3 mb-5 border-b border-slate-800 pb-4">
+        <div class="w-9 h-9 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center"><i class="fa-solid fa-clipboard-list"></i></div>
+        <h2 class="text-lg font-bold text-slate-100">Quy định</h2>
       </div>
-      <div class="mt-6 pt-4 border-t border-slate-800 text-center"><p class="text-[11px] text-slate-500">Lịch trực nhật lớp 12A1.1</p></div>
+      <ul id="rules" class="space-y-3 text-xs text-slate-300"></ul>
     </section>
   </div>
 </main>
 
 <footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© Nguyễn Tiến Long - 12A1 - MC I</p></footer>
 
-<!-- Password modal -->
-<div id="pwModal" class="hidden fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+<!-- Nhập mật khẩu -->
+<div id="pwModal" role="dialog" aria-modal="true" class="hidden fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm items-center justify-center p-4">
   <div class="glass-panel rounded-2xl p-6 w-full max-w-sm border border-cyan-500/30 shadow-neon-cyan">
     <div class="flex items-center gap-3 mb-4">
       <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center"><i class="fa-solid fa-key"></i></div>
-      <div><h3 class="text-base font-extrabold text-slate-100">Nhập mật khẩu chỉnh sửa</h3><p class="text-xs text-slate-400">Chỉ người có mật khẩu mới sửa được lịch</p></div>
+      <h3 class="text-base font-extrabold text-slate-100">Nhập mật khẩu chỉnh sửa</h3>
     </div>
-    <input id="pwInput" type="password" inputmode="numeric" autocomplete="off" placeholder="Mật khẩu" class="w-full px-4 py-3 bg-slate-900/80 border border-slate-700/80 rounded-xl focus:ring-2 focus:ring-cyan-500 outline-none text-sm text-slate-100 placeholder-slate-500">
-    <p id="pwError" class="hidden text-xs text-rose-400 font-semibold mt-2"><i class="fa-solid fa-circle-exclamation mr-1"></i>Sai mật khẩu, thử lại.</p>
+    <input id="pwInput" type="password" inputmode="numeric" autocomplete="off" placeholder="Mật khẩu" aria-label="Mật khẩu" class="field">
+    <p id="pwError" class="hidden text-xs text-rose-400 font-semibold mt-2">Sai mật khẩu, thử lại.</p>
     <div class="flex justify-end gap-2 mt-5">
       <button id="pwCancel" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60">Hủy</button>
       <button id="pwOk" type="button" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white">Xác nhận</button>
@@ -202,15 +199,72 @@ html:not(.dark) .theme-ico.sun{opacity:1;transform:rotate(0) scale(1)}
   </div>
 </div>
 
+<!-- Tạo / sửa tuần -->
+<div id="weekModal" role="dialog" aria-modal="true" class="hidden fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm items-center justify-center p-4 overflow-y-auto">
+  <div class="glass-panel rounded-2xl p-6 w-full max-w-md border border-cyan-500/30 shadow-neon-cyan my-8">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center"><i class="fa-solid fa-calendar-plus"></i></div>
+      <div><h3 id="wmTitle" class="text-base font-extrabold text-slate-100"></h3><p class="text-xs text-slate-400">Tuần tính từ Thứ 2 đến Thứ 7 (có thể thêm Chủ Nhật bằng "Thêm thứ")</p></div>
+    </div>
+    <div class="space-y-3">
+      <div id="wmDateWrap"><label for="wmDate" class="text-[11px] font-bold text-slate-400 block mb-1">Chọn một ngày trong tuần</label><input id="wmDate" type="date" class="field"><p id="wmDateHint" class="text-[11px] text-cyan-400 mt-1"></p></div>
+      <div><label for="wmPenName" class="text-[11px] font-bold text-slate-400 block mb-1">Người bị phạt trực nhật</label><input id="wmPenName" type="text" class="field" placeholder="Để trống nếu không có"></div>
+      <div class="grid grid-cols-2 gap-3">
+        <div><label for="wmPenLabel" class="text-[11px] font-bold text-slate-400 block mb-1">Nhãn phạt</label><input id="wmPenLabel" type="text" class="field" placeholder="(Trực hết năm 2026)"></div>
+        <div><label for="wmPenUntil" class="text-[11px] font-bold text-slate-400 block mb-1">Thời hạn</label><input id="wmPenUntil" type="text" class="field" placeholder="ĐẾN HẾT NĂM 2026"></div>
+      </div>
+      <label id="wmCopyWrap" class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer"><input id="wmCopy" type="checkbox" class="accent-cyan-500"> Sao chép ngày và người từ tuần đang chọn</label>
+    </div>
+    <p id="wmError" class="hidden text-xs text-rose-400 font-semibold mt-3"></p>
+    <div class="flex justify-end gap-2 mt-5">
+      <button id="wmCancel" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60">Hủy</button>
+      <button id="wmOk" type="button" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white">Lưu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sửa thứ / Thêm thứ -->
+<div id="dayModal" role="dialog" aria-modal="true" class="hidden fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm items-center justify-center p-4 overflow-y-auto">
+  <div class="glass-panel rounded-2xl p-6 w-full max-w-md border border-cyan-500/30 shadow-neon-cyan my-8">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center"><i id="dmIconI" class="fa-solid fa-calendar-plus"></i></div>
+      <div><h3 id="dmTitle" class="text-base font-extrabold text-slate-100"></h3><p id="dmSub" class="text-xs text-slate-400"></p></div>
+    </div>
+    <div class="space-y-3">
+      <div>
+        <label id="dmDayLabel" for="dmDay" class="text-[11px] font-bold text-slate-400 block mb-1"></label>
+        <select id="dmDay" class="field"></select>
+        <p id="dmHint" class="text-[11px] text-cyan-400 mt-1"></p>
+      </div>
+      <div id="dmAddWrap" class="space-y-3">
+        <div>
+          <label for="dmKind" class="text-[11px] font-bold text-slate-400 block mb-1">Loại ngày</label>
+          <select id="dmKind" class="field"><option value="duty">Ngày trực</option><option value="holiday">Ngày nghỉ</option></select>
+        </div>
+        <div id="dmNamesWrap">
+          <label for="dmNames" class="text-[11px] font-bold text-slate-400 block mb-1">Người trực (không bắt buộc)</label>
+          <textarea id="dmNames" rows="3" class="field" placeholder="Nhiều người cách nhau bằng dấu phẩy hoặc xuống dòng"></textarea>
+        </div>
+        <div id="dmReasonWrap" class="hidden">
+          <label for="dmReason" class="text-[11px] font-bold text-slate-400 block mb-1">Lý do nghỉ</label>
+          <input id="dmReason" type="text" class="field" placeholder="Nghỉ">
+        </div>
+      </div>
+    </div>
+    <p id="dmError" class="hidden text-xs text-rose-400 font-semibold mt-3"></p>
+    <div class="flex justify-end gap-2 mt-5">
+      <button id="dmCancel" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60">Hủy</button>
+      <button id="dmOk" type="button" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white">Lưu</button>
+    </div>
+  </div>
+</div>
+
 <script>
-/* ================== DỮ LIỆU CÁC TUẦN ==================
-   Thêm tuần mới: copy 1 khối trong WEEKS, đổi id/prefix/start/label/days.
-   start = [năm, tháng(0-11), ngày] của THỨ 2. Tháng 11 => số 10.
-   holiday: 'lý do' => ngày nghỉ, không có ô chọn.
-   prefix '' của tuần 09/11 giữ nguyên khóa lưu cũ để không mất lựa chọn đã chọn. */
-const WEEKS = [
-  { id:'w46', prefix:'', start:[2026,10,9], label:'09/11 - 14/11',
-    penalty:{ name:'Lê Đình Trường', label:'(Trực Hết Năm 2026)', until:'ĐẾN HẾT NĂM 2026', note:'Có thể tăng hoặc giảm so với dự kiến' },
+/* Dữ liệu khởi tạo lần đầu. Sau đó dữ liệu lưu trên Firebase và sửa trực tiếp trên web.
+   start = [năm, tháng (0-11), ngày] của THỨ 2. Khóa ngày: 2..7 = Thứ 2..Thứ 7, 8 = Chủ Nhật. */
+const DEFAULT_WEEKS = [
+  { id:'w46', prefix:'', start:[2026,10,9],
+    penalty:{ name:'Lê Đình Trường', label:'(Trực hết năm 2026)', until:'ĐẾN HẾT NĂM 2026' },
     days:{
       2:['Lê Quỳnh Anh','Đào Thị Ngọc Anh','Nguyễn Quốc Bảo'],
       3:['Nguyễn Thái Bảo','Vũ Trí Dũng','Nguyễn Tùng Dương'],
@@ -219,8 +273,8 @@ const WEEKS = [
       6:['Đinh Ngọc Hưng','Cao Thanh Long','Hà Đức Kiên'],
       7:['Nguyễn Trung Kiên']
     } },
-  { id:'w47', prefix:'w47_', start:[2026,10,16], label:'16/11 - 21/11',
-    penalty:{ name:'Lê Đình Trường', label:'(Trực Hết Năm 2026)', until:'ĐẾN HẾT NĂM 2026', note:'Có thể tăng hoặc giảm so với dự kiến' },
+  { id:'w47', prefix:'w47_', start:[2026,10,16],
+    penalty:{ name:'Lê Đình Trường', label:'(Trực hết năm 2026)', until:'ĐẾN HẾT NĂM 2026' },
     days:{
       2:['Nguyễn Ngọc Xuân Mai','Nguyễn Thanh Mai','Nguyễn Vũ Quang Minh'],
       3:['Nguyễn Quang Minh','Đàm Nhật Minh','Phạm Văn Ninh'],
@@ -232,307 +286,542 @@ const WEEKS = [
 ];
 const META = {
   2:{label:'THỨ 2',c:'cyan'}, 3:{label:'THỨ 3',c:'purple'}, 4:{label:'THỨ 4',c:'emerald'},
-  5:{label:'THỨ 5',c:'blue'}, 6:{label:'THỨ 6',c:'amber'}, 7:{label:'THỨ 7',c:'rose'}
+  5:{label:'THỨ 5',c:'blue'}, 6:{label:'THỨ 6',c:'amber'}, 7:{label:'THỨ 7',c:'rose'},
+  8:{label:'CHỦ NHẬT',c:'orange'}
 };
+const WEEKDAYS = [2,3,4,5,6,7,8];
+const dayName = d => d === 8 ? 'Chủ Nhật' : 'Thứ ' + d;
+const DUTY = {'':'Chưa chọn','sáng':'Chỉ buổi sáng','chiều':'Chỉ buổi chiều','cả hai':'Cả ngày','miễn':'Miễn','vắng':'Vắng'};
+const TASKS = [['chair','Kê bàn ghế'],['chalkboard','Lau bảng'],['table','Dọn bàn giáo viên'],['broom','Quét nhà'],['door-closed','Đóng cửa / cửa sổ'],['soap','Lau lớp (chỉ Thứ 7)']];
+const RULES = [
+  ['emerald','shield-halved','Miễn trực nhật:','Lớp trưởng, Lớp phó, Bí thư được miễn trực nhật (nếu không vi phạm lỗi).'],
+  ['rose','triangle-exclamation','Xử phạt vi phạm:','Vi phạm nhiều lỗi sẽ phải trực nhiều ngày.'],
+  ['amber','book-bookmark','Sổ đầu bài:','Vi phạm nội quy hoặc bị ghi sổ đầu bài sẽ bị phạt trực nhật từ 2 ngày đến 1 tuần.']
+];
+const EDIT_PASSWORD = '170109';
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDGXntxLwBZXa0kqBOQHuRsSIW16ZoozsU",
+  authDomain: "lich-truc-nhat-12a1.firebaseapp.com",
+  databaseURL: "https://lich-truc-nhat-12a1-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "lich-truc-nhat-12a1",
+  storageBucket: "lich-truc-nhat-12a1.firebasestorage.app",
+  messagingSenderId: "213763956147",
+  appId: "1:213763956147:web:9092b8f383163a841b3fc6"
+};
+const ESC_MAP = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
+const esc = s => String(s).replace(/[&<>"']/g, ch => ESC_MAP[ch]);
+
+/* Mỗi người = {id, name, type}; type là 'list' (theo danh sách) hoặc 'penalty' (phạt). */
+function normalizeWeek(w){
+  const o = JSON.parse(JSON.stringify(w));
+  o.penalty = Object.assign({name:'',label:'',until:''}, o.penalty || {});
+  o.days = o.days || {};
+  Object.keys(o.days).forEach(d => {
+    const v = o.days[d];
+    if (Array.isArray(v)) o.days[d] = v.map((p,i) => typeof p === 'string'
+      ? {id:String(i+1), name:p, type:'list'}
+      : {id:String(p.id), name:p.name, type:p.type === 'penalty' ? 'penalty' : 'list'});
+  });
+  return o;
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   const $ = id => document.getElementById(id);
-  const grid = $('cardsGrid'), tabsEl = $('weekTabs'), filtersEl = $('dayFilters');
-  const searchInput = $('searchInput'), clearBtn = $('clearSearch');
+  const grid = $('cardsGrid'), tabsEl = $('weekTabs'), filtersEl = $('dayFilters'), toolsEl = $('weekTools');
+  const searchInput = $('searchInput'), clearBtn = $('clearSearch'), editBtn = $('editBtn');
+  const show = (el, on) => { el.classList.toggle('hidden', !on); el.classList.toggle('flex', on); };
   const store = {
     get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
     set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
   };
-  /* ---------- Chế độ chỉnh sửa (cần mật khẩu) ---------- */
-  const EDIT_PASSWORD = '170109';
+
+  $('tasks').innerHTML = TASKS.map(([i,t]) => `<div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-${i} text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">${t}</span></div>`).join('');
+  $('rules').innerHTML = RULES.map(([c,i,t,x]) => `<li class="p-3 rounded-xl bg-${c}-500/10 border border-${c}-500/20 flex items-start space-x-2.5"><i class="fa-solid fa-${i} text-${c}-400 mt-0.5"></i><div><span class="font-bold text-${c}-300">${t}</span> ${x}</div></li>`).join('');
+
+  /* ---------- Mở khóa chỉnh sửa ---------- */
   let editMode = false;
   try { editMode = sessionStorage.getItem('editMode') === '1'; } catch(e){}
-  const pwModal = $('pwModal'), pwInput = $('pwInput'), pwError = $('pwError'), editBtn = $('editBtn');
-  function openPw(){
-    pwError.classList.add('hidden'); pwInput.value = '';
-    pwModal.classList.remove('hidden'); setTimeout(() => pwInput.focus(), 50);
-  }
-  function closePw(){ pwModal.classList.add('hidden'); }
+  const pwModal = $('pwModal'), pwInput = $('pwInput'), pwError = $('pwError');
+  const openPw = () => { pwError.classList.add('hidden'); pwInput.value = ''; show(pwModal, true); setTimeout(() => pwInput.focus(), 50); };
+  const closePw = () => show(pwModal, false);
   function updateEditBtn(){
-    if (editMode){
-      editBtn.className = 'px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition-all bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/50';
-      editBtn.innerHTML = '<i class="fa-solid fa-pen-to-square"></i><span class="hidden sm:inline">Đang chỉnh sửa · Thoát</span>';
-    } else {
-      editBtn.className = 'px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition-all bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700/60';
-      editBtn.innerHTML = '<i class="fa-solid fa-key"></i><span class="hidden sm:inline">Chỉnh sửa</span>';
-    }
+    const base = 'px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition-all ';
+    editBtn.className = base + (editMode
+      ? 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/50'
+      : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700/60');
+    editBtn.innerHTML = editMode
+      ? '<i class="fa-solid fa-lock-open"></i><span class="hidden sm:inline">Khóa lại</span>'
+      : '<i class="fa-solid fa-key"></i><span class="hidden sm:inline">Chỉnh sửa</span>';
   }
   function setEdit(v){
     editMode = v;
     try { sessionStorage.setItem('editMode', v ? '1' : '0'); } catch(e){}
-    updateEditBtn();
-    const w = WEEKS[current];
-    grid.querySelectorAll('.day-card').forEach(card => setLockUI(card, getLock(lockKey(w, card.dataset.day))));
+    updateEditBtn(); render();
   }
-  editBtn.addEventListener('click', () => { if (editMode) setEdit(false); else openPw(); });
+  editBtn.addEventListener('click', () => editMode ? setEdit(false) : openPw());
   $('pwCancel').addEventListener('click', closePw);
   pwModal.addEventListener('click', e => { if (e.target === pwModal) closePw(); });
   const submitPw = () => {
-    if (pwInput.value === EDIT_PASSWORD){ closePw(); setEdit(true); }
+    if (pwInput.value === EDIT_PASSWORD) { closePw(); setEdit(true); }
     else { pwError.classList.remove('hidden'); pwInput.select(); }
   };
   $('pwOk').addEventListener('click', submitPw);
   pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitPw(); if (e.key === 'Escape') closePw(); });
 
-  /* ---------- Đổi giao diện sáng / tối ---------- */
+  /* ---------- Giao diện sáng / tối ---------- */
   const root = document.documentElement, themeBtn = $('themeBtn');
-  function applyTheme(dark){
-    root.classList.toggle('dark', dark);
-    try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch(e){}
-  }
   themeBtn.addEventListener('click', () => {
     const toDark = !root.classList.contains('dark');
-    const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!document.startViewTransition || reduce) {
-      root.classList.add('theme-anim');
-      applyTheme(toDark);
+    const apply = () => { root.classList.toggle('dark', toDark); try { localStorage.setItem('theme', toDark ? 'dark' : 'light'); } catch(e){} };
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      root.classList.add('theme-anim'); apply();
       setTimeout(() => root.classList.remove('theme-anim'), 650);
       return;
     }
-    const r = themeBtn.getBoundingClientRect();
-    const x = r.left + r.width / 2, y = r.top + r.height / 2;
-    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-    const t = document.startViewTransition(() => applyTheme(toDark));
-    t.ready.then(() => root.animate(
-      { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+    const r = themeBtn.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const R = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    document.startViewTransition(apply).ready.then(() => root.animate(
+      { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${R}px at ${x}px ${y}px)`] },
       { duration: 650, easing: 'cubic-bezier(.4,0,.2,1)', pseudoElement: '::view-transition-new(root)' }
     )).catch(() => {});
   });
 
-  /* ---------- Firebase Realtime Database (dữ liệu dùng chung) ---------- */
-  const firebaseConfig = {
-    apiKey: "AIzaSyDGXntxLwBZXa0kqBOQHuRsSIW16ZoozsU",
-    authDomain: "lich-truc-nhat-12a1.firebaseapp.com",
-    databaseURL: "https://lich-truc-nhat-12a1-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "lich-truc-nhat-12a1",
-    storageBucket: "lich-truc-nhat-12a1.firebasestorage.app",
-    messagingSenderId: "213763956147",
-    appId: "1:213763956147:web:9092b8f383163a841b3fc6"
-  };
+  /* ---------- Firebase ---------- */
   let db = null;
-  try { if (window.firebase) { firebase.initializeApp(firebaseConfig); db = firebase.database(); } }
+  try { if (window.firebase) { firebase.initializeApp(FIREBASE_CONFIG); db = firebase.database(); } }
   catch (e) { console.warn('Firebase lỗi:', e); db = null; }
-  const state = { choices:{}, locks:{} };
+  const state = { choices:{}, weeks:{} };
+  let loaded = false;
+  /* Chữ ký của danh sách tuần (không phụ thuộc thứ tự khóa): để biết dữ liệu có thật sự đổi hay chỉ là "tiếng vọng" của chính mình */
+  let lastSig = null;
+  const weeksSig = o => Object.keys(o).sort().map(k => k + '\u0001' + o[k]).join('\u0002');
   const setStatus = (ok, text) => {
-    const el = $('syncStatus'); if (!el) return;
-    el.className = 'ml-auto normal-case tracking-normal font-semibold ' + (ok ? 'text-emerald-400' : 'text-amber-400');
-    el.innerHTML = '<i class="fa-solid fa-circle text-[7px] mr-1"></i>' + text;
+    $('syncStatus').className = 'ml-auto font-semibold ' + (ok ? 'text-emerald-400' : 'text-amber-400');
+    $('syncStatus').innerHTML = '<i class="fa-solid fa-circle text-[7px] mr-1"></i>' + text;
   };
-  const getChoice = n => db ? state.choices[n] : store.get(n);
-  const saveChoice = (n, v) => {
-    store.set(n, v);
-    if (db) { if (v) state.choices[n] = v; else delete state.choices[n]; db.ref('duty/choices/' + n).set(v || null).catch(e => console.warn(e)); }
-  };
-  const getLock = k => db ? !!state.locks[k] : store.get(k) === '1';
-  const saveLock = (k, v) => {
-    store.set(k, v ? '1' : '0');
-    if (db) { if (v) state.locks[k] = true; else delete state.locks[k]; db.ref('duty/locks/' + k).set(v ? true : null).catch(e => console.warn(e)); }
+  setStatus(false, 'Đang kết nối...');
+  const getChoice = k => db ? state.choices[k] : store.get(k);
+  const saveChoice = (k, v) => {
+    store.set(k, v || '');
+    if (db) {
+      if (v) state.choices[k] = v; else delete state.choices[k];
+      db.ref('duty/choices/' + k).set(v || null).catch(e => console.warn(e));
+    }
   };
 
-  const pad = n => String(n).padStart(2,'0');
+  /* ---------- Danh sách tuần ---------- */
+  let weeks = [], currentId = null, dayFilter = 'all';
+  const pad = n => String(n).padStart(2, '0');
   const startOfToday = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
   const dayDate = (w, d) => new Date(w.start[0], w.start[1], w.start[2] + (d - 2));
-  const fmt = dt => pad(dt.getDate()) + '/' + pad(dt.getMonth()+1);
-  const weekEnd = w => dayDate(w, 7);
-  const weekLocked = w => weekEnd(w) < startOfToday();
-  const weekCurrent = w => { const t = startOfToday(); return dayDate(w,2) <= t && t <= weekEnd(w); };
+  const lastDay = w => w.days[8] ? 8 : 7;
+  const fmt = dt => pad(dt.getDate()) + '/' + pad(dt.getMonth() + 1);
+  const weekLabel = w => fmt(dayDate(w,2)) + ' - ' + fmt(dayDate(w,lastDay(w)));
+  const weekCurrent = w => { const t = startOfToday(); return dayDate(w,2) <= t && t <= dayDate(w,lastDay(w)); };
+  const cur = () => weeks.find(w => w.id === currentId);
+  const choiceKey = (w, d, p) => w.prefix + 't' + d + '_' + p.id;
 
-  let current = WEEKS.findIndex(weekCurrent);
-  if (current < 0) current = startOfToday() < dayDate(WEEKS[0],2) ? 0 : WEEKS.length - 1;
-  let dayFilter = 'all';
+  function loadWeeks(){
+    let list = null;
+    if (db) {
+      if (loaded) list = Object.keys(state.weeks).map(k => { try { return JSON.parse(state.weeks[k]); } catch(e){ return null; } }).filter(Boolean);
+    } else {
+      try { const s = store.get('weeks_v2'); if (s) list = JSON.parse(s); } catch(e){}
+    }
+    if (!list) list = DEFAULT_WEEKS;
+    weeks = list.map(normalizeWeek).sort((a,b) => dayDate(a,2) - dayDate(b,2));
+    if (!weeks.some(w => w.id === currentId)) {
+      const t = startOfToday();
+      const c = weeks.find(weekCurrent) || weeks.slice().reverse().find(w => dayDate(w,2) <= t) || weeks[0];
+      currentId = c ? c.id : null;
+    }
+  }
+  function saveWeek(w){
+    const i = weeks.findIndex(x => x.id === w.id);
+    if (i >= 0) weeks[i] = w; else weeks.push(w);
+    weeks.sort((a,b) => dayDate(a,2) - dayDate(b,2));
+    if (db) {
+      const s = JSON.stringify(w); state.weeks[w.id] = s; lastSig = weeksSig(state.weeks);
+      db.ref('duty/weeks/' + w.id).set(s).catch(e => console.warn(e));
+    }
+    else store.set('weeks_v2', JSON.stringify(weeks));
+  }
+  function removeWeek(w){
+    weeks = weeks.filter(x => x.id !== w.id);
+    if (db) {
+      delete state.weeks[w.id]; lastSig = weeksSig(state.weeks);
+      db.ref('duty/weeks/' + w.id).set(null).catch(e => console.warn(e));
+    }
+    else store.set('weeks_v2', JSON.stringify(weeks));
+  }
+  function mutate(fn){ const w = JSON.parse(JSON.stringify(cur())); fn(w); saveWeek(w); render(); }
+  const clearChoices = (w, d) => { if (Array.isArray(w.days[d])) w.days[d].forEach(p => saveChoice(choiceKey(w,d,p), '')); };
 
-  // Hôm nay
+  /* Chuyển ngày a sang thứ b (nếu b đã có lịch thì hoán đổi), kèm theo lựa chọn buổi trực của từng người */
+  function swapDays(w, a, b){
+    const A = w.days[a], B = w.days[b], moves = [];
+    const collect = (from, to, arr) => { if (Array.isArray(arr)) arr.forEach(p => moves.push({ k:choiceKey(w,from,p), nk:choiceKey(w,to,p), v:getChoice(choiceKey(w,from,p)) })); };
+    collect(a, b, A); collect(b, a, B);
+    moves.forEach(m => saveChoice(m.k, ''));
+    moves.forEach(m => { if (m.v) saveChoice(m.nk, m.v); });
+    if (B === undefined) delete w.days[a]; else w.days[a] = B;
+    w.days[b] = A;
+  }
+
   const dn = ['Chủ Nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
   const now = new Date();
-  $('today-display').textContent = dn[now.getDay()] + ` (${now.getDate()}/${now.getMonth()+1})`;
+  $('todayDisplay').textContent = dn[now.getDay()] + ` (${now.getDate()}/${now.getMonth() + 1})`;
 
-  /* ---------- Tabs tuần ---------- */
+  /* ---------- Tab tuần + công cụ tuần (chỉ khi mở khóa) ---------- */
   function renderTabs(){
     tabsEl.innerHTML = '';
-    WEEKS.forEach((w, i) => {
-      const active = i === current;
+    weeks.forEach(w => {
       const b = document.createElement('button');
+      b.type = 'button';
       b.className = 'px-4 py-2.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-2 ' +
-        (active ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-transparent shadow-lg'
-                : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border-slate-700/50');
-      const tag = weekCurrent(w) ? '<span class="text-[9px] bg-emerald-400 text-black px-1.5 py-0.5 rounded-full uppercase">Hiện tại</span>'
-                : '';
-      b.innerHTML = `<i class="fa-regular fa-calendar"></i> ${w.label} ${tag}`;
-      b.addEventListener('click', () => { current = i; dayFilter = 'all'; searchInput.value=''; clearBtn.classList.add('hidden'); render(); });
+        (w.id === currentId ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-transparent shadow-lg'
+                            : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border-slate-700/50');
+      b.innerHTML = `<i class="fa-regular fa-calendar"></i> ${weekLabel(w)}` + (weekCurrent(w) ? ' <span class="text-[9px] bg-emerald-400 text-black px-1.5 py-0.5 rounded-full">Hiện tại</span>' : '');
+      b.addEventListener('click', () => { currentId = w.id; dayFilter = 'all'; searchInput.value = ''; render(); });
       tabsEl.appendChild(b);
     });
+    const mk = (parent, cls, icon, text, fn) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = cls;
+      b.innerHTML = `<i class="fa-solid ${icon}"></i> ${text}`;
+      b.addEventListener('click', fn); parent.appendChild(b);
+    };
+    if (editMode) mk(tabsEl, 'px-4 py-2.5 rounded-xl text-xs font-bold border border-dashed border-emerald-500/60 text-emerald-300 hover:bg-emerald-500/10 transition-all flex items-center gap-2', 'fa-plus', 'Tạo tuần', () => openWeekModal('create'));
+    toolsEl.innerHTML = '';
+    const showTools = editMode && cur();
+    toolsEl.className = showTools ? 'flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-700/50' : 'hidden';
+    if (showTools) {
+      const base = 'px-3 py-2 rounded-xl text-xs font-semibold border flex items-center gap-2 transition-all ';
+      mk(toolsEl, base + 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border-emerald-500/40', 'fa-calendar-plus', 'Thêm thứ', () => openDayModal('add'));
+      mk(toolsEl, base + 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700/60', 'fa-pen', 'Sửa người bị phạt của tuần', () => openWeekModal('edit'));
+      mk(toolsEl, base + 'bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border-rose-500/40', 'fa-trash', 'Xóa tuần này', () => {
+        const w = cur();
+        if (!confirm('Xóa tuần ' + weekLabel(w) + '? Không thể hoàn tác.')) return;
+        Object.keys(w.days).forEach(d => clearChoices(w, d));
+        removeWeek(w); currentId = null; loadWeeks(); render();
+      });
+    }
   }
+
+  /* ---------- Hộp thoại tạo / sửa tuần ---------- */
+  const wm = $('weekModal'); let wmMode = 'create';
+  const mondayOf = str => {
+    const p = str.split('-').map(Number);
+    if (p.length !== 3 || p.some(isNaN)) return null;
+    const d = new Date(p[0], p[1] - 1, p[2]); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d;
+  };
+  const toInput = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  const wmErr = t => { $('wmError').textContent = t; $('wmError').classList.toggle('hidden', !t); };
+  function updateWmHint(){
+    const m = mondayOf($('wmDate').value);
+    $('wmDateHint').textContent = m ? 'Tuần: ' + fmt(m) + ' - ' + fmt(new Date(m.getFullYear(), m.getMonth(), m.getDate() + 5)) : '';
+  }
+  function openWeekModal(mode){
+    wmMode = mode; wmErr('');
+    const w = cur(), isEdit = mode === 'edit';
+    $('wmTitle').textContent = isEdit ? 'Sửa người bị phạt' : 'Tạo tuần mới';
+    $('wmDateWrap').classList.toggle('hidden', isEdit);
+    $('wmCopyWrap').classList.toggle('hidden', isEdit || !w);
+    $('wmCopy').checked = false;
+    const pen = (isEdit && w && w.penalty) || {name:'',label:'',until:''};
+    $('wmPenName').value = pen.name; $('wmPenLabel').value = pen.label; $('wmPenUntil').value = pen.until;
+    if (!isEdit) {
+      const last = weeks[weeks.length - 1];
+      $('wmDate').value = toInput(last ? new Date(last.start[0], last.start[1], last.start[2] + 7) : mondayOf(toInput(new Date())));
+      updateWmHint();
+    }
+    show(wm, true);
+  }
+  $('wmDate').addEventListener('input', updateWmHint);
+  $('wmCancel').addEventListener('click', () => show(wm, false));
+  wm.addEventListener('click', e => { if (e.target === wm) show(wm, false); });
+  $('wmOk').addEventListener('click', () => {
+    const penalty = { name:$('wmPenName').value.trim(), label:$('wmPenLabel').value.trim(), until:$('wmPenUntil').value.trim() };
+    if (wmMode === 'edit') { mutate(w => { w.penalty = penalty; }); show(wm, false); return; }
+    const m = mondayOf($('wmDate').value);
+    if (!m) return wmErr('Hãy chọn ngày hợp lệ.');
+    const start = [m.getFullYear(), m.getMonth(), m.getDate()];
+    if (weeks.some(x => x.start.join() === start.join())) return wmErr('Tuần này đã tồn tại.');
+    const id = 'w' + Date.now(), nw = { id, prefix:id + '_', start, penalty, days:{} }, src = cur();
+    if ($('wmCopy').checked && src) {
+      Object.keys(src.days).forEach(d => {
+        const v = src.days[d];
+        nw.days[d] = Array.isArray(v) ? v.map(p => ({id:p.id, name:p.name, type:'list'})) : {holiday:v.holiday};
+      });
+    }
+    saveWeek(nw); currentId = id; show(wm, false); render();
+  });
+
+  /* ---------- Hộp thoại Sửa thứ / Thêm thứ ---------- */
+  const dm = $('dayModal'), dmDay = $('dmDay'); let dmMode = 'add', dmFrom = null;
+  const dmErr = t => { $('dmError').textContent = t; $('dmError').classList.toggle('hidden', !t); };
+  const dayStatus = v => !v ? 'trống' : Array.isArray(v) ? v.length + ' người' : 'ngày nghỉ';
+  function syncKind(){
+    const hol = $('dmKind').value === 'holiday';
+    $('dmNamesWrap').classList.toggle('hidden', hol);
+    $('dmReasonWrap').classList.toggle('hidden', !hol);
+  }
+  function updateDmHint(){
+    const w = cur(), d = parseInt(dmDay.value, 10), el = $('dmHint');
+    if (!w || !(d >= 2 && d <= 8)) { el.textContent = ''; return; }
+    let t = 'Ngày ' + fmt(dayDate(w, d));
+    if (dmMode === 'move') t += w.days[d] ? ' — thứ này đã có lịch, hai ngày sẽ được hoán đổi cho nhau' : ' — lịch sẽ được chuyển sang thứ này';
+    el.textContent = t;
+  }
+  function openDayModal(mode, from){
+    const w = cur(); if (!w) return;
+    const isMove = mode === 'move';
+    const days = WEEKDAYS.filter(d => isMove ? d !== from : !w.days[d]);
+    if (!days.length) { alert('Tuần này đã có đủ các thứ từ Thứ 2 đến Chủ Nhật.'); return; }
+    dmMode = mode; dmFrom = isMove ? from : null; dmErr('');
+    $('dmTitle').textContent = isMove ? 'Sửa thứ' : 'Thêm thứ';
+    $('dmSub').textContent = isMove
+      ? 'Chuyển ' + dayName(from) + ' (' + fmt(dayDate(w, from)) + ') sang thứ khác'
+      : 'Thêm một thứ vào tuần ' + weekLabel(w);
+    $('dmIconI').className = 'fa-solid ' + (isMove ? 'fa-arrow-right-arrow-left' : 'fa-calendar-plus');
+    $('dmDayLabel').textContent = isMove ? 'Chuyển sang' : 'Chọn thứ cần thêm';
+    $('dmAddWrap').classList.toggle('hidden', isMove);
+    dmDay.innerHTML = days.map(d => `<option value="${d}">${dayName(d)} (${fmt(dayDate(w, d))})${isMove ? ' — ' + dayStatus(w.days[d]) : ''}</option>`).join('');
+    $('dmKind').value = 'duty'; $('dmNames').value = ''; $('dmReason').value = '';
+    syncKind(); updateDmHint(); show(dm, true);
+  }
+  dmDay.addEventListener('change', updateDmHint);
+  $('dmKind').addEventListener('change', syncKind);
+  $('dmCancel').addEventListener('click', () => show(dm, false));
+  dm.addEventListener('click', e => { if (e.target === dm) show(dm, false); });
+  $('dmOk').addEventListener('click', () => {
+    const w = cur(); if (!w) { show(dm, false); return; }
+    const d = parseInt(dmDay.value, 10);
+    if (!(d >= 2 && d <= 8)) return dmErr('Hãy chọn thứ hợp lệ.');
+    if (dmMode === 'move') {
+      if (dmFrom === null || !w.days[dmFrom]) { show(dm, false); return; }
+      if (d === dmFrom) return dmErr('Hãy chọn một thứ khác.');
+      mutate(x => swapDays(x, dmFrom, d));
+    } else {
+      if (w.days[d]) return dmErr('Thứ này đã có lịch rồi.');
+      if ($('dmKind').value === 'holiday') {
+        const r = $('dmReason').value.trim() || 'Nghỉ';
+        mutate(x => { x.days[d] = { holiday: r }; });
+      } else {
+        const names = $('dmNames').value.split(/[,\n;]/).map(s => s.trim()).filter(Boolean);
+        mutate(x => { x.days[d] = names.map((n, i) => ({ id:String(i + 1), name:n, type:'list' })); });
+      }
+    }
+    dayFilter = 'all'; show(dm, false); render();
+  });
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { show(wm, false); show(dm, false); } });
 
   /* ---------- Bộ lọc ngày ---------- */
   function renderFilters(){
     filtersEl.innerHTML = '';
+    const w = cur();
     const mk = (val, text) => {
-      const on = dayFilter === val;
       const b = document.createElement('button');
+      b.type = 'button';
       b.className = 'px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ' +
-        (on ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg' : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50');
+        (dayFilter === val ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg' : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50');
       b.textContent = text;
       b.addEventListener('click', () => { dayFilter = val; renderFilters(); applyFilter(); });
       filtersEl.appendChild(b);
     };
-    mk('all','Tất cả');
+    mk('all', 'Tất cả');
     for (let d = 2; d <= 7; d++) mk(String(d), 'Thứ ' + d);
+    if (w && w.days[8]) mk('8', 'Chủ Nhật');
   }
-  function applyFilter(){
-    grid.querySelectorAll('.day-card').forEach(c => {
-      c.style.display = (dayFilter === 'all' || c.dataset.day === dayFilter) ? '' : 'none';
-    });
-  }
+  const applyFilter = () => grid.querySelectorAll('.day-card').forEach(c => { c.style.display = (dayFilter === 'all' || c.dataset.day === dayFilter) ? '' : 'none'; });
 
   /* ---------- Thẻ ngày ---------- */
-  function studentLi(w, d, i, name, c){
-    const rose = c === 'rose';
-    const nameAttr = w.prefix + 't' + d + '_' + (i+1);
-    const options = [['','-- Chọn --'],['sáng','Chỉ buổi sáng'],['chiều','Chỉ buổi chiều'],['cả hai','Cả ngày'],['miễn','Miễn'],['vắng','Vắng']]
-      .map(([v,t]) => `<option value="${v}">${t}</option>`).join('');
-    return `<li class="student-name p-3 rounded-xl ${rose ? 'bg-rose-900/20 border border-rose-500/30' : 'bg-slate-800/50 border border-slate-700/50'} transition-colors">
-      <div class="flex items-center space-x-2.5 mb-2"><i class="fa-solid ${rose?'fa-star':'fa-user-check'} text-${c}-400 text-xs"></i><span class="${rose?'text-sm font-bold text-rose-100':'text-sm font-semibold'}">${name}</span></div>
-      <div class="text-xs text-slate-400 space-y-1 pt-1 border-t ${rose?'border-rose-500/20':'border-slate-700/40'}">
-        <span class="text-[10px] font-bold uppercase tracking-wider block ${rose?'text-rose-400/80':'text-slate-400'} mb-1">Buổi trực:</span>
-        <div class="duty-opts bg-slate-900/60 p-1.5 rounded-lg border ${rose?'border-rose-500/30':'border-slate-700/40'}">
-          <select name="${nameAttr}" data-v="" aria-label="Buổi trực của ${name}" class="duty-select w-full px-2.5 py-1.5 rounded-md bg-transparent text-xs font-semibold text-slate-300 outline-none cursor-pointer focus:ring-2 focus:ring-${c}-500">${options}</select>
-        </div></div></li>`;
+  const btn = (act, icon, text, color, extra = '') =>
+    `<button type="button" data-act="${act}" class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-${color}-500/50 text-${color}-300 hover:bg-${color}-500/10 ${extra}"><i class="fa-solid fa-${icon} mr-1"></i>${text}</button>`;
+
+  function studentLi(w, d, p, c){
+    const rose = c === 'rose', pen = p.type === 'penalty', key = choiceKey(w, d, p);
+    const tools = editMode ? `<span class="ml-auto flex gap-1"><button type="button" class="mini-btn" data-act="rename" data-pid="${esc(p.id)}" title="Sửa tên" aria-label="Sửa tên"><i class="fa-solid fa-pen"></i></button><button type="button" class="mini-btn danger" data-act="rmperson" data-pid="${esc(p.id)}" title="Xóa người" aria-label="Xóa người"><i class="fa-solid fa-user-minus"></i></button></span>` : '';
+    const typeEl = editMode
+      ? `<select class="ptype-select" data-pid="${esc(p.id)}" data-t="${pen ? 'penalty' : 'list'}" aria-label="Hình thức trực của ${esc(p.name)}"><option value="list"${pen ? '' : ' selected'}>Trực theo danh sách</option><option value="penalty"${pen ? ' selected' : ''}>Phạt</option></select>`
+      : `<p class="text-[11px] italic mt-0.5 ml-6 ${pen ? 'text-rose-400' : 'text-slate-400'}">${pen ? 'Phạt' : 'Trực theo danh sách'}</p>`;
+    const dutyEl = editMode
+      ? `<select name="${esc(key)}" data-v="" aria-label="Buổi trực của ${esc(p.name)}" class="duty-select w-full px-2.5 py-1.5 rounded-md bg-transparent text-xs font-semibold text-slate-300 outline-none cursor-pointer focus:ring-2 focus:ring-${c}-500">${Object.keys(DUTY).map(v => `<option value="${v}">${v ? DUTY[v] : '-- Chọn --'}</option>`).join('')}</select>`
+      : `<span class="duty-view duty-select block px-2.5 py-1.5 text-xs font-semibold text-slate-300" data-key="${esc(key)}" data-v=""></span>`;
+    return `<li class="student-name p-3 rounded-xl ${rose ? 'bg-rose-900/20 border border-rose-500/30' : 'bg-slate-800/50 border border-slate-700/50'}">
+      <div class="flex items-center space-x-2.5"><i class="fa-solid ${rose ? 'fa-star' : 'fa-user-check'} text-${c}-400 text-xs"></i><span class="pname ${rose ? 'text-sm font-bold text-rose-100' : 'text-sm font-semibold'}">${esc(p.name)}</span>${tools}</div>
+      ${typeEl}
+      <div class="text-xs text-slate-400 mt-2 pt-2 border-t ${rose ? 'border-rose-500/20' : 'border-slate-700/40'}">
+        <span class="text-[10px] font-bold block ${rose ? 'text-rose-400/80' : 'text-slate-400'} mb-1">Trạng thái trực:</span>
+        <div class="bg-slate-900/60 p-1.5 rounded-lg border ${rose ? 'border-rose-500/30' : 'border-slate-700/40'}">${dutyEl}</div>
+      </div></li>`;
   }
 
   function cardHtml(w, d){
-    const m = META[d], c = m.c, data = w.days[d], date = dayDate(w, d);
-    let right, body, foot;
-    if (data && data.holiday){
-      right = '<span class="text-xs text-amber-400 font-bold">Nghỉ</span>';
-      body = `<div class="p-6 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center"><i class="fa-solid fa-champagne-glasses text-amber-400 text-3xl mb-2"></i><div class="text-base font-black text-amber-200">${data.holiday}</div><div class="text-xs text-slate-300 mt-1">Học sinh được nghỉ, không trực nhật.</div></div>`;
-      foot = '<i class="fa-solid fa-bed text-amber-400 mr-1.5"></i> Không trực nhật';
-    } else {
-      right = d === 7 ? '<span class="text-xs text-rose-400 font-bold">Lau Lớp</span>' : `<span class="text-xs text-slate-400">${data.length} Thành viên</span>`;
-      body = '<ul class="space-y-3 text-slate-200">' + data.map((n,i) => studentLi(w,d,i,n,c)).join('') + '</ul>';
-      foot = d === 2 ? '<i class="fa-solid fa-flag text-amber-400 mr-1.5"></i> (Nếu có) Chào cờ: bê ghế sau'
-           : d === 7 ? '<i class="fa-solid fa-soap text-rose-400 mr-1.5"></i> Trực nhật như bình thường + Lau Lớp'
-           : `<i class="fa-solid fa-broom text-${c}-400 mr-1.5"></i> Trực nhật như bình thường`;
+    const { label, c } = META[d], data = w.days[d], date = dayDate(w, d);
+    const attrs = `data-day="${d}" data-ts="${date.getTime()}"`;
+    const head = `<span class="text-sm font-extrabold px-3 py-1 rounded-lg bg-${c}-500/20 text-${c}-300 tracking-wider">${label} <span class="text-[10px] font-semibold opacity-70 ml-1">${fmt(date)}</span></span>`;
+    if (!data) {
+      if (!editMode || d === 8) return '';
+      return `<div class="day-card glass-panel rounded-2xl p-5 flex flex-col gap-4 border-2 border-dashed border-${c}-500/40" ${attrs}>
+        <div>${head} <span class="text-xs text-slate-400 ml-2">Chưa có lịch</span></div>
+        <div class="flex flex-wrap gap-2">${btn('adddutyday','plus','Thêm ngày trực','emerald')}${btn('addholiday','champagne-glasses','Thêm ngày nghỉ','amber')}</div></div>`;
     }
-    return `<div class="day-card glass-panel rounded-2xl p-5 flex flex-col justify-between border-t-4 border-t-${c}-500 ${d===7?'bg-rose-950/10':''}" data-day="${d}" data-ts="${date.getTime()}">
+    const isHol = !Array.isArray(data);
+    const right = isHol ? '<span class="text-xs text-amber-400 font-bold">Nghỉ</span>'
+      : d === 7 ? '<span class="text-xs text-rose-400 font-bold">Lau Lớp</span>'
+      : `<span class="text-xs text-slate-400">${data.length} thành viên</span>`;
+    const body = isHol
+      ? `<div class="p-6 rounded-xl bg-amber-500/10 border border-amber-500/30 text-center"><i class="fa-solid fa-champagne-glasses text-amber-400 text-3xl mb-2"></i><div class="text-base font-black text-amber-200">${esc(data.holiday)}</div></div>`
+      : '<ul class="space-y-3 text-slate-200">' + data.map(p => studentLi(w, d, p, c)).join('') + '</ul>' +
+        (data.length ? '' : '<div class="text-xs text-slate-400 italic text-center py-3">Chưa có ai trực ngày này</div>');
+    const foot = (d === 2 && !isHol)
+      ? '<div class="mt-5 pt-3 border-t border-slate-800/80 text-slate-400 italic text-xs"><i class="fa-solid fa-flag text-amber-400 mr-1.5"></i>Nếu có chào cờ sẽ nhắc bê ghế riêng</div>' : '';
+    const editBar = !editMode ? '' : `<div class="flex flex-wrap gap-2 mt-4 pt-3 border-t border-slate-700/50">` +
+      (isHol ? btn('edithol','pen','Sửa lý do','slate') + btn('tooduty','broom','Chuyển thành ngày trực','emerald')
+             : btn('addperson','user-plus','Thêm người','emerald') + btn('toholiday','champagne-glasses','Đặt ngày nghỉ','amber')) +
+      btn('chgday','arrow-right-arrow-left','Sửa thứ','cyan') +
+      btn('rmday','trash','Xóa ngày','rose','ml-auto') + '</div>';
+    return `<div class="day-card glass-panel rounded-2xl p-5 flex flex-col justify-between border-t-4 border-t-${c}-500 ${d === 7 ? 'bg-rose-950/10' : ''}" ${attrs}>
       <div>
         <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
-          <span class="flex items-center gap-2"><button type="button" class="lock-btn w-8 h-8 rounded-lg flex items-center justify-center border border-slate-700/60 bg-slate-800/80 text-slate-300 hover:bg-slate-700 transition-all" title="Khóa / mở khóa chỉnh sửa ngày này"><i class="fa-solid fa-lock-open"></i></button><span class="day-head text-sm font-extrabold px-3 py-1 rounded-lg bg-${c}-500/20 text-${c}-300 tracking-wider">${m.label} <span class="text-[10px] font-semibold opacity-70 ml-1">${fmt(date)}</span></span></span>
-          <span class="flex items-center gap-2"><span class="status-badge"></span>${right}</span>
-        </div>${body}
-      </div>
-      <div class="day-foot mt-5 pt-3 border-t ${d===7?'border-rose-500/30 text-rose-300 font-semibold':'border-slate-800/80 text-slate-400 italic'} text-xs">${foot}</div></div>`;
+          <span>${head}</span><span class="flex items-center gap-2"><span class="status-badge"></span>${right}</span>
+        </div>${body}${editBar}
+      </div>${foot}</div>`;
   }
 
-  /* ---------- Khóa thủ công từng ngày ---------- */
-  const lockKey = (w, d) => w.prefix + 'lock_t' + d;
-  function setLockUI(card, locked){
-    const today = startOfToday().getTime(), ts = +card.dataset.ts;
-    card.classList.toggle('locked', locked);
-    card.querySelectorAll('.duty-select').forEach(el => { el.disabled = locked || !editMode; });
-    const btn = card.querySelector('.lock-btn');
-    btn.classList.toggle('opacity-50', !editMode);
-    btn.innerHTML = locked ? '<i class="fa-solid fa-lock"></i>' : '<i class="fa-solid fa-lock-open"></i>';
-    btn.classList.toggle('bg-rose-500/20', locked);
-    btn.classList.toggle('text-rose-300', locked);
-    btn.classList.toggle('border-rose-500/50', locked);
-    const badge = card.querySelector('.status-badge');
-    if (locked) badge.innerHTML = '<span class="text-[9px] bg-slate-700 text-slate-200 px-1.5 py-0.5 rounded-full uppercase"><i class="fa-solid fa-lock mr-1"></i>Đã khóa</span>';
-    else if (ts === today) badge.innerHTML = '<span class="text-[9px] bg-cyan-400 text-black px-1.5 py-0.5 rounded-full uppercase">Hôm nay</span>';
-    else badge.innerHTML = '';
-    card.classList.toggle('ring-2', ts === today);
-    card.classList.toggle('ring-cyan-400', ts === today);
-  }
-  function initLocks(w){
+  function decorateCards(){
+    const today = startOfToday().getTime();
     grid.querySelectorAll('.day-card').forEach(card => {
-      const d = card.dataset.day, key = lockKey(w, d);
-      const btn = card.querySelector('.lock-btn');
-      setLockUI(card, getLock(key));
-      btn.addEventListener('click', () => {
-        if (!editMode) { openPw(); return; }
-        const nowLocked = !card.classList.contains('locked');
-        saveLock(key, nowLocked);
-        setLockUI(card, nowLocked);
-      });
+      const isToday = +card.dataset.ts === today, badge = card.querySelector('.status-badge');
+      if (badge) badge.innerHTML = isToday ? '<span class="text-[9px] bg-cyan-400 text-black px-1.5 py-0.5 rounded-full">Hôm nay</span>' : '';
+      card.classList.toggle('ring-2', isToday);
+      card.classList.toggle('ring-cyan-400', isToday);
     });
   }
 
-  /* ---------- Render tuần ---------- */
-  function render(){
-    const w = WEEKS[current];
-    $('headRange').textContent = w.label;
-    $('headPenalty').textContent = w.penalty.name;
-    $('penName').textContent = w.penalty.name;
-    $('penUntil').textContent = w.penalty.until;
-    $('penLabel').textContent = w.penalty.label;
-    $('penNote').querySelector('span').textContent = w.penalty.note;
-    grid.innerHTML = [2,3,4,5,6,7].map(d => cardHtml(w, d)).join('');
-    grid.querySelectorAll('.duty-opts').forEach(el => el.addEventListener('click', () => { if (!editMode) openPw(); }));
-    grid.querySelectorAll('.duty-select').forEach(el => {
-      el.value = getChoice(el.name) || ''; el.dataset.v = el.value;
-      el.addEventListener('change', () => {
-        el.dataset.v = el.value;
-        if (!el.disabled) saveChoice(el.name, el.value);
-      });
-    });
-    renderTabs(); renderFilters(); applyFilter(); initLocks(w);
+  function syncValues(){
+    grid.querySelectorAll('select.duty-select').forEach(el => { el.value = getChoice(el.name) || ''; el.dataset.v = el.value; });
+    grid.querySelectorAll('span.duty-view').forEach(el => { const v = getChoice(el.dataset.key) || ''; el.dataset.v = v; el.textContent = DUTY[v] || v; });
   }
 
-  /* ---------- Tìm kiếm ---------- */
-  searchInput.addEventListener('input', e => {
-    const term = e.target.value.toLowerCase().trim();
+  /* ---------- Thao tác chỉnh sửa trong thẻ ---------- */
+  grid.addEventListener('click', e => {
+    const b = e.target.closest('[data-act]');
+    if (!b || !editMode) return;
+    const card = b.closest('.day-card'), w = cur();
+    if (!card || !w) return;
+    const d = card.dataset.day, act = b.dataset.act, pid = b.dataset.pid;
+    if (act === 'chgday') openDayModal('move', parseInt(d, 10));
+    else if (act === 'adddutyday' || act === 'tooduty') mutate(x => { x.days[d] = []; });
+    else if (act === 'addholiday' || act === 'toholiday') {
+      const r = prompt('Lý do nghỉ (vd: Nghỉ lễ, Nghỉ bão...):', 'Nghỉ'); if (r === null) return;
+      if (act === 'toholiday') {
+        if (w.days[d].length && !confirm('Danh sách người trực ngày này sẽ bị xóa. Tiếp tục?')) return;
+        clearChoices(w, d);
+      }
+      mutate(x => { x.days[d] = { holiday: r.trim() || 'Nghỉ' }; });
+    }
+    else if (act === 'edithol') {
+      const r = prompt('Sửa lý do nghỉ:', w.days[d].holiday); if (r === null) return;
+      mutate(x => { x.days[d].holiday = r.trim() || 'Nghỉ'; });
+    }
+    else if (act === 'rmday') {
+      if (!confirm('Xóa ngày này khỏi tuần?')) return;
+      clearChoices(w, d); mutate(x => { delete x.days[d]; });
+    }
+    else if (act === 'addperson') {
+      const r = prompt('Nhập tên người trực (nhiều người cách nhau bằng dấu phẩy):'); if (!r) return;
+      const names = r.split(/[,\n;]/).map(s => s.trim()).filter(Boolean); if (!names.length) return;
+      mutate(x => {
+        let next = Math.max(0, ...x.days[d].map(p => parseInt(p.id) || 0)) + 1;
+        names.forEach(n => x.days[d].push({ id:String(next++), name:n, type:'list' }));
+      });
+    }
+    else if (act === 'rename') {
+      const p = w.days[d].find(q => q.id === pid), r = prompt('Sửa tên:', p.name); if (!r || !r.trim()) return;
+      mutate(x => { x.days[d].find(q => q.id === pid).name = r.trim(); });
+    }
+    else if (act === 'rmperson') {
+      const p = w.days[d].find(q => q.id === pid);
+      if (!confirm('Xóa "' + p.name + '" khỏi ngày này?')) return;
+      saveChoice(choiceKey(w, d, p), '');
+      mutate(x => { x.days[d] = x.days[d].filter(q => q.id !== pid); });
+    }
+  });
+
+  grid.addEventListener('change', e => {
+    const t = e.target; if (!editMode) return;
+    if (t.classList.contains('duty-select')) { t.dataset.v = t.value; saveChoice(t.name, t.value); }
+    else if (t.classList.contains('ptype-select')) {
+      const d = t.closest('.day-card').dataset.day, pid = t.dataset.pid;
+      mutate(x => { x.days[d].find(q => q.id === pid).type = t.value === 'penalty' ? 'penalty' : 'list'; });
+    }
+  });
+
+  /* ---------- Tìm kiếm theo tên ---------- */
+  function applySearch(){
+    const term = searchInput.value.toLowerCase().trim();
     clearBtn.classList.toggle('hidden', !term);
     grid.querySelectorAll('.day-card').forEach(card => {
+      const items = card.querySelectorAll('.student-name');
       let match = false;
-      card.querySelectorAll('.student-name').forEach(s => {
-        const ok = s.textContent.toLowerCase().includes(term);
+      items.forEach(s => {
+        const ok = (s.querySelector('.pname') || s).textContent.toLowerCase().includes(term);
         s.style.display = (ok || !term) ? '' : 'none';
         if (ok) match = true;
       });
-      card.style.opacity = (match || !term) ? '1' : '0.3';
+      card.style.opacity = (!term || match) ? '1' : '0.3';
     });
+  }
+  let searchTimer = 0;
+  searchInput.addEventListener('input', () => {
+    clearBtn.classList.toggle('hidden', !searchInput.value.trim());
+    clearTimeout(searchTimer); searchTimer = setTimeout(applySearch, 80);
   });
-  clearBtn.addEventListener('click', () => { searchInput.value=''; searchInput.dispatchEvent(new Event('input')); });
+  clearBtn.addEventListener('click', () => { searchInput.value = ''; clearTimeout(searchTimer); applySearch(); });
 
-  render();
-  updateEditBtn();
+  /* ---------- Vẽ lại toàn trang ---------- */
+  function render(){
+    const w = cur();
+    if (!w) {
+      $('headRange').textContent = '—'; $('headPenalty').textContent = '—';
+      $('penSection').classList.add('hidden');
+      grid.innerHTML = `<div class="col-span-full glass-panel rounded-2xl p-8 text-center text-slate-400 text-sm">Chưa có tuần nào.${editMode ? ' Bấm "Tạo tuần" để bắt đầu.' : ''}</div>`;
+      renderTabs(); renderFilters(); return;
+    }
+    if (dayFilter === '8' && !w.days[8]) dayFilter = 'all';
+    const pen = w.penalty, hasPen = !!pen.name;
+    $('headRange').textContent = weekLabel(w);
+    $('penSection').classList.toggle('hidden', !hasPen);
+    $('headPenalty').textContent = hasPen ? pen.name : 'Không có';
+    $('penName').textContent = pen.name; $('penLabel').textContent = pen.label; $('penUntil').textContent = pen.until;
+    grid.innerHTML = WEEKDAYS.map(d => cardHtml(w, d)).join('');
+    syncValues(); renderTabs(); renderFilters(); applyFilter(); decorateCards(); applySearch();
+  }
 
-  /* ---------- Đồng bộ thời gian thực ---------- */
-  function syncUI(){
-    const w = WEEKS[current];
-    grid.querySelectorAll('.duty-select').forEach(el => { el.value = getChoice(el.name) || ''; el.dataset.v = el.value; });
-    grid.querySelectorAll('.day-card').forEach(card => setLockUI(card, getLock(lockKey(w, card.dataset.day))));
-  }
-  function migrateLocal(){
-    // Đẩy dữ liệu đã lưu trên máy này lên chung (chỉ 1 lần mỗi máy)
-    if (store.get('migrated_v1') === '1') return;
-    WEEKS.forEach(w => [2,3,4,5,6,7].forEach(d => {
-      const list = w.days[d];
-      if (Array.isArray(list)) list.forEach((_, i) => {
-        const n = w.prefix + 't' + d + '_' + (i+1), v = store.get(n);
-        if (v && state.choices[n] === undefined) db.ref('duty/choices/' + n).set(v);
-      });
-      const k = lockKey(w, d);
-      if (store.get(k) === '1' && state.locks[k] === undefined) db.ref('duty/locks/' + k).set(true);
-    }));
-    store.set('migrated_v1', '1');
-  }
+  /* ---------- Khởi động + đồng bộ thời gian thực ---------- */
+  updateEditBtn(); loadWeeks(); render();
+
   if (db) {
-    let first = true;
     db.ref('.info/connected').on('value', s => setStatus(!!s.val(), s.val() ? 'Đã đồng bộ trực tuyến' : 'Mất kết nối'));
     db.ref('duty').on('value', snap => {
       const v = snap.val() || {};
       state.choices = v.choices || {};
-      state.locks = v.locks || {};
-      if (first) { first = false; migrateLocal(); }
-      syncUI();
+      state.weeks = v.weeks || {};
+      if (!loaded) {
+        loaded = true;
+        if (!Object.keys(state.weeks).length) {
+          DEFAULT_WEEKS.forEach(w => { const s = JSON.stringify(normalizeWeek(w)); state.weeks[w.id] = s; db.ref('duty/weeks/' + w.id).set(s); });
+        }
+      }
+      const sig = weeksSig(state.weeks);
+      if (sig !== lastSig) { lastSig = sig; loadWeeks(); render(); }
+      else syncValues();
     }, err => {
       console.warn('Không đọc được database:', err);
-      db = null; setStatus(false, 'Chưa đồng bộ (kiểm tra Rules)'); render();
+      db = null; setStatus(false, 'Chưa đồng bộ (kiểm tra Rules)'); loadWeeks(); render();
     });
   } else {
     setStatus(false, 'Chế độ offline (chỉ lưu trên máy này)');
