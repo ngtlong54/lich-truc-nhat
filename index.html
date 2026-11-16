@@ -125,6 +125,15 @@ html:not(.dark) .field{background:rgba(255,255,255,.9)}
 
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
 
+  <!-- Banner chế độ TEST -->
+  <div id="testBanner" role="status" class="hidden glass-panel rounded-2xl p-4 border border-amber-500/50 bg-amber-500/10 items-center gap-3">
+    <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0"><i class="fa-solid fa-flask"></i></div>
+    <div>
+      <div class="text-sm font-extrabold text-amber-300">Đang ở chế độ TEST</div>
+      <div class="text-xs text-amber-200/80">Tất cả các thay đổi không có tác dụng</div>
+    </div>
+  </div>
+
   <section class="glass-panel p-3 sm:p-4 rounded-2xl">
     <div class="flex items-center gap-2 mb-2 text-[11px] font-bold text-slate-400"><i class="fa-solid fa-layer-group text-cyan-400"></i> Chọn tuần <span id="syncStatus" class="ml-auto font-semibold text-slate-500"></span></div>
     <div id="weekTabs" class="flex flex-wrap gap-2"></div>
@@ -195,6 +204,20 @@ html:not(.dark) .field{background:rgba(255,255,255,.9)}
     <div class="flex justify-end gap-2 mt-5">
       <button id="pwCancel" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60">Hủy</button>
       <button id="pwOk" type="button" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white">Xác nhận</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hộp thông báo (chế độ TEST / mật khẩu đặc biệt) -->
+<div id="infoModal" role="dialog" aria-modal="true" class="hidden fixed inset-0 z-[110] bg-black/70 backdrop-blur-sm items-center justify-center p-4">
+  <div class="glass-panel rounded-2xl p-6 w-full max-w-sm border border-amber-500/40 shadow-neon-cyan">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center"><i id="imIconI" class="fa-solid fa-flask"></i></div>
+      <h3 id="imTitle" class="text-base font-extrabold text-slate-100"></h3>
+    </div>
+    <div id="imNote" class="text-sm text-slate-300 break-words"></div>
+    <div class="flex justify-end mt-5">
+      <button id="imOk" type="button" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white">Đóng</button>
     </div>
   </div>
 </div>
@@ -299,6 +322,10 @@ const RULES = [
   ['amber','book-bookmark','Sổ đầu bài:','Vi phạm nội quy hoặc bị ghi sổ đầu bài sẽ bị phạt trực nhật từ 2 ngày đến 1 tuần.']
 ];
 const EDIT_PASSWORD = '170109';
+const TEST_PASSWORD = '123456';   /* Chế độ TEST: sửa thoải mái nhưng không lưu gì cả */
+const TROLL_PASSWORD = '363636';  /* Hiện hộp thông báo troll, không mở khóa chỉnh sửa */
+const TROLL_TITLE = 'M var à';
+const TROLL_LINK = 'https://www.youtube.com/watch?v=QDia3e12czc';
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyDGXntxLwBZXa0kqBOQHuRsSIW16ZoozsU",
   authDomain: "lich-truc-nhat-12a1.firebaseapp.com",
@@ -338,6 +365,34 @@ document.addEventListener('DOMContentLoaded', () => {
   $('tasks').innerHTML = TASKS.map(([i,t]) => `<div class="p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-3"><i class="fa-solid fa-${i} text-cyan-400 w-4 text-center"></i><span class="text-sm text-slate-300 font-medium">${t}</span></div>`).join('');
   $('rules').innerHTML = RULES.map(([c,i,t,x]) => `<li class="p-3 rounded-xl bg-${c}-500/10 border border-${c}-500/20 flex items-start space-x-2.5"><i class="fa-solid fa-${i} text-${c}-400 mt-0.5"></i><div><span class="font-bold text-${c}-300">${t}</span> ${x}</div></li>`).join('');
 
+  /* ---------- Chế độ TEST: mọi thay đổi chỉ nằm trong bộ nhớ, không ghi Firebase / localStorage ---------- */
+  let testMode = false, testData = null;   /* testData = { weeks:[...], choices:{key: value} } */
+  const hasOwn = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+
+  /* ---------- Hộp thông báo ---------- */
+  const infoModal = $('infoModal');
+  const closeInfo = () => show(infoModal, false);
+  function showInfo(kind){
+    const note = $('imNote');
+    note.textContent = '';
+    if (kind === 'test') {
+      $('imIconI').className = 'fa-solid fa-flask';
+      $('imTitle').textContent = 'Đang ở chế độ TEST';
+      note.textContent = 'Tất cả các thay đổi không có tác dụng';
+    } else {
+      $('imIconI').className = 'fa-solid fa-face-grin-tears';
+      $('imTitle').textContent = TROLL_TITLE;
+      const a = document.createElement('a');
+      a.href = TROLL_LINK; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.className = 'text-cyan-400 underline underline-offset-2 break-all';
+      a.textContent = TROLL_LINK;
+      note.appendChild(a);
+    }
+    show(infoModal, true);
+  }
+  $('imOk').addEventListener('click', closeInfo);
+  infoModal.addEventListener('click', e => { if (e.target === infoModal) closeInfo(); });
+
   /* ---------- Mở khóa chỉnh sửa ---------- */
   let editMode = false;
   try { editMode = sessionStorage.getItem('editMode') === '1'; } catch(e){}
@@ -346,23 +401,42 @@ document.addEventListener('DOMContentLoaded', () => {
   const closePw = () => show(pwModal, false);
   function updateEditBtn(){
     const base = 'px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition-all ';
-    editBtn.className = base + (editMode
-      ? 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/50'
-      : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700/60');
-    editBtn.innerHTML = editMode
-      ? '<i class="fa-solid fa-lock-open"></i><span class="hidden sm:inline">Khóa lại</span>'
-      : '<i class="fa-solid fa-key"></i><span class="hidden sm:inline">Chỉnh sửa</span>';
+    editBtn.className = base + (testMode
+      ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/50'
+      : editMode
+        ? 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/50'
+        : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700/60');
+    editBtn.innerHTML = testMode
+      ? '<i class="fa-solid fa-flask"></i><span class="hidden sm:inline">Thoát TEST</span>'
+      : editMode
+        ? '<i class="fa-solid fa-lock-open"></i><span class="hidden sm:inline">Khóa lại</span>'
+        : '<i class="fa-solid fa-key"></i><span class="hidden sm:inline">Chỉnh sửa</span>';
   }
-  function setEdit(v){
+  function setEdit(v, test){
+    const wasTest = testMode;
     editMode = v;
-    try { sessionStorage.setItem('editMode', v ? '1' : '0'); } catch(e){}
+    if (v && test) {
+      /* Vào TEST: chụp bản sao danh sách tuần hiện tại, mọi sửa đổi chỉ diễn ra trên bản sao này */
+      testMode = true;
+      testData = { weeks: JSON.parse(JSON.stringify(weeks)), choices: {} };
+    } else {
+      testMode = false; testData = null;
+      /* Thoát TEST: bỏ bản sao, nạp lại dữ liệu thật */
+      if (wasTest) { if (db) lastSig = weeksSig(state.weeks); loadWeeks(); }
+    }
+    /* Chế độ TEST không ghi nhớ phiên: tải lại trang sẽ quay về chế độ xem bình thường */
+    if (!testMode) { try { sessionStorage.setItem('editMode', v ? '1' : '0'); } catch(e){} }
+    show($('testBanner'), testMode);
     updateEditBtn(); render();
   }
   editBtn.addEventListener('click', () => editMode ? setEdit(false) : openPw());
   $('pwCancel').addEventListener('click', closePw);
   pwModal.addEventListener('click', e => { if (e.target === pwModal) closePw(); });
   const submitPw = () => {
-    if (pwInput.value === EDIT_PASSWORD) { closePw(); setEdit(true); }
+    const v = pwInput.value;
+    if (v === EDIT_PASSWORD) { closePw(); setEdit(true); }
+    else if (v === TEST_PASSWORD) { closePw(); setEdit(true, true); showInfo('test'); }
+    else if (v === TROLL_PASSWORD) { closePw(); showInfo('troll'); }
     else { pwError.classList.remove('hidden'); pwInput.select(); }
   };
   $('pwOk').addEventListener('click', submitPw);
@@ -400,8 +474,9 @@ document.addEventListener('DOMContentLoaded', () => {
     $('syncStatus').innerHTML = '<i class="fa-solid fa-circle text-[7px] mr-1"></i>' + text;
   };
   setStatus(false, 'Đang kết nối...');
-  const getChoice = k => db ? state.choices[k] : store.get(k);
+  const getChoice = k => (testMode && hasOwn(testData.choices, k)) ? testData.choices[k] : (db ? state.choices[k] : store.get(k));
   const saveChoice = (k, v) => {
+    if (testMode) { testData.choices[k] = v || ''; return; }   /* TEST: chỉ lưu trong bộ nhớ */
     store.set(k, v || '');
     if (db) {
       if (v) state.choices[k] = v; else delete state.choices[k];
@@ -423,7 +498,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function loadWeeks(){
     let list = null;
-    if (db) {
+    if (testMode) {
+      list = testData.weeks;
+    } else if (db) {
       if (loaded) list = Object.keys(state.weeks).map(k => { try { return JSON.parse(state.weeks[k]); } catch(e){ return null; } }).filter(Boolean);
     } else {
       try { const s = store.get('weeks_v2'); if (s) list = JSON.parse(s); } catch(e){}
@@ -440,6 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const i = weeks.findIndex(x => x.id === w.id);
     if (i >= 0) weeks[i] = w; else weeks.push(w);
     weeks.sort((a,b) => dayDate(a,2) - dayDate(b,2));
+    if (testMode) { testData.weeks = JSON.parse(JSON.stringify(weeks)); return; }   /* TEST: không ghi ra ngoài */
     if (db) {
       const s = JSON.stringify(w); state.weeks[w.id] = s; lastSig = weeksSig(state.weeks);
       db.ref('duty/weeks/' + w.id).set(s).catch(e => console.warn(e));
@@ -448,6 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function removeWeek(w){
     weeks = weeks.filter(x => x.id !== w.id);
+    if (testMode) { testData.weeks = JSON.parse(JSON.stringify(weeks)); return; }  /* TEST: không ghi ra ngoài */
     if (db) {
       delete state.weeks[w.id]; lastSig = weeksSig(state.weeks);
       db.ref('duty/weeks/' + w.id).set(null).catch(e => console.warn(e));
@@ -615,7 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
     dayFilter = 'all'; show(dm, false); render();
   });
 
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { show(wm, false); show(dm, false); } });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { show(wm, false); show(dm, false); closeInfo(); } });
 
   /* ---------- Bộ lọc ngày ---------- */
   function renderFilters(){
@@ -816,6 +895,8 @@ document.addEventListener('DOMContentLoaded', () => {
           DEFAULT_WEEKS.forEach(w => { const s = JSON.stringify(normalizeWeek(w)); state.weeks[w.id] = s; db.ref('duty/weeks/' + w.id).set(s); });
         }
       }
+      /* Đang TEST: giữ nguyên bản sao thử nghiệm, không để dữ liệu thật từ máy khác đè lên */
+      if (testMode) return;
       const sig = weeksSig(state.weeks);
       if (sig !== lastSig) { lastSig = sig; loadWeeks(); render(); }
       else syncValues();
