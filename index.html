@@ -43,6 +43,8 @@
     orange:{100:['255 237 213','154 52 18'],200:['254 215 170','194 65 12'],300:['253 186 116','194 65 12'],400:['251 146 60','234 88 12']},
     rose:{100:['255 228 230','159 18 57'],200:['254 205 211','190 18 60'],300:['253 164 175','190 18 60'],400:['251 113 133','225 29 72'],900:['136 19 55','255 228 230'],950:['76 5 25','255 241 242']}
   };
+  var X = {"slate":{"100":["227 226 230","27 27 31"],"200":["213 212 217","47 48 51"],"300":["196 198 208","68 71 78"],"400":["142 144 153","116 119 127"],"500":["142 144 153","116 119 127"],"600":["68 71 78","142 144 153"],"700":["58 60 66","196 198 208"],"800":["43 45 50","225 226 236"],"900":["29 31 36","242 243 250"]},"cyan":{"100":["211 227 253","4 30 73"],"200":["187 211 249","8 66 160"],"300":["168 199 250","11 87 208"],"400":["138 180 248","26 115 232"],"500":["102 157 246","26 115 232"],"600":["66 133 244","11 87 208"]},"purple":{"100":["234 221 255","33 0 93"],"200":["208 188 255","79 55 139"],"300":["208 188 255","103 80 164"],"400":["182 157 248","103 80 164"],"500":["154 130 219","127 103 190"],"600":["127 103 190","103 80 164"]},"emerald":{"100":["196 238 208","7 39 17"],"200":["168 218 181","13 101 45"],"300":["109 213 140","20 108 46"],"400":["109 213 140","24 128 56"],"500":["52 168 83","24 128 56"],"600":["30 142 62","20 108 46"]},"blue":{"100":["194 231 255","0 29 53"],"200":["165 211 245","0 74 119"],"300":["127 207 255","0 98 155"],"400":["90 184 240","11 135 201"],"500":["57 160 224","11 135 201"],"600":["30 136 201","0 98 155"]},"amber":{"100":["255 239 194","63 46 0"],"200":["253 226 147","92 67 0"],"300":["253 214 99","122 89 0"],"400":["251 188 4","176 96 0"],"500":["249 171 0","227 116 0"],"600":["227 116 0","176 96 0"]},"orange":{"100":["255 224 204","58 19 0"],"200":["255 201 168","122 46 0"],"300":["255 179 138","161 62 0"],"400":["250 144 62","196 74 0"],"500":["232 113 10","196 74 0"],"600":["194 100 1","161 62 0"]},"rose":{"100":["252 232 230","65 14 11"],"200":["249 222 220","96 20 16"],"300":["242 184 181","179 38 30"],"400":["242 139 130","217 48 37"],"500":["238 103 92","217 48 37"],"600":["217 48 37","179 38 30"],"900":["96 20 16","252 232 230"],"950":["65 14 11","255 241 240"]}};
+  for (var xh in X) { P[xh] = P[xh] || {}; for (var xn in X[xh]) P[xh][xn] = X[xh][xn]; }
   var dark = '', light = '', colors = {};
   for (var h in P) { colors[h] = {};
     for (var n in P[h]) { var v = '--c-' + h + '-' + n;
@@ -162,8 +164,293 @@ span.duty-view[data-v="cả hai"]{--k:var(--c-emerald-400);color:rgb(var(--c-eme
 span.duty-view[data-v="miễn"]{--k:var(--c-purple-400);color:rgb(var(--c-purple-300))}
 span.duty-view[data-v="vắng"]{--k:var(--c-rose-400);color:rgb(var(--c-rose-300))}
 </style>
+<script>
+/* Màn hình khóa: chỉ bỏ qua khi phiên này đã đăng nhập hoặc đã chọn xem với tư cách khách */
+try{var __s=sessionStorage;if(__s.getItem('editMode')!=='1'&&__s.getItem('guest')!=='1')document.documentElement.classList.add('locked');}catch(e){document.documentElement.classList.add('locked');}
+</script>
+<style id="m3-android">
+/* ===================== Android / Material You ===================== */
+:root{
+  --m-bg:#121316;--m-s1:#1a1b1f;--m-s2:#1f2024;--m-s3:#292a2f;--m-s4:#33353a;
+  --m-on:#e3e2e6;--m-on-v:#c4c6d0;--m-outline:#44474e;
+  --m-p:168 199 250;--m-on-p:6 46 111;--m-pc:40 71 120;--m-on-pc:211 227 253;--m-ok:109 213 140;
+  --bg:#121316;--glass:#1f2024;--glass-b:transparent;--accent:#a8c7fa;
+  --sb-track:transparent;--sb-thumb:#44474e;
+  --emph:cubic-bezier(.2,0,0,1);--emph-dec:cubic-bezier(.05,.7,.1,1);--emph-acc:cubic-bezier(.3,0,.8,.15);
+  --spring:cubic-bezier(.34,1.45,.64,1);
+}
+@supports (transition-timing-function:linear(0,1)){
+  :root{--spring:linear(0,.1871 1.6%,.5017 3.7%,.8174 6.6%,1.0227 9.9%,1.1225 13.2%,1.1329 15.4%,1.1004 17.9%,1.0235 24.2%,.9889 29.4%,.9815 33.3%,.9894 38.2%,1.0018 49.6%,1.002 59.1%,1)}
+}
+html:not(.dark){
+  --m-bg:#f8f9ff;--m-s1:#f1f3fa;--m-s2:#eceff6;--m-s3:#e5e8f0;--m-s4:#dde1ea;
+  --m-on:#1b1b1f;--m-on-v:#44474e;--m-outline:#c4c6d0;
+  --m-p:11 87 208;--m-on-p:255 255 255;--m-pc:211 227 253;--m-on-pc:4 30 73;--m-ok:20 108 46;
+  --bg:#f8f9ff;--glass:#eceff6;--glass-b:transparent;--accent:#0b57d0;
+  --sb-track:transparent;--sb-thumb:#c4c6d0;
+}
+
+html body{font-family:'Google Sans Flex','Google Sans','Plus Jakarta Sans',system-ui,sans-serif!important;background-color:var(--bg);color:var(--m-on)}
+html body::before{display:block!important;content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(60% 50% at 0% 0%,rgb(var(--m-p)/.14),transparent 70%),
+             radial-gradient(50% 45% at 100% 8%,rgb(var(--c-purple-400)/.10),transparent 70%),
+             radial-gradient(60% 50% at 50% 100%,rgb(var(--c-emerald-400)/.08),transparent 70%)}
+
+/* --- Bo góc kiểu Android --- */
+html body .rounded-md{border-radius:12px!important}
+html body .rounded-lg{border-radius:14px!important}
+html body .rounded-xl{border-radius:20px!important}
+html body .rounded-2xl{border-radius:28px!important}
+html body button.rounded-xl,html body button.rounded-lg{border-radius:999px!important}
+html body .mini-btn{border-radius:50%!important}
+html body .duty-select{border-radius:999px!important}
+html body .ptype-select{border-radius:999px!important}
+
+/* --- Thanh trên cùng + các thẻ --- */
+html body header.glass-panel{background:var(--m-s1)!important;border:0!important;border-radius:0 0 32px 32px!important;box-shadow:none!important}
+html body .glass-panel:where(:not(#penSection,#testBanner,#errBanner)){background:var(--m-s2)!important;border:0!important;border-radius:28px!important}
+html body header.glass-panel{border-radius:0 0 32px 32px!important}
+html body div[role="dialog"]>.glass-panel{background:var(--m-s3)!important;border-radius:32px!important;box-shadow:0 8px 32px rgb(0 0 0/.28)!important}
+html body #penSection{border-width:0!important;border-radius:28px!important;background-color:rgb(var(--c-rose-500)/.16)!important}
+html body #testBanner,html body #errBanner{border-radius:24px!important}
+html body .day-card{border-width:0!important;border-radius:28px!important;transition:opacity .3s var(--emph),transform .5s var(--spring)!important}
+html body .day-card[data-day="7"]{background:color-mix(in srgb,rgb(var(--c-rose-400)) 9%,var(--m-s2))!important}
+html body .day-card.ring-2{box-shadow:none!important;outline:2px solid rgb(var(--m-p));outline-offset:-2px}
+html body li.student-name{border-radius:20px!important;background:var(--m-s3)!important;border-color:transparent!important}
+html body li.student-name[class*="rose-900"]{background:rgb(var(--c-rose-500)/.15)!important}
+html body [class*="bg-slate-900/"]{background:var(--m-s3)!important;border-color:transparent!important}
+html body #rosterList .r-item{background:var(--m-s3)!important;border-color:transparent!important}
+html body .day-card [class*="border-t"]{border-color:rgb(var(--c-slate-600)/.35)}
+
+/* --- Nút --- */
+html body button{overflow:hidden;transition:background-color .25s var(--emph),border-color .25s var(--emph),color .25s var(--emph),opacity .25s var(--emph),transform .5s var(--spring)!important}
+@media (hover:hover){html body button:hover:not(:disabled){transform:none}html body .day-card:hover{transform:none}}
+html body button:active:not(:disabled){transform:scale(.94)}
+html body [class*="from-cyan-500"]{background:rgb(var(--m-pc))!important;color:rgb(var(--m-on-pc))!important;background-image:none!important;box-shadow:none!important}
+html body #pwOk,html body #wmOk,html body #dmOk,html body #bulkOk,html body #imOk,html body #rosterSave{background:rgb(var(--m-p))!important;color:rgb(var(--m-on-p))!important}
+html body #pwOk:disabled{opacity:.38}
+html:not(.dark) body .bg-cyan-400.text-black{color:#fff!important}
+html body #weekTabs button,html body #dayFilters button{font-weight:600}
+
+/* --- Ô nhập --- */
+html body .field{background:var(--m-s4)!important;border:1px solid transparent!important;border-radius:16px!important;color:var(--m-on)!important;transition:box-shadow .25s var(--emph),background-color .25s}
+html body .field:focus{box-shadow:0 0 0 2px rgb(var(--m-p))!important}
+html body #searchInput{background:var(--m-s3)!important;border:0!important;border-radius:999px!important;color:var(--m-on)!important}
+html body #searchInput:focus{box-shadow:0 0 0 2px rgb(var(--m-p))!important}
+html body .duty-select option,html body .ptype-select option,html body .field option{background:var(--m-s3);color:var(--m-on)}
+
+/* --- Ngăn kéo Danh sách lớp --- */
+html body #rosterDrawer{background:var(--m-s1)!important;border:0!important;border-radius:32px 0 0 32px!important;box-shadow:-12px 0 40px -12px rgb(0 0 0/.4)!important;transition:transform .55s var(--emph-dec)!important}
+html body #rosterDrawer.closed{transform:translateX(104%);transition-duration:.35s!important;transition-timing-function:var(--emph-acc)!important}
+html body #rosterOverlay{transition:opacity .4s var(--emph)!important}
+
+/* --- Chuyển động --- */
+@keyframes pop{from{opacity:0;transform:scale(.8) translateY(14px)}}
+@keyframes popOut{to{opacity:0;transform:scale(.9) translateY(6px)}}
+@keyframes fade{from{opacity:0}}
+@keyframes fadeOut{to{opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(32px) scale(.92)}}
+@keyframes ripple{to{transform:scale(1);opacity:0}}
+html body div[role="dialog"]:not(.hidden){animation:fade .3s var(--emph) backwards}
+html body div[role="dialog"]:not(.hidden)>div{animation:pop .55s var(--spring) backwards}
+html body div[role="dialog"].closing{animation:fadeOut .22s var(--emph-acc) forwards}
+html body div[role="dialog"].closing>div{animation:popOut .22s var(--emph-acc) forwards}
+html body #cardsGrid.enter .day-card{animation:rise .7s var(--spring) backwards;animation-delay:calc(var(--i,0)*55ms)}
+html body #rosterList.enter>.r-item{animation:rise .55s var(--spring) backwards;animation-delay:calc(var(--i,0)*35ms)}
+html body #testBanner:not(.hidden),html body #errBanner:not(.hidden),html body #penSection:not(.hidden){animation:rise .65s var(--spring) backwards}
+html body .theme-ico{transition:transform .6s var(--spring),opacity .35s var(--emph)}
+.m-ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.22;transform:scale(0);pointer-events:none;animation:ripple .65s var(--emph) forwards}
+
+/* ===================== Màn hình khóa ===================== */
+#lockScreen{display:none;position:fixed;inset:0;z-index:105;flex-direction:column;align-items:center;justify-content:center;
+  padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));overflow-y:auto;color:var(--m-on);
+  background:color-mix(in srgb,var(--m-bg) 40%,transparent);font-family:'Google Sans Flex','Google Sans','Plus Jakarta Sans',system-ui,sans-serif}
+html.locked #lockScreen,#lockScreen.leaving{display:flex}
+html.locked #lockScreen:not(.leaving){animation:lkEnter .8s var(--emph-dec) backwards}
+#lockScreen.leaving{pointer-events:none;animation:lkLeave .7s var(--emph-acc) forwards}
+@keyframes lkEnter{from{opacity:0;transform:scale(1.1)}}
+@keyframes lkLeave{to{opacity:0;transform:scale(1.2);filter:blur(14px)}}
+@keyframes lkCard{from{opacity:0;transform:translateY(48px) scale(.9)}}
+@keyframes lkTick{from{opacity:0;transform:translateY(.22em) scale(.82)}}
+@keyframes lkPop{0%{transform:scale(.3) rotate(-25deg)}60%{transform:scale(1.3) rotate(6deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes lkBlink{50%{opacity:.25}}
+html.locked,html.locked body{overflow:hidden}
+html body>header,html body>main,html body>footer{transition:filter .9s var(--emph),opacity .7s var(--emph),transform .9s var(--spring)}
+html.locked body>header,html.locked body>main,html.locked body>footer{filter:blur(30px) saturate(1.3);opacity:.5;transform:scale(1.06);pointer-events:none;user-select:none}
+
+.lk-wrap{width:100%;display:flex;flex-direction:column;align-items:center;margin:auto}
+.lk-top{text-align:center;margin-bottom:28px}
+.lk-date{font-size:1.05rem;font-weight:500;color:var(--m-on-v);letter-spacing:.01em}
+.lk-clock{font-size:clamp(72px,20vw,136px);font-weight:600;line-height:1.05;letter-spacing:-.04em;font-variant-numeric:tabular-nums;color:rgb(var(--m-p));white-space:nowrap}
+.lk-clock .d{display:inline-block;min-width:.6em}
+.lk-clock .d.flip{animation:lkTick .6s var(--spring)}
+.lk-clock .colon{display:inline-block;margin:0 .02em;animation:lkBlink 2s steps(1) infinite}
+.lk-clock .sec{display:inline-block;vertical-align:top;position:relative;top:.45em;margin-left:.25em;font-size:.2em;font-weight:500;letter-spacing:0;color:var(--m-on-v)}
+.lk-card{width:min(400px,100%);padding:28px 22px 22px;border-radius:32px;text-align:center;
+  background:color-mix(in srgb,var(--m-s2) 86%,transparent);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  box-shadow:0 12px 48px rgb(0 0 0/.25);transition:transform .6s var(--spring)}
+html.locked #lockScreen:not(.leaving) .lk-card{animation:lkCard .8s var(--spring) .12s backwards}
+.lk-card.ok{transform:scale(1.05)}
+.lk-avatar{width:60px;height:60px;margin:0 auto 14px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+  background:rgb(var(--m-pc));color:rgb(var(--m-on-pc));transition:background-color .35s var(--emph),color .35s var(--emph)}
+.lk-card.ok .lk-avatar{background:rgb(var(--m-ok)/.25);color:rgb(var(--m-ok))}
+.lk-card.ok .lk-avatar i{animation:lkPop .6s var(--spring)}
+.lk-card h2{font-size:1.25rem;font-weight:700;margin:0}
+.lk-hint{font-size:.8rem;color:var(--m-on-v);margin:6px 0 18px;min-height:1.2em}
+.lk-field{display:flex;align-items:center;gap:6px;height:58px;padding:0 7px 0 20px;border-radius:999px;background:var(--m-s4);
+  transition:box-shadow .25s var(--emph),opacity .3s var(--emph)}
+.lk-field:focus-within{box-shadow:0 0 0 2px rgb(var(--m-p))}
+.lk-field.disabled{opacity:.55}
+.lk-field .lead{color:var(--m-on-v);font-size:.9rem}
+.lk-field input{flex:1;min-width:0;background:transparent;border:0;outline:0;font-size:16px;color:var(--m-on);padding:0 4px;font-family:inherit}
+.lk-field input::placeholder{color:var(--m-on-v);opacity:.7}
+.lk-ibtn{width:42px;height:42px;border-radius:50%;border:0;background:transparent;color:var(--m-on-v);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.lk-ibtn:hover{background:rgb(var(--m-p)/.12)}
+.lk-go{background:rgb(var(--m-p))!important;color:rgb(var(--m-on-p))!important}
+.lk-go:disabled{opacity:.38;cursor:not-allowed}
+.lk-msg{min-height:1.3em;margin:10px 0 0;font-size:.78rem;font-weight:600;color:rgb(var(--c-rose-400))}
+.lk-msg:empty{min-height:0;margin:0}
+.lk-or{display:flex;align-items:center;gap:12px;margin:16px 0;font-size:.72rem;color:var(--m-on-v)}
+.lk-or::before,.lk-or::after{content:"";flex:1;height:1px;background:var(--m-outline)}
+.lk-tonal{width:100%;height:52px;border-radius:999px;border:0;font-size:.9rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;
+  background:rgb(var(--m-pc))!important;color:rgb(var(--m-on-pc))!important;font-family:inherit}
+#lkTheme{position:fixed;top:max(16px,env(safe-area-inset-top));right:16px;width:46px;height:46px;background:color-mix(in srgb,var(--m-s3) 85%,transparent);color:var(--m-on)}
+.lk-foot{margin-top:18px;font-size:.7rem;color:var(--m-on-v);opacity:.8}
+@media (prefers-reduced-motion:reduce){#lockScreen.leaving{display:none!important}}
+</style>
+<style id="m3-android-v2">
+/* ===================== Bản vá 2 ===================== */
+/* Nền phía sau màn hình khóa: vừa mờ dần vừa zoom in nhanh (~0.8s) */
+@keyframes lkBgIn{from{filter:blur(0) saturate(1);opacity:1;transform:scale(1)}to{filter:blur(30px) saturate(1.3);opacity:.5;transform:scale(1.12)}}
+html.locked body>header,html.locked body>main,html.locked body>footer{transform:scale(1.12);animation:lkBgIn .8s var(--emph-dec) backwards}
+@keyframes lkEnter{from{opacity:0;transform:scale(.94)}}
+html.locked #lockScreen:not(.leaving){animation:lkEnter .7s var(--emph-dec) backwards}
+@keyframes lkFadeIn{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){html.locked body>header,html.locked body>main,html.locked body>footer{animation:none}}
+
+/* --- Câu hỏi dành cho khách --- */
+@keyframes lkSwapOut{to{opacity:0;transform:scale(1.1)}}
+html.locked #lockScreen .lk-card.swap-out{animation:lkSwapOut .22s var(--emph-acc) forwards}
+.lk-card[hidden]{display:none}
+.lk-q{font-size:1.02rem;font-weight:600;margin:0}
+.lk-eq{font-size:2.8rem;font-weight:700;letter-spacing:-.02em;color:rgb(var(--m-p));margin:4px 0 18px}
+.lk-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lk-choice{height:68px;border-radius:24px;border:2px solid transparent;font-size:1.7rem;font-weight:700;font-family:inherit;cursor:pointer;
+  background:var(--m-s4);color:var(--m-on);transition:background-color .3s var(--emph),border-color .3s var(--emph),color .3s var(--emph),transform .5s var(--spring)!important}
+.lk-choice.sel{background:rgb(var(--m-pc));color:rgb(var(--m-on-pc));border-color:rgb(var(--m-p));transform:scale(1.05)}
+.lk-reveal{display:grid;grid-template-rows:0fr;opacity:0;margin-top:0;transition:grid-template-rows .5s var(--emph),opacity .35s var(--emph),margin-top .5s var(--emph)}
+.lk-reveal.show{grid-template-rows:1fr;opacity:1;margin-top:16px}
+.lk-reveal>div{overflow:hidden;min-height:0}
+.lk-primary{width:100%;height:52px;border-radius:999px;border:0;font-size:.9rem;font-weight:700;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;
+  background:rgb(var(--m-p))!important;color:rgb(var(--m-on-p))!important}
+.lk-link{background:none;border:0;margin-top:14px;padding:8px 14px;border-radius:999px;color:var(--m-on-v);font-size:.78rem;font-weight:600;font-family:inherit;cursor:pointer}
+.lk-link:hover{background:rgb(var(--m-p)/.1)}
+
+/* Nút "2" rất nhỏ ở góc màn hình */
+.lk-two{display:none;position:fixed;z-index:3;width:22px;height:22px;padding:0;border:0;border-radius:50%;overflow:visible;
+  align-items:center;justify-content:center;background:transparent;color:var(--m-on-v);font-size:10px;font-weight:600;line-height:1;font-family:inherit;opacity:.3;cursor:pointer}
+.lk-two.show{display:flex;animation:lkFadeIn .6s var(--emph) .35s backwards}
+.lk-two::after{content:"";position:absolute;inset:-7px}
+.lk-two:hover{opacity:.85}
+.lk-two .m-ripple{display:none}
+.lk-two.c-tl{top:calc(env(safe-area-inset-top,0px) + 6px);left:6px}
+.lk-two.c-tr{top:calc(env(safe-area-inset-top,0px) + 6px);right:6px}
+.lk-two.c-bl{bottom:calc(env(safe-area-inset-bottom,0px) + 6px);left:6px}
+.lk-two.c-br{bottom:calc(env(safe-area-inset-bottom,0px) + 6px);right:6px}
+
+/* Hộp thoại ảnh + chúc mừng */
+.lk-img-wrap{border-radius:24px;overflow:hidden;background:var(--m-s4);min-height:160px;display:flex;align-items:center;justify-content:center}
+.lk-img-wrap img{display:block;width:100%;max-height:60vh;object-fit:contain}
+.lk-img-wrap [hidden]{display:none!important}
+.lk-img-fb{padding:30px 20px;text-align:center;font-weight:700;color:var(--m-on)}
+.lk-img-fb i{display:block;font-size:3.2rem;margin-bottom:10px;color:#FFB020}
+.lk-ok-ico{width:76px;height:76px;margin:0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.1rem;
+  background:rgb(var(--m-ok)/.22);color:rgb(var(--m-ok));animation:lkPop .7s var(--spring) .1s backwards}
+
+/* ---- Light mode: icon sáng, hiện đại ---- */
+html:not(.dark) body i[class*="text-cyan-"]{color:#4C8DF6!important}
+html:not(.dark) body .justify-center[class*="bg-cyan-500/"]{background-image:linear-gradient(135deg,rgb(76 141 246/.28),rgb(76 141 246/.10))!important;box-shadow:inset 0 0 0 1px rgb(76 141 246/.22)!important}
+html:not(.dark) body i[class*="text-purple-"]{color:#A77BF3!important}
+html:not(.dark) body .justify-center[class*="bg-purple-500/"]{background-image:linear-gradient(135deg,rgb(167 123 243/.28),rgb(167 123 243/.10))!important;box-shadow:inset 0 0 0 1px rgb(167 123 243/.22)!important}
+html:not(.dark) body i[class*="text-emerald-"]{color:#2FBF71!important}
+html:not(.dark) body .justify-center[class*="bg-emerald-500/"]{background-image:linear-gradient(135deg,rgb(47 191 113/.28),rgb(47 191 113/.10))!important;box-shadow:inset 0 0 0 1px rgb(47 191 113/.22)!important}
+html:not(.dark) body i[class*="text-blue-"]{color:#3FB4F5!important}
+html:not(.dark) body .justify-center[class*="bg-blue-500/"]{background-image:linear-gradient(135deg,rgb(63 180 245/.28),rgb(63 180 245/.10))!important;box-shadow:inset 0 0 0 1px rgb(63 180 245/.22)!important}
+html:not(.dark) body i[class*="text-amber-"]{color:#FFB020!important}
+html:not(.dark) body .justify-center[class*="bg-amber-500/"]{background-image:linear-gradient(135deg,rgb(255 176 32/.28),rgb(255 176 32/.10))!important;box-shadow:inset 0 0 0 1px rgb(255 176 32/.22)!important}
+html:not(.dark) body i[class*="text-orange-"]{color:#FF8A4C!important}
+html:not(.dark) body .justify-center[class*="bg-orange-500/"]{background-image:linear-gradient(135deg,rgb(255 138 76/.28),rgb(255 138 76/.10))!important;box-shadow:inset 0 0 0 1px rgb(255 138 76/.22)!important}
+html:not(.dark) body i[class*="text-rose-"]{color:#F26B6B!important}
+html:not(.dark) body .justify-center[class*="bg-rose-500/"]{background-image:linear-gradient(135deg,rgb(242 107 107/.28),rgb(242 107 107/.10))!important;box-shadow:inset 0 0 0 1px rgb(242 107 107/.22)!important}
+html:not(.dark) body i[class*="text-slate-"]{color:#8C9AB5!important}
+html:not(.dark) body .mini-btn{color:#4C8DF6;background:rgb(76 141 246/.12);border-color:rgb(76 141 246/.30)}
+html:not(.dark) body .mini-btn:hover{background:rgb(76 141 246/.22)}
+html:not(.dark) body .mini-btn.danger{color:#F26B6B;background:rgb(242 107 107/.12);border-color:rgb(242 107 107/.32)}
+html:not(.dark) body .mini-btn.danger:hover{background:rgb(242 107 107/.22)}
+html:not(.dark) body #rosterBtn{background:linear-gradient(135deg,#5B9CFF,#8A6CF6)!important;color:#fff!important}
+html:not(.dark) body #rosterBtn i{color:#fff!important}
+html:not(.dark) body .theme-ico.sun{color:#FFB020}
+html:not(.dark) .lk-avatar{background:linear-gradient(135deg,#DCE8FF,#E9DEFF);color:#4C8DF6}
+html:not(.dark) .lk-field .lead{color:#4C8DF6}
+html:not(.dark) .lk-ibtn{color:#6B93E0}
+html:not(.dark) .lk-go{color:#fff!important}
+html:not(.dark) #lkTheme{color:#4C8DF6}
+html:not(.dark) .lk-tonal i{color:#4C8DF6}
+html:not(.dark) .lk-card.ok .lk-avatar{background:rgb(47 191 113/.2);color:#2FBF71}
+html:not(.dark) .lk-ok-ico{background:rgb(47 191 113/.2);color:#2FBF71}
+</style>
+<style id="m3-android-v3">
+/* ===== Bản vá 3: mở khóa nhanh gọn như điện thoại ===== */
+@keyframes lkLeave{to{opacity:0;transform:scale(1.14);filter:blur(10px)}}
+#lockScreen.leaving{animation:lkLeave 420ms cubic-bezier(.3,0,.2,1) forwards}
+html body>header,html body>main,html body>footer{transition:filter 520ms cubic-bezier(.2,0,0,1),opacity 420ms cubic-bezier(.2,0,0,1),transform 520ms cubic-bezier(.2,0,0,1)}
+.lk-card{transition:transform 300ms cubic-bezier(.2,0,0,1)}
+.lk-card.ok{transform:scale(1.04)}
+.lk-avatar{transition:background-color 300ms cubic-bezier(.2,0,0,1),color 300ms cubic-bezier(.2,0,0,1)}
+.lk-card.ok .lk-avatar i{animation:lkPop 400ms cubic-bezier(.34,1.4,.64,1)}
+</style>
 </head>
 <body class="text-slate-200 font-sans min-h-screen pb-12 antialiased selection:bg-cyan-500 selection:text-black">
+<!-- Màn hình khóa kiểu Android -->
+<div id="lockScreen" aria-label="Màn hình khóa">
+  <button id="lkTheme" type="button" class="lk-ibtn" aria-label="Chuyển giao diện sáng / tối" title="Chuyển giao diện sáng / tối"><i class="fa-solid fa-circle-half-stroke"></i></button>
+  <button id="lkTwo" type="button" class="lk-two" aria-label="2">2</button>
+  <div class="lk-wrap">
+    <div class="lk-top">
+      <div class="lk-date" id="lkDate"></div>
+      <div class="lk-clock" id="lkClock" aria-hidden="true"><span class="d">0</span><span class="d">0</span><span class="colon">:</span><span class="d">0</span><span class="d">0</span><span class="sec" id="lkSec">00</span></div>
+    </div>
+    <div class="lk-card" id="lkCard">
+      <div class="lk-avatar"><i class="fa-solid fa-lock" id="lkIcon"></i></div>
+      <h2 id="lkTitle">Lịch trực nhật 12A1</h2>
+      <p class="lk-hint" id="lkHint"></p>
+      <div class="lk-field" id="lkField">
+        <i class="fa-solid fa-key lead"></i>
+        <input id="lkInput" type="password" autocomplete="off" placeholder="Mật khẩu" aria-label="Mật khẩu">
+        <button id="lkEye" type="button" class="lk-ibtn" aria-label="Hiện / ẩn mật khẩu"><i class="fa-regular fa-eye"></i></button>
+        <button id="lkGo" type="button" class="lk-ibtn lk-go" aria-label="Mở khóa" disabled><i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+      <p class="lk-msg" id="lkMsg" role="alert"></p>
+      <div class="lk-or"><span>hoặc</span></div>
+      <button id="lkGuest" type="button" class="lk-tonal"><i class="fa-regular fa-user"></i> Truy cập ẩn danh</button>
+    </div>
+    <div class="lk-card" id="lkQuiz" hidden>
+      <div class="lk-avatar"><i class="fa-solid fa-circle-question"></i></div>
+      <p class="lk-q" id="lkQ">Trả lời câu hỏi để tiếp tục:</p>
+      <div class="lk-eq">1 + 1 = ?</div>
+      <div class="lk-choices" role="group" aria-label="Đáp án">
+        <button type="button" class="lk-choice" data-v="3" aria-pressed="false">3</button>
+        <button type="button" class="lk-choice" data-v="6" aria-pressed="false">6</button>
+      </div>
+      <div class="lk-reveal" id="lkConfirmWrap" inert><div>
+        <button id="lkConfirm" type="button" class="lk-primary"><i class="fa-solid fa-check"></i> Xác nhận đáp án</button>
+      </div></div>
+      <button id="lkBack" type="button" class="lk-link"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+    </div>
+    <div class="lk-foot">12A1 - MC I</div>
+  </div>
+</div>
+
 
 <header class="sticky top-0 z-50 glass-panel bf border-b border-slate-800/80 mb-8">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -187,6 +474,7 @@ span.duty-view[data-v="vắng"]{--k:var(--c-rose-400);color:rgb(var(--c-rose-300
         <i class="theme-ico sun fa-solid fa-sun text-amber-400 text-base"></i>
         <i class="theme-ico moon fa-solid fa-moon text-cyan-300 text-base"></i>
       </button>
+      <button id="lockBtn" type="button" aria-label="Khóa màn hình" title="Khóa màn hình" class="relative w-10 h-10 shrink-0 rounded-xl border flex items-center justify-center bg-slate-800/80 hover:bg-slate-700/80 border-slate-700/60"><i class="fa-solid fa-lock text-cyan-300 text-base"></i></button>
       <button id="editBtn" type="button"></button>
     </div>
   </div>
@@ -269,7 +557,28 @@ span.duty-view[data-v="vắng"]{--k:var(--c-rose-400);color:rgb(var(--c-rose-300
   </div>
 </main>
 
-<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.17.13-ver.8</p></footer>
+<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.17.18-ver.10</p></footer>
+
+<!-- Hộp thoại khi chọn sai (ảnh) -->
+<div id="lkImgModal" role="dialog" aria-modal="true" aria-label="Sai rồi" class="hidden fixed inset-0 z-[120] bg-black/70 backdrop-blur-sm items-center justify-center p-4 overflow-y-auto">
+  <div class="glass-panel rounded-2xl p-4 w-full max-w-sm my-8">
+    <div class="lk-img-wrap">
+      <img id="lkImg" alt="" decoding="async">
+      <div id="lkImgFb" class="lk-img-fb" hidden><i class="fa-solid fa-face-grin-tears"></i>Sai rồi nha =)))</div>
+    </div>
+    <button id="lkImgGo" type="button" class="lk-tonal" style="margin-top:16px">Tiếp tục truy cập =)))</button>
+  </div>
+</div>
+
+<!-- Hộp thoại chúc mừng khi trả lời đúng -->
+<div id="lkOkModal" role="dialog" aria-modal="true" aria-label="Chúc mừng" class="hidden fixed inset-0 z-[120] bg-black/70 backdrop-blur-sm items-center justify-center p-4">
+  <div class="glass-panel rounded-2xl p-6 w-full max-w-sm text-center">
+    <div class="lk-ok-ico"><i class="fa-solid fa-check"></i></div>
+    <h3 class="text-lg font-extrabold text-slate-100 mt-4">Chúc mừng! Bạn trả lời đúng rồi</h3>
+    <p class="text-sm text-slate-300 mt-1">1 + 1 = 2. Quá đỉnh luôn!</p>
+    <button id="lkOkGo" type="button" class="lk-primary" style="margin-top:20px">Tiếp tục truy cập</button>
+  </div>
+</div>
 
 <!-- Ngăn kéo Danh sách lớp (trượt từ bên phải) -->
 <div id="rosterOverlay" class="closed fixed inset-0 z-[80] bg-black/60"></div>
@@ -592,8 +901,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return hexOf(await crypto.subtle.deriveBits({ name:'PBKDF2', hash:'SHA-256', salt:te.encode(salt), iterations:AUTH.it }, k, 256));
   }
   let pwTimer = 0, pwBusy = false, pwWaiting = false;
-  const setPwMsg = t => { pwError.textContent = t; pwError.classList.toggle('hidden', !t); };
-  function shakePw(){ pwInput.classList.remove('shake'); void pwInput.offsetWidth; pwInput.classList.add('shake'); }
+  const setPwMsg = t => { if (window.__lk) window.__lk.msg(t); pwError.textContent = t; pwError.classList.toggle('hidden', !t); };
+  function shakePw(){ if (window.__lk) window.__lk.shake(); pwInput.classList.remove('shake'); void pwInput.offsetWidth; pwInput.classList.add('shake'); }
   function renderPw(){
     clearTimeout(pwTimer);
     const st = lkState(), left = Math.ceil((st.until - Date.now()) / 1000), q = st.stage === 'q';
@@ -609,6 +918,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const wait = left > 0;
     $('pwSkip').classList.toggle('hidden', !(simMode && wait));
     pwInput.disabled = wait || pwBusy; $('pwOk').disabled = wait || pwBusy;
+    if (window.__lk) window.__lk.sync(wait);
     if (wait) {
       pwWaiting = true; setPwMsg('Vui lòng chờ ' + left + ' giây rồi thử lại.');
       if (!pwModal.classList.contains('hidden')) pwTimer = setTimeout(renderPw, 250);
@@ -650,6 +960,7 @@ document.addEventListener('DOMContentLoaded', () => {
         : '<i class="fa-solid fa-key"></i><span class="hidden sm:inline">Chỉnh sửa</span>';
   }
   function setEdit(v, test, mon){
+    if (v && window.__lk) window.__lk.unlock();
     const wasTest = testMode;
     editMode = v; monitorMode = !!(v && mon && !test);
     if (v && test) {
@@ -699,7 +1010,184 @@ document.addEventListener('DOMContentLoaded', () => {
   $('pwOk').addEventListener('click', submitPw);
   pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitPw(); if (e.key === 'Escape') closePw(); });
 
-  /* ---------- Giao diện sáng / tối ---------- */
+  /* ===== Màn hình khóa kiểu Android (patch) ===== */
+(function(){
+  const root = document.documentElement, scr = $('lockScreen');
+  if (!scr) return;
+  const inp = $('lkInput'), go = $('lkGo'), msgEl = $('lkMsg'), eye = $('lkEye'), field = $('lkField'),
+        hintEl = $('lkHint'), icon = $('lkIcon'), card = $('lkCard');
+  const parts = ['header', 'main', 'footer'].map(s => document.querySelector(s)).filter(Boolean);
+  const DEF_HINT = 'Nhập mật khẩu để chỉnh sửa, hoặc xem với tư cách khách';
+  let on = root.classList.contains('locked'), busy = false, waiting = false, poll = 0, reveal = false;
+  const p2 = n => String(n).padStart(2, '0');
+  const setInert = v => parts.forEach(el => { el.inert = v; if (v) el.setAttribute('aria-hidden', 'true'); else el.removeAttribute('aria-hidden'); });
+  setInert(on);
+
+  /* Đồng hồ thời gian thực (từng chữ số có hiệu ứng lật kiểu lò xo) */
+  const DAYS = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+  const digits = scr.querySelectorAll('#lkClock .d'), secEl = $('lkSec'), dateEl = $('lkDate');
+  const last = ['', '', '', ''];
+  function tick(){
+    const n = new Date(), s = p2(n.getHours()) + p2(n.getMinutes());
+    digits.forEach((el, i) => {
+      if (last[i] === s[i]) return;
+      el.textContent = s[i];
+      if (last[i]) { el.classList.remove('flip'); void el.offsetWidth; el.classList.add('flip'); }
+      last[i] = s[i];
+    });
+    secEl.textContent = p2(n.getSeconds());
+    const d = DAYS[n.getDay()] + ', ' + n.getDate() + ' tháng ' + (n.getMonth() + 1);
+    if (dateEl.textContent !== d) dateEl.textContent = d;
+  }
+  tick();
+  (function loop(){ if (on) tick(); setTimeout(loop, 1000 - (Date.now() % 1000) + 5); })();
+
+  const refresh = () => { go.disabled = waiting || busy || !inp.value.trim(); };
+  const msg = t => { msgEl.textContent = t || ''; };
+  function shake(){ field.classList.remove('shake'); void field.offsetWidth; field.classList.add('shake'); }
+
+  /* Đồng bộ trạng thái từ hộp mật khẩu gốc (giai đoạn mật khẩu / câu hỏi / thời gian chờ) */
+  function sync(wait){
+    waiting = !!wait;
+    const q = pwInput.type === 'text';
+    inp.type = q ? 'text' : (reveal ? 'text' : 'password');
+    inp.placeholder = pwInput.placeholder || 'Mật khẩu';
+    eye.style.display = q ? 'none' : '';
+    const h = $('pwHint');
+    hintEl.textContent = (h && !h.classList.contains('hidden') && h.textContent) ? h.textContent : DEF_HINT;
+    inp.disabled = waiting; field.classList.toggle('disabled', waiting);
+    refresh();
+    if (waiting && !poll) poll = setInterval(() => { if (waiting && on) renderPw(); else { clearInterval(poll); poll = 0; } }, 250);
+  }
+
+  async function submit(){
+    if (busy || !on || waiting) return;
+    const v = inp.value;
+    if (!v.trim()) return;
+    busy = true; refresh();
+    pwInput.value = v; inp.value = '';
+    try { await submitPw(); } catch (e) { msg('Đã có lỗi, hãy thử lại.'); }
+    busy = false; refresh();
+    if (on && !inp.disabled && !matchMedia('(pointer:coarse)').matches) inp.focus();
+  }
+
+  /* Mở khóa: biểu tượng khóa mở + thẻ phóng nhẹ, rồi màn hình khóa zoom ra và mờ dần,
+     nội dung từ trạng thái mờ + phóng to thu về vị trí */
+  function unlock(){
+    if (!on) return;
+    on = false; waiting = false;
+    icon.className = 'fa-solid fa-lock-open';
+    card.classList.add('ok'); scr.classList.add('ok');
+    setTimeout(() => {
+      scr.classList.add('leaving');
+      root.classList.remove('locked');
+      setInert(false);
+      setTimeout(() => {
+        scr.classList.remove('leaving', 'ok'); card.classList.remove('ok');
+        icon.className = 'fa-solid fa-lock'; msg(''); inp.value = ''; resetQuiz();
+      }, 460);
+    }, 220);
+  }
+
+  function lock(){
+    try { sessionStorage.removeItem('guest'); } catch (e) {}
+    if (editMode) setEdit(false);
+    if (rosterOpen) setRosterOpen(false);
+    inp.value = ''; msg(''); reveal = false; resetQuiz();
+    on = true; scr.classList.remove('leaving', 'ok'); card.classList.remove('ok');
+    icon.className = 'fa-solid fa-lock';
+    root.classList.add('locked'); setInert(true);
+    renderPw(); tick();
+    if (!matchMedia('(pointer:coarse)').matches) setTimeout(() => inp.focus(), 500);
+  }
+
+  /* ===== Câu hỏi xác nhận dành cho khách (patch 2) ===== */
+const IMAGES = ["https://lh3.googleusercontent.com/d/1ncskqU1LsNDrvVR6cGYGPX_1E8qHJzWi=w900", "https://lh3.googleusercontent.com/d/1263a4ZhTes8zCJ3FuOumMxlKhKsJMpsG=w900", "https://lh3.googleusercontent.com/d/1gBcCo89Uk9tWwDBrwb9P0PQhrHo2t0jp=w900", "https://lh3.googleusercontent.com/d/1N8FpFOmwHiPhse4aRhjecVeDzXoaKNeN=w900", "https://lh3.googleusercontent.com/d/1yRlMsEOQ3AapU4Uo2WAV8YE6vmoDgbb_=w900", "https://lh3.googleusercontent.com/d/1cB0WEvm6NhMQlAJEj5-IwoxjNMheUQLq=w900"];
+const quiz = $('lkQuiz'), two = $('lkTwo'), themeBtnLk = $('lkTheme'), confWrap = $('lkConfirmWrap'), confBtn = $('lkConfirm');
+const choices = Array.from(quiz.querySelectorAll('.lk-choice'));
+const imgModal = $('lkImgModal'), okModal = $('lkOkModal'), imgEl = $('lkImg'), imgFb = $('lkImgFb');
+let picked = null, quizOpen = false, nextImg = '';
+const CORNERS = ['tl', 'tr', 'bl', 'br'];
+
+function pickCorner(){
+  let prev = '';
+  try { prev = localStorage.getItem('lk_corner') || ''; } catch (e) {}
+  const pool = CORNERS.filter(c => c !== prev), c = pool[Math.floor(Math.random() * pool.length)];
+  try { localStorage.setItem('lk_corner', c); } catch (e) {}
+  return c;
+}
+const pickImage = () => IMAGES.length ? IMAGES[Math.floor(Math.random() * IMAGES.length)] : '';
+
+function setPicked(v){
+  picked = v;
+  choices.forEach(b => { const s = b.dataset.v === v; b.classList.toggle('sel', s); b.setAttribute('aria-pressed', s ? 'true' : 'false'); });
+  confWrap.classList.toggle('show', !!v); confWrap.inert = !v;
+}
+function openQuiz(){
+  if (!on || quizOpen) return;
+  quizOpen = true; setPicked(null);
+  nextImg = pickImage();
+  if (nextImg) { const pre = new Image(); pre.src = nextImg; }   /* tải trước để hiện ngay */
+  card.classList.add('swap-out');
+  setTimeout(() => {
+    if (!quizOpen) return;
+    card.hidden = true; card.classList.remove('swap-out'); quiz.hidden = false;
+    two.className = 'lk-two c-' + pickCorner() + ' show';
+    themeBtnLk.style.display = 'none';
+  }, 220);
+}
+function resetQuiz(){
+  quizOpen = false; setPicked(null);
+  quiz.hidden = true; card.hidden = false; card.classList.remove('swap-out');
+  two.className = 'lk-two'; themeBtnLk.style.display = '';
+  show(imgModal, false); show(okModal, false);
+}
+function backQuiz(){
+  if (!quizOpen) return;
+  quizOpen = false; two.className = 'lk-two';
+  quiz.hidden = true; card.hidden = false; card.classList.remove('swap-out');   /* thẻ chính tự zoom vào lại */
+  setPicked(null); themeBtnLk.style.display = '';
+}
+function finishGuest(){
+  try { sessionStorage.setItem('guest', '1'); } catch (e) {}
+  show(imgModal, false); show(okModal, false);
+  unlock();
+}
+
+choices.forEach(b => b.addEventListener('click', () => setPicked(b.dataset.v)));
+confBtn.addEventListener('click', () => {
+  if (!picked) return;
+  if (nextImg) { imgEl.hidden = false; imgFb.hidden = true; imgEl.src = nextImg; }
+  else { imgEl.hidden = true; imgFb.hidden = false; }
+  show(imgModal, true);
+});
+imgEl.addEventListener('error', () => { imgEl.hidden = true; imgFb.hidden = false; });
+two.addEventListener('click', () => { if (quizOpen) show(okModal, true); });
+$('lkImgGo').addEventListener('click', finishGuest);
+$('lkOkGo').addEventListener('click', finishGuest);
+$('lkBack').addEventListener('click', backQuiz);
+
+window.__lk = { msg, sync, shake, unlock, lock };
+
+  inp.addEventListener('input', refresh);
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+  go.addEventListener('click', submit);
+  eye.addEventListener('click', () => {
+    reveal = !reveal;
+    if (pwInput.type !== 'text') inp.type = reveal ? 'text' : 'password';
+    eye.firstElementChild.className = reveal ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+  });
+  $('lkGuest').addEventListener('click', openQuiz);
+  $('lkTheme').addEventListener('click', () => $('themeBtn').click());
+  const lb = $('lockBtn'); if (lb) lb.addEventListener('click', lock);
+
+  if (on) {
+    renderPw();
+    if (!matchMedia('(pointer:coarse)').matches) setTimeout(() => inp.focus(), 600);
+  }
+})();
+
+/* ---------- Giao diện sáng / tối ---------- */
   const root = document.documentElement, themeBtn = $('themeBtn');
   let themeBusy = false;
   themeBtn.addEventListener('click', () => {
@@ -1433,6 +1921,21 @@ document.addEventListener('DOMContentLoaded', () => {
     setStatus(false, 'Chế độ offline (chỉ lưu trên máy này)');
   }
 });
+</script>
+<script>
+/* Hiệu ứng gợn sóng (ripple) kiểu Android khi chạm nút */
+document.addEventListener('pointerdown', function(e){
+  var b = e.target.closest && e.target.closest('button');
+  if (!b || b.disabled || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (getComputedStyle(b).position === 'static') b.style.position = 'relative';
+  var r = b.getBoundingClientRect();
+  var size = Math.hypot(Math.max(e.clientX - r.left, r.right - e.clientX), Math.max(e.clientY - r.top, r.bottom - e.clientY)) * 2;
+  var s = document.createElement('span');
+  s.className = 'm-ripple';
+  s.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (e.clientX - r.left - size / 2) + 'px;top:' + (e.clientY - r.top - size / 2) + 'px';
+  b.appendChild(s);
+  s.addEventListener('animationend', function(){ s.remove(); });
+}, { passive: true });
 </script>
 </body>
 </html>
