@@ -72,7 +72,9 @@ html:not(.dark) .glass-panel{box-shadow:0 1px 3px rgba(15,23,42,.06),0 8px 24px 
 .bf{backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
 ::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
 ::view-transition-old(root){z-index:1}::view-transition-new(root){z-index:2}
-html.theme-anim,html.theme-anim *,html.theme-anim *::before,html.theme-anim *::after{transition:background-color .5s ease,color .5s ease,border-color .5s ease,box-shadow .5s ease,--bg .5s ease,--g1 .5s ease,--g2 .5s ease,--g3 .5s ease,--glass .5s ease!important}
+/* Toi uu doi giao dien: tat moi transition trong luc doi (chi 1 lan tinh style), bo backdrop-filter vi nen the da dac nen blur khong nhin thay */
+html.theme-switching *:not(.theme-ico),html.theme-switching *:not(.theme-ico)::before,html.theme-switching *:not(.theme-ico)::after{transition:none!important}
+.bf{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 .theme-ico{position:absolute;transition:transform .55s cubic-bezier(.4,0,.2,1),opacity .4s ease}
 html.dark .theme-ico.sun{opacity:0;transform:rotate(-90deg) scale(.3)}
 html.dark .theme-ico.moon{opacity:1;transform:rotate(0) scale(1)}
@@ -260,14 +262,14 @@ span.duty-view[data-v="vắng"]{--k:var(--c-rose-400);color:rgb(var(--c-rose-300
     <section class="glass-panel p-6 rounded-2xl">
       <div class="flex items-center space-x-3 mb-5 border-b border-slate-800 pb-4">
         <div class="w-9 h-9 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center"><i class="fa-solid fa-clipboard-list"></i></div>
-        <h2 class="text-lg font-bold text-slate-100">Quy định</h2>
+        <h2 class="text-lg font-bold text-slate-100">Chú thích</h2>
       </div>
       <ul id="rules" class="space-y-3 text-xs text-slate-300"></ul>
     </section>
   </div>
 </main>
 
-<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.17.10-ver5</p></footer>
+<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.17.11-ver.6</p></footer>
 
 <!-- Ngăn kéo Danh sách lớp (trượt từ bên phải) -->
 <div id="rosterOverlay" class="closed fixed inset-0 z-[80] bg-black/60"></div>
@@ -677,20 +679,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Giao diện sáng / tối ---------- */
   const root = document.documentElement, themeBtn = $('themeBtn');
+  let themeBusy = false;
   themeBtn.addEventListener('click', () => {
+    if (themeBusy) return;
+    themeBusy = true;
     const toDark = !root.classList.contains('dark');
-    const apply = () => { root.classList.toggle('dark', toDark); try { localStorage.setItem('theme', toDark ? 'dark' : 'light'); } catch(e){} };
+    const apply = () => root.classList.toggle('dark', toDark);
+    const done = () => {
+      /* doi 2 frame cho trinh duyet ap dung xong mau moi (khi transition dang tat) roi moi bat lai */
+      requestAnimationFrame(() => requestAnimationFrame(() => { root.classList.remove('theme-switching'); themeBusy = false; }));
+      try { localStorage.setItem('theme', toDark ? 'dark' : 'light'); } catch(e){}
+    };
+    root.classList.add('theme-switching');
     if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      root.classList.add('theme-anim'); apply();
-      setTimeout(() => root.classList.remove('theme-anim'), 650);
-      return;
+      apply(); done(); return;   /* khong co hieu ung: doi ngay lap tuc */
     }
     const r = themeBtn.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
     const R = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-    document.startViewTransition(apply).ready.then(() => root.animate(
+    const vt = document.startViewTransition(apply);
+    vt.ready.then(() => root.animate(
       { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${R}px at ${x}px ${y}px)`] },
-      { duration: 650, easing: 'cubic-bezier(.4,0,.2,1)', pseudoElement: '::view-transition-new(root)' }
+      { duration: 420, easing: 'cubic-bezier(.4,0,.2,1)', pseudoElement: '::view-transition-new(root)' }
     )).catch(() => {});
+    vt.finished.then(done, done);
   });
 
   /* ---------- Firebase ---------- */
