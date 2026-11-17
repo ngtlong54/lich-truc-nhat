@@ -166,7 +166,6 @@ span.duty-view[data-v="vắng"]{--k:var(--c-rose-400);color:rgb(var(--c-rose-300
 <body class="text-slate-200 font-sans min-h-screen pb-12 antialiased selection:bg-cyan-500 selection:text-black">
 
 <header class="sticky top-0 z-50 glass-panel bf border-b border-slate-800/80 mb-8">
-  <div id="greetBadge" class="hidden absolute top-1 right-3 sm:right-5 items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold whitespace-nowrap"><i class="fa-solid fa-hand"></i><span>Xin chào, Vũ Khánh Linh!</span></div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
     <div class="flex items-center space-x-4">
       <button id="rosterBtn" type="button" aria-label="Danh sách lớp" aria-controls="rosterDrawer" aria-expanded="false" title="Danh sách lớp" class="h-12 px-3.5 sm:px-4 shrink-0 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center gap-2 text-white shadow-neon-cyan font-extrabold text-sm tracking-tight hover:brightness-110 active:scale-95 transition">
@@ -178,7 +177,6 @@ span.duty-view[data-v="vắng"]{--k:var(--c-rose-400);color:rgb(var(--c-rose-300
       </div>
     </div>
     <div class="flex items-center gap-4">
-      <div id="roleTag" class="hidden flex-col items-end leading-tight"><span class="text-xs font-extrabold italic text-emerald-300">Lớp trưởng</span><span class="text-[10px] italic text-slate-400">Người chỉnh sửa</span></div>
       <div class="hidden md:flex items-center space-x-6">
         <div class="glass-panel px-4 py-2 rounded-xl border border-cyan-500/20 flex items-center space-x-3">
           <div class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></div>
@@ -271,7 +269,7 @@ span.duty-view[data-v="vắng"]{--k:var(--c-rose-400);color:rgb(var(--c-rose-300
   </div>
 </main>
 
-<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.17.11-ver.6</p></footer>
+<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.17.13-ver.8</p></footer>
 
 <!-- Ngăn kéo Danh sách lớp (trượt từ bên phải) -->
 <div id="rosterOverlay" class="closed fixed inset-0 z-[80] bg-black/60"></div>
@@ -633,18 +631,22 @@ document.addEventListener('DOMContentLoaded', () => {
   $('pwSkip').addEventListener('click', () => { if (!simMode) return; simSt.until = 0; renderPw(); });
   const closePw = () => { show(pwModal, false); simMode = false; };
   function updateEditBtn(){
-    show($('greetBadge'), monitorMode);
-    show($('roleTag'), monitorMode);
-    const base = 'px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition-all ';
+    const base = 'px-3.5 ' + (editMode && !testMode ? 'py-1.5' : 'py-2.5') + ' rounded-xl text-xs font-bold border flex items-center gap-2 transition-all ';
     editBtn.className = base + (testMode
       ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/50'
       : editMode
         ? 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border-emerald-500/50'
         : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700/60');
+    /* Đăng nhập: admin (mật khẩu chính) hoặc lớp trưởng -> hiện tên + dòng nhỏ thay cho "Khóa lại" */
+    const who = monitorMode
+      ? ['Vũ Khánh Linh', '<span class="text-[9px] italic font-semibold opacity-80">Người chỉnh sửa</span>']
+      : ['Nguyễn Tiến Long', '<span class="text-[9px] font-extrabold tracking-widest opacity-80">ADMIN</span>'];
+    editBtn.title = (editMode && !testMode) ? 'Bấm để khóa lại' : '';
+    editBtn.setAttribute('aria-label', testMode ? 'Thoát chế độ thử nghiệm' : editMode ? 'Khóa lại chỉnh sửa (' + who[0] + ')' : 'Chỉnh sửa');
     editBtn.innerHTML = testMode
       ? '<i class="fa-solid fa-flask"></i><span class="hidden sm:inline">Thoát TN</span>'
       : editMode
-        ? '<i class="fa-solid fa-lock-open"></i><span class="hidden sm:inline">Khóa lại</span>'
+        ? '<i class="fa-solid fa-lock-open"></i><span class="hidden sm:flex flex-col items-start text-left leading-tight"><span class="text-xs font-bold">' + who[0] + '</span>' + who[1] + '</span>'
         : '<i class="fa-solid fa-key"></i><span class="hidden sm:inline">Chỉnh sửa</span>';
   }
   function setEdit(v, test, mon){
