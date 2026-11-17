@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lịch Trực Nhật 12A1 Bản Web</title>
+<meta name="description" content="Lịch trực nhật lớp 12A1: xem ai trực ngày nào, danh sách lớp và quy định.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="vi_VN">
+<meta property="og:title" content="Lịch Trực Nhật 12A1">
+<meta property="og:description" content="Xem lịch trực nhật, danh sách lớp và quy định của lớp 12A1.">
+<meta property="og:image" content="https://lh3.googleusercontent.com/d/1ci9s_LfrNUAIdkrNjrWyw0A5x8UD44pV">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lh3.googleusercontent.com/d/1ci9s_LfrNUAIdkrNjrWyw0A5x8UD44pV">
 <link rel="preconnect" href="https://cdn.tailwindcss.com">
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,7 +82,7 @@ html:not(.dark) .theme-ico.sun{opacity:1;transform:rotate(0) scale(1)}
 .pulse-glow{position:relative;box-shadow:0 0 8px rgba(244,63,94,.4)}
 .pulse-glow::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;box-shadow:0 0 22px rgba(244,63,94,.8);opacity:0;will-change:opacity;animation:pulseGlow 2s infinite alternate}
 @keyframes pulseGlow{to{opacity:1}}
-@media (prefers-reduced-motion:reduce){.pulse-glow::after,.animate-ping{animation:none}}
+@media (prefers-reduced-motion:reduce){.pulse-glow::after,.animate-ping{animation:none}#rosterDrawer,#rosterOverlay{transition:none!important}}
 .duty-select option,.ptype-select option,.field option{background:rgb(var(--c-slate-900));color:rgb(var(--c-slate-200))}
 .duty-select[data-v="sáng"]{color:rgb(var(--c-amber-300))}
 .duty-select[data-v="chiều"]{color:rgb(var(--c-blue-300))}
@@ -81,7 +92,7 @@ html:not(.dark) .theme-ico.sun{opacity:1;transform:rotate(0) scale(1)}
 .ptype-select{width:100%;margin-top:.4rem;padding:.3rem .5rem;border-radius:.5rem;font-size:.7rem;font-weight:600;background:rgba(15,23,42,.8);border:1px solid rgba(100,116,139,.5);color:rgb(var(--c-slate-200));outline:none;cursor:pointer}
 html:not(.dark) .ptype-select{background:rgba(255,255,255,.9)}
 .ptype-select[data-t="penalty"]{color:rgb(var(--c-rose-300));border-color:rgba(244,63,94,.5)}
-.mini-btn{width:1.75rem;height:1.75rem;border-radius:.5rem;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;border:1px solid rgba(100,116,139,.35);background:rgba(30,41,59,.6);color:rgb(var(--c-slate-300));transition:all .2s}
+.mini-btn{width:1.75rem;height:1.75rem;border-radius:.5rem;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;border:1px solid rgba(100,116,139,.35);background:rgba(30,41,59,.6);color:rgb(var(--c-slate-300));transition:all .2s;flex-shrink:0}
 .mini-btn:hover{background:rgba(100,116,139,.35)}
 .mini-btn.danger{color:rgb(var(--c-rose-300));border-color:rgba(244,63,94,.4)}
 .mini-btn.danger:hover{background:rgba(244,63,94,.2)}
@@ -89,7 +100,65 @@ html:not(.dark) .ptype-select{background:rgba(255,255,255,.9)}
 textarea.field{resize:vertical;min-height:4.5rem}
 html:not(.dark) .field{background:rgba(255,255,255,.9)}
 .field:focus{box-shadow:0 0 0 2px rgb(6 182 212)}
+/* Ngăn kéo Danh sách lớp */
+#rosterDrawer{background:var(--bg);border-left:1px solid var(--glass-b);box-shadow:-12px 0 40px -12px rgba(0,0,0,.45)}
+#rosterDrawer.closed{transform:translateX(100%)}
+#rosterOverlay{transition:opacity .3s ease}
+#rosterOverlay.closed{opacity:0;pointer-events:none}
+.r-role-view{font-size:.68rem;font-style:italic;color:rgb(var(--c-slate-400))}
 ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:var(--sb-track)}::-webkit-scrollbar-thumb{background:var(--sb-thumb);border-radius:4px}
+
+/* ===== Giao diện tối giản + chuyển động ===== */
+:root{--bg:#0f1218;--glass:#171b23;--glass-b:rgba(255,255,255,.07);--accent:#3b82f6}
+html:not(.dark){--bg:#f6f7f9;--glass:#ffffff;--glass-b:rgba(15,23,42,.09);--accent:#2563eb}
+html{scroll-behavior:smooth}
+body::before{display:none}
+.glass-panel{border-radius:14px!important;box-shadow:none!important}
+html:not(.dark) .glass-panel{box-shadow:0 1px 2px rgba(15,23,42,.05)!important}
+header.glass-panel{border-radius:0!important;border-width:0 0 1px!important}
+h1{background:none!important;-webkit-text-fill-color:currentColor!important;color:rgb(var(--c-slate-100))!important}
+[class*="from-cyan-500"]{background-image:none!important;background-color:var(--accent)!important;box-shadow:none!important}
+#penSection{background-image:none!important;background-color:rgba(244,63,94,.07)!important}
+.shadow-neon-cyan,.shadow-neon-rose,.shadow-lg{box-shadow:none!important}
+.pulse-glow{box-shadow:none!important}
+.pulse-glow::after{display:none}
+.day-card{border-top-width:2px!important;transition:opacity .25s ease}
+button{transition:background-color .2s ease,border-color .2s ease,color .2s ease,opacity .2s ease,transform .15s ease}
+button:active:not(:disabled){transform:scale(.97)}
+#pwOk:disabled,.field:disabled{opacity:.5;cursor:not-allowed}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.96)}}
+@keyframes fade{from{opacity:0}}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+#cardsGrid.enter .day-card{animation:rise .5s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(var(--i,0)*60ms)}
+div[role="dialog"]:not(.hidden){animation:fade .2s ease backwards}
+div[role="dialog"]:not(.hidden)>div{animation:pop .28s cubic-bezier(.2,.8,.2,1) backwards}
+.shake{animation:shake .35s}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+/* Thứ 7 (light mode): nền giống các thẻ khác */
+html:not(.dark) .day-card[data-day="7"]{background-color:var(--glass)!important}
+/* v3: chuyển động mượt + trạng thái trực nổi bật */
+body{animation:fade .45s ease backwards}
+.day-card{transition:opacity .25s ease,transform .25s ease}
+li.student-name{transition:background-color .2s ease,border-color .2s ease}
+@media (hover:hover){
+  .day-card:hover{transform:translateY(-2px)}
+  button:hover:not(:disabled){transform:translateY(-1px)}
+  button:active:not(:disabled){transform:scale(.97)}
+}
+@keyframes fadeOut{to{opacity:0}}
+@keyframes popOut{to{opacity:0;transform:translateY(8px) scale(.97)}}
+div[role="dialog"].closing{animation:fadeOut .18s ease forwards;pointer-events:none}
+div[role="dialog"].closing>div{animation:popOut .18s ease forwards}
+#testBanner:not(.hidden),#errBanner:not(.hidden),#penSection:not(.hidden){animation:rise .45s cubic-bezier(.2,.7,.2,1) backwards}
+#rosterList.enter>.r-item{animation:rise .35s cubic-bezier(.2,.7,.2,1) backwards;animation-delay:calc(var(--i,0)*30ms)}
+span.duty-view{text-align:center;font-weight:700;border-radius:.5rem;border:1px dashed rgb(var(--c-slate-500)/.45);color:rgb(var(--c-slate-400));transition:background-color .3s ease,border-color .3s ease,color .3s ease,box-shadow .3s ease}
+span.duty-view[data-v]:not([data-v=""]){border-style:solid;background:rgb(var(--k)/.14);border-color:rgb(var(--k)/.55);box-shadow:0 0 14px -3px rgb(var(--k)/.55)}
+span.duty-view[data-v="sáng"]{--k:var(--c-amber-400);color:rgb(var(--c-amber-300))}
+span.duty-view[data-v="chiều"]{--k:var(--c-blue-400);color:rgb(var(--c-blue-300))}
+span.duty-view[data-v="cả hai"]{--k:var(--c-emerald-400);color:rgb(var(--c-emerald-300))}
+span.duty-view[data-v="miễn"]{--k:var(--c-purple-400);color:rgb(var(--c-purple-300))}
+span.duty-view[data-v="vắng"]{--k:var(--c-rose-400);color:rgb(var(--c-rose-300))}
 </style>
 </head>
 <body class="text-slate-200 font-sans min-h-screen pb-12 antialiased selection:bg-cyan-500 selection:text-black">
@@ -97,7 +166,9 @@ html:not(.dark) .field{background:rgba(255,255,255,.9)}
 <header class="sticky top-0 z-50 glass-panel bf border-b border-slate-800/80 mb-8">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
     <div class="flex items-center space-x-4">
-      <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center text-white shadow-neon-cyan font-black text-xl tracking-wider">12A1</div>
+      <button id="rosterBtn" type="button" aria-label="Danh sách lớp" aria-controls="rosterDrawer" aria-expanded="false" title="Danh sách lớp" class="h-12 px-3.5 sm:px-4 shrink-0 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center gap-2 text-white shadow-neon-cyan font-extrabold text-sm tracking-tight hover:brightness-110 active:scale-95 transition">
+        <i class="fa-solid fa-users text-base"></i><span class="hidden sm:inline whitespace-nowrap">Danh sách lớp</span>
+      </button>
       <div>
         <h1 class="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-slate-100 via-cyan-200 to-purple-300 bg-clip-text text-transparent">LỊCH TRỰC NHẬT</h1>
         <p class="text-xs font-semibold text-cyan-400/90"><i class="fa-regular fa-calendar-alt mr-1"></i><span id="headRange"></span></p>
@@ -108,10 +179,6 @@ html:not(.dark) .field{background:rgba(255,255,255,.9)}
         <div class="glass-panel px-4 py-2 rounded-xl border border-cyan-500/20 flex items-center space-x-3">
           <div class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></div>
           <div><div class="text-[10px] text-slate-400 font-semibold">Hôm nay</div><div id="todayDisplay" class="text-xs font-bold text-cyan-300"></div></div>
-        </div>
-        <div class="glass-panel px-4 py-2 rounded-xl border border-rose-500/30 flex items-center space-x-3 bg-rose-950/20">
-          <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg"></i>
-          <div><div class="text-[10px] text-rose-400 font-bold">Phạt trực nhật</div><div id="headPenalty" class="text-xs font-extrabold text-rose-200"></div></div>
         </div>
       </div>
       <button id="themeBtn" type="button" aria-label="Chuyển giao diện sáng / tối" title="Chuyển giao diện sáng / tối" class="relative w-10 h-10 shrink-0 rounded-xl border flex items-center justify-center overflow-hidden transition-colors bg-slate-800/80 hover:bg-slate-700/80 border-slate-700/60">
@@ -131,7 +198,17 @@ html:not(.dark) .field{background:rgba(255,255,255,.9)}
     <div>
       <div class="text-sm font-extrabold text-amber-300">Đang ở chế độ Thử Nghiệm</div>
       <div class="text-xs text-amber-200/80">Tất cả các thay đổi không có tác dụng</div>
+    </div><button id="simPwBtn" type="button" class="ml-auto px-3.5 py-2 rounded-xl text-xs font-bold border border-amber-500/50 text-amber-300 hover:bg-amber-500/10 flex items-center gap-2 shrink-0"><i class="fa-solid fa-key"></i><span>Thử mật khẩu</span></button>
+  </div>
+
+  <!-- Banner lỗi ghi dữ liệu lên Firebase -->
+  <div id="errBanner" role="alert" class="hidden glass-panel rounded-2xl p-4 border border-rose-500/50 bg-rose-500/10 items-start gap-3">
+    <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0"><i class="fa-solid fa-circle-exclamation"></i></div>
+    <div class="min-w-0 flex-1">
+      <div class="text-sm font-extrabold text-rose-300">Không ghi được dữ liệu lên máy chủ</div>
+      <div id="errText" class="text-xs text-rose-200/80 mt-0.5 break-words"></div>
     </div>
+    <button id="errClose" type="button" aria-label="Đóng thông báo" class="mini-btn"><i class="fa-solid fa-xmark"></i></button>
   </div>
 
   <section class="glass-panel p-3 sm:p-4 rounded-2xl">
@@ -190,18 +267,81 @@ html:not(.dark) .field{background:rgba(255,255,255,.9)}
   </div>
 </main>
 
-<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© Nguyễn Tiến Long - 12A1 - MC I</p></footer>
+<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.17.10-ver5</p></footer>
+
+<!-- Ngăn kéo Danh sách lớp (trượt từ bên phải) -->
+<div id="rosterOverlay" class="closed fixed inset-0 z-[80] bg-black/60"></div>
+<aside id="rosterDrawer" role="dialog" aria-modal="true" aria-label="Danh sách lớp" class="closed fixed top-0 right-0 bottom-0 z-[90] w-full max-w-md flex flex-col transition-transform duration-300 ease-out" inert>
+  <div class="px-5 pt-5 pb-4 border-b border-slate-800/80">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 text-white flex items-center justify-center shrink-0"><i class="fa-solid fa-users"></i></div>
+      <div class="min-w-0">
+        <h2 class="text-base font-extrabold text-slate-100">Danh sách lớp 12A1</h2>
+        <p id="rosterCount" class="text-xs text-cyan-400 font-semibold"></p>
+      </div>
+      <button id="rosterClose" type="button" aria-label="Đóng" class="mini-btn ml-auto !w-9 !h-9 text-sm"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="relative mt-4">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+      <input id="rosterSearch" type="text" placeholder="Tìm tên hoặc chức vụ..." aria-label="Tìm trong danh sách lớp" class="field !pl-9 !py-2.5">
+    </div>
+    <button id="rosterUnlock" type="button" class="mt-3 w-full px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center justify-center gap-2 bg-slate-800/80 hover:bg-slate-700/80 text-slate-200 border-slate-700/60"><i class="fa-solid fa-key"></i> Nhập mật khẩu để chỉnh sửa</button>
+    <p id="rosterEditNote" class="hidden mt-3 text-[11px] text-emerald-400 font-semibold items-center gap-1.5"><i class="fa-solid fa-lock-open"></i> Đang mở chỉnh sửa. Nhớ bấm "Lưu" để áp dụng.</p>
+  </div>
+  <ul id="rosterList" class="flex-1 overflow-y-auto px-5 py-4 space-y-2.5"></ul>
+  <div id="rosterEditBar" class="hidden px-5 py-4 border-t border-slate-800/80 flex-col gap-2.5">
+    <p id="rosterMsg" class="hidden text-xs font-semibold text-emerald-400 text-center"></p>
+    <button id="rosterBulk" type="button" class="w-full px-3.5 py-2.5 rounded-xl text-xs font-bold border border-cyan-500/50 text-cyan-300 bg-cyan-500/10 hover:bg-cyan-500/20 flex items-center justify-center gap-2"><i class="fa-solid fa-paste"></i> Dán danh sách (từ Excel hoặc mỗi tên một dòng)</button>
+    <button id="rosterAdd" type="button" class="w-full px-3.5 py-2.5 rounded-xl text-xs font-bold border border-dashed border-emerald-500/60 text-emerald-300 hover:bg-emerald-500/10 flex items-center justify-center gap-2"><i class="fa-solid fa-user-plus"></i> Thêm học sinh</button>
+    <div class="flex gap-2">
+      <button id="rosterCancel" type="button" class="flex-1 px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60">Hoàn tác</button>
+      <button id="rosterSave" type="button" class="flex-1 px-4 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white"><i class="fa-solid fa-floppy-disk mr-1"></i> Lưu</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Dán danh sách học sinh -->
+<div id="bulkModal" role="dialog" aria-modal="true" aria-labelledby="bulkTitle" class="hidden fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm items-center justify-center p-4 overflow-y-auto">
+  <div class="glass-panel rounded-2xl p-6 w-full max-w-lg border border-cyan-500/30 shadow-neon-cyan my-8">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0"><i class="fa-solid fa-paste"></i></div>
+      <div><h3 id="bulkTitle" class="text-base font-extrabold text-slate-100">Dán danh sách học sinh</h3><p class="text-xs text-slate-400">Dán cột tên từ Excel, hoặc ghi mỗi tên một dòng (tối đa 100 học sinh)</p></div>
+    </div>
+    <label for="bulkText" class="sr-only">Danh sách tên</label>
+    <textarea id="bulkText" rows="9" class="field" placeholder="Nguyễn Văn An&#10;Trần Thị Bình&#10;Lê Quỳnh Anh&#10;..." spellcheck="false"></textarea>
+    <p id="bulkCount" class="text-[11px] text-cyan-400 font-semibold mt-1.5 min-h-[1rem]"></p>
+    <div class="space-y-3 mt-3">
+      <div>
+        <label for="bulkSort" class="text-[11px] font-bold text-slate-400 block mb-1">Thứ tự A → Z</label>
+        <select id="bulkSort" class="field">
+          <option value="given">Theo Tên: Anh, Bảo, Chi... (chuẩn danh sách lớp)</option>
+          <option value="full">Theo Họ rồi đến tên: Lê, Nguyễn, Trần...</option>
+        </select>
+      </div>
+      <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer"><input id="bulkCap" type="checkbox" class="accent-cyan-500" checked> Tự viết hoa chữ cái đầu mỗi từ</label>
+      <p class="text-[11px] text-slate-400">Tên đã có trong danh sách sẽ được bỏ qua. Sau khi thêm, cả danh sách được sắp xếp lại và đánh số từ 1.</p>
+    </div>
+    <p id="bulkError" class="hidden text-xs text-rose-400 font-semibold mt-3"></p>
+    <div class="flex justify-end gap-2 mt-5">
+      <button id="bulkCancel" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60">Hủy</button>
+      <button id="bulkOk" type="button" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white"><i class="fa-solid fa-user-plus mr-1"></i> Thêm</button>
+    </div>
+  </div>
+</div>
 
 <!-- Nhập mật khẩu -->
 <div id="pwModal" role="dialog" aria-modal="true" class="hidden fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm items-center justify-center p-4">
   <div class="glass-panel rounded-2xl p-6 w-full max-w-sm border border-cyan-500/30 shadow-neon-cyan">
     <div class="flex items-center gap-3 mb-4">
       <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center"><i class="fa-solid fa-key"></i></div>
-      <h3 class="text-base font-extrabold text-slate-100">Nhập mật khẩu chỉnh sửa</h3>
+      <h3 id="pwTitle" class="text-base font-extrabold text-slate-100">Nhập mật khẩu chỉnh sửa</h3>
     </div>
-    <input id="pwInput" type="password" inputmode="numeric" autocomplete="off" placeholder="Mật khẩu" aria-label="Mật khẩu" class="field">
+    <p id="pwHint" class="hidden text-xs text-slate-400 mb-3"></p>
+    <p id="pwSim" class="hidden text-xs font-bold text-amber-400 mb-3"></p>
+    <input id="pwInput" type="password" inputmode="text" autocomplete="off" placeholder="Mật khẩu" aria-label="Mật khẩu" class="field">
     <p id="pwError" class="hidden text-xs text-rose-400 font-semibold mt-2">Sai mật khẩu, thử lại.</p>
     <div class="flex justify-end gap-2 mt-5">
+      <button id="pwSkip" type="button" class="hidden mr-auto px-4 py-2 rounded-xl text-xs font-semibold border border-amber-500/50 text-amber-300 hover:bg-amber-500/10">Bỏ qua chờ</button>
       <button id="pwCancel" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60">Hủy</button>
       <button id="pwOk" type="button" class="px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-500 to-blue-600 text-white">Xác nhận</button>
     </div>
@@ -307,6 +447,17 @@ const DEFAULT_WEEKS = [
       7:['Phạm Đăng Tùng']
     } }
 ];
+/* Danh sách lớp mặc định: lấy từ tên đã có trong lịch trực; sau đó sửa trực tiếp trên web (cần mật khẩu) */
+const DEFAULT_ROSTER = (() => {
+  const seen = new Set(), out = [];
+  const add = n => { n = (n || '').trim(); if (n && !seen.has(n)) { seen.add(n); out.push({ id:'r' + (out.length + 1), name:n, role:'' }); } };
+  DEFAULT_WEEKS.forEach(w => {
+    Object.keys(w.days).forEach(d => { const v = w.days[d]; if (Array.isArray(v)) v.forEach(add); });
+    add(w.penalty.name);
+  });
+  return out;
+})();
+const MAX_ROSTER = 100;   /* Số học sinh tối đa trong danh sách lớp */
 const META = {
   2:{label:'THỨ 2',c:'cyan'}, 3:{label:'THỨ 3',c:'purple'}, 4:{label:'THỨ 4',c:'emerald'},
   5:{label:'THỨ 5',c:'blue'}, 6:{label:'THỨ 6',c:'amber'}, 7:{label:'THỨ 7',c:'rose'},
@@ -319,11 +470,10 @@ const TASKS = [['chair','Kê bàn ghế'],['chalkboard','Lau bảng'],['table','
 const RULES = [
   ['emerald','shield-halved','Miễn trực nhật:','Lớp trưởng, Lớp phó, Bí thư được miễn trực nhật (nếu không vi phạm lỗi).'],
   ['rose','triangle-exclamation','Xử phạt vi phạm:','Vi phạm nhiều lỗi sẽ phải trực nhiều ngày.'],
-  ['amber','book-bookmark','Sổ đầu bài:','Vi phạm nội quy hoặc bị ghi sổ đầu bài sẽ bị phạt trực nhật từ 2 ngày đến 1 tuần.']
+  ['amber','book-bookmark','Sổ đầu bài:','Vi phạm nội quy hoặc bị ghi sổ đầu bài sẽ bị phạt trực nhật từ 2 ngày đến 1 tuần.'],
+  ['cyan','user','Có thắc mắc:','Liên hệ <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="font-bold text-cyan-300 underline underline-offset-2 hover:text-cyan-200">NgtLong</a>']
 ];
-const EDIT_PASSWORD = '170109';
-const TEST_PASSWORD = '123456';   /* Chế độ TEST: sửa thoải mái nhưng không lưu gì cả */
-const TROLL_PASSWORD = '363636';  /* Hiện hộp thông báo troll, không mở khóa chỉnh sửa */
+const AUTH = { hSimAns:'9c288d303aebe66861465279bc09fbd721c1bcb59c4eb0a911654ab249f98011', it:150000, salt:'87748ab118b884f10717c63153daf57e', hPw:'25d64f4ac52b5c3386202f6836abbf98ffd26c68bb8cc4a46c28940889f3336d', hTest:'5d218335874919fc7ac9fc1181862490b610dfd5a77fbddb1426f25fff468c92', hTroll:'538aec078c667d7eaae8c26cc0214ae3a7c6027423df91ce37ae7783897c50b2', aSalt:'d4ffa79fd8d9a3e3eabc117016395049', hAns:'12e7c849b5fb7d54ebc19af66615f16bee105a7764f4811917aab31c40f17261' };
 const TROLL_TITLE = 'M var à';
 const TROLL_LINK = 'https://www.youtube.com/watch?v=QDia3e12czc';
 const FIREBASE_CONFIG = {
@@ -356,7 +506,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const $ = id => document.getElementById(id);
   const grid = $('cardsGrid'), tabsEl = $('weekTabs'), filtersEl = $('dayFilters'), toolsEl = $('weekTools');
   const searchInput = $('searchInput'), clearBtn = $('clearSearch'), editBtn = $('editBtn');
-  const show = (el, on) => { el.classList.toggle('hidden', !on); el.classList.toggle('flex', on); };
+  const show = (el, on) => {
+    clearTimeout(el._ct);
+    const dlg = el.getAttribute('role') === 'dialog' && el.tagName !== 'ASIDE';
+    if (!on && dlg && !el.classList.contains('hidden') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.classList.add('closing');   /* chạy hiệu ứng đóng rồi mới ẩn */
+      el._ct = setTimeout(() => { el.classList.remove('closing', 'flex'); el.classList.add('hidden'); }, 180);
+      return;
+    }
+    el.classList.remove('closing');
+    el.classList.toggle('hidden', !on); el.classList.toggle('flex', on);
+  };
   const store = {
     get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
     set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
@@ -366,8 +526,9 @@ document.addEventListener('DOMContentLoaded', () => {
   $('rules').innerHTML = RULES.map(([c,i,t,x]) => `<li class="p-3 rounded-xl bg-${c}-500/10 border border-${c}-500/20 flex items-start space-x-2.5"><i class="fa-solid fa-${i} text-${c}-400 mt-0.5"></i><div><span class="font-bold text-${c}-300">${t}</span> ${x}</div></li>`).join('');
 
   /* ---------- Chế độ TEST: mọi thay đổi chỉ nằm trong bộ nhớ, không ghi Firebase / localStorage ---------- */
-  let testMode = false, testData = null;   /* testData = { weeks:[...], choices:{key: value} } */
+  let testMode = false, testData = null;   /* testData = { weeks:[...], roster:[...], choices:{key: value} } */
   const hasOwn = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+  const clone = o => JSON.parse(JSON.stringify(o));
 
   /* ---------- Hộp thông báo ---------- */
   const infoModal = $('infoModal');
@@ -397,8 +558,62 @@ document.addEventListener('DOMContentLoaded', () => {
   let editMode = false;
   try { editMode = sessionStorage.getItem('editMode') === '1'; } catch(e){}
   const pwModal = $('pwModal'), pwInput = $('pwInput'), pwError = $('pwError');
-  const openPw = () => { pwError.classList.add('hidden'); pwInput.value = ''; show(pwModal, true); setTimeout(() => pwInput.focus(), 50); };
-  const closePw = () => show(pwModal, false);
+  /* ---------- Xác thực: băm PBKDF2 + khóa tăng dần ---------- */
+  const LK = 'lk_v1', WAITS = [10, 20, 30, 40, 50, 60];
+  const LK0 = () => ({ stage:'pw', f:0, q:0, p:0, until:0 });
+  let simMode = false, simSt = LK0();   /* simMode: đang thử mật khẩu trong chế độ Thử Nghiệm */
+  const loadLk = () => { if (simMode) return Object.assign(LK0(), simSt); try { return Object.assign(LK0(), JSON.parse(store.get(LK) || '{}')); } catch(e){ return LK0(); } };
+  const saveLk = st => { if (simMode) simSt = Object.assign({}, st); else store.set(LK, JSON.stringify(st)); };
+  function lkState(){
+    const st = loadLk();
+    if (st.stage === 'pw' && st.f >= 18 && Date.now() >= st.until) { st.stage = 'q'; saveLk(st); }
+    return st;
+  }
+  const hexOf = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('');
+  async function pbk(text, salt){
+    const te = new TextEncoder();
+    const k = await crypto.subtle.importKey('raw', te.encode(text), 'PBKDF2', false, ['deriveBits']);
+    return hexOf(await crypto.subtle.deriveBits({ name:'PBKDF2', hash:'SHA-256', salt:te.encode(salt), iterations:AUTH.it }, k, 256));
+  }
+  let pwTimer = 0, pwBusy = false, pwWaiting = false;
+  const setPwMsg = t => { pwError.textContent = t; pwError.classList.toggle('hidden', !t); };
+  function shakePw(){ pwInput.classList.remove('shake'); void pwInput.offsetWidth; pwInput.classList.add('shake'); }
+  function renderPw(){
+    clearTimeout(pwTimer);
+    const st = lkState(), left = Math.ceil((st.until - Date.now()) / 1000), q = st.stage === 'q';
+    $('pwTitle').textContent = (simMode ? 'Thử nghiệm: ' : '') + (q ? 'Câu hỏi mở khóa' : 'Nhập mật khẩu chỉnh sửa');
+    const hint = q ? 'Bạn đã nhập sai quá nhiều lần. Hãy trả lời câu hỏi: "Who is my CRUSH?"'
+      : st.stage === 'pw2' ? (simMode ? 'Đã trả lời đúng. Hãy nhập mật khẩu thử nghiệm.' : 'Đã trả lời đúng. Hãy nhập mật khẩu chính.') : '';
+    $('pwHint').textContent = hint; $('pwHint').classList.toggle('hidden', !hint);
+    const sn = simMode ? (q ? 'Thử rtx5090' : 'Đang thử mô phỏng. Không dùng mật khẩu chính.') : '';
+    $('pwSim').textContent = sn; $('pwSim').classList.toggle('hidden', !sn);
+    pwInput.type = q ? 'text' : 'password';
+    pwInput.setAttribute('inputmode', 'text');
+    pwInput.placeholder = q ? 'Câu trả lời' : 'Mật khẩu';
+    const wait = left > 0;
+    $('pwSkip').classList.toggle('hidden', !(simMode && wait));
+    pwInput.disabled = wait || pwBusy; $('pwOk').disabled = wait || pwBusy;
+    if (wait) {
+      pwWaiting = true; setPwMsg('Vui lòng chờ ' + left + ' giây rồi thử lại.');
+      if (!pwModal.classList.contains('hidden')) pwTimer = setTimeout(renderPw, 250);
+    } else if (pwWaiting) { pwWaiting = false; setPwMsg(''); if (!pwBusy) pwInput.focus(); }
+  }
+  const openPw = () => { simMode = false; pwInput.value = ''; setPwMsg(''); show(pwModal, true); renderPw(); setTimeout(() => { if (!pwInput.disabled) pwInput.focus(); }, 50); };
+  /* Thử mật khẩu (chỉ trong chế độ Thử Nghiệm): mô phỏng đầy đủ luồng thật, KHÔNG dùng được mật khẩu chính, không đụng tới trạng thái khóa thật */
+  function openSimPw(){
+    simMode = true; simSt = LK0(); pwWaiting = false;
+    pwInput.value = ''; setPwMsg(''); show(pwModal, true); renderPw();
+    setTimeout(() => { if (!pwInput.disabled) pwInput.focus(); }, 50);
+  }
+  function showSimOk(){
+    $('imIconI').className = 'fa-solid fa-circle-check';
+    $('imTitle').textContent = 'Nhập đúng (mô phỏng)';
+    $('imNote').textContent = 'Ở bản thật, hộp thoại sẽ đóng và mở khóa chỉnh sửa. Các bộ đếm sai và thời gian chờ được đặt lại.';
+    show(infoModal, true);
+  }
+  $('simPwBtn').addEventListener('click', () => { if (testMode) openSimPw(); });
+  $('pwSkip').addEventListener('click', () => { if (!simMode) return; simSt.until = 0; renderPw(); });
+  const closePw = () => { show(pwModal, false); simMode = false; };
   function updateEditBtn(){
     const base = 'px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition-all ';
     editBtn.className = base + (testMode
@@ -416,29 +631,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const wasTest = testMode;
     editMode = v;
     if (v && test) {
-      /* Vào TEST: chụp bản sao danh sách tuần hiện tại, mọi sửa đổi chỉ diễn ra trên bản sao này */
+      /* Vào TEST: chụp bản sao danh sách tuần + danh sách lớp hiện tại, mọi sửa đổi chỉ diễn ra trên bản sao này */
       testMode = true;
-      testData = { weeks: JSON.parse(JSON.stringify(weeks)), choices: {} };
+      testData = { weeks: clone(weeks), roster: clone(roster), choices: {} };
     } else {
       testMode = false; testData = null;
       /* Thoát TEST: bỏ bản sao, nạp lại dữ liệu thật */
-      if (wasTest) { if (db) lastSig = weeksSig(state.weeks); loadWeeks(); }
+      if (wasTest) { if (db) lastSig = weeksSig(state.weeks); loadWeeks(); loadRoster(); }
     }
     /* Chế độ TEST không ghi nhớ phiên: tải lại trang sẽ quay về chế độ xem bình thường */
     if (!testMode) { try { sessionStorage.setItem('editMode', v ? '1' : '0'); } catch(e){} }
     show($('testBanner'), testMode);
-    updateEditBtn(); render();
+    updateEditBtn(); render(); refreshRoster();
   }
   editBtn.addEventListener('click', () => editMode ? setEdit(false) : openPw());
   $('pwCancel').addEventListener('click', closePw);
   pwModal.addEventListener('click', e => { if (e.target === pwModal) closePw(); });
-  const submitPw = () => {
-    const v = pwInput.value;
-    if (v === EDIT_PASSWORD) { closePw(); setEdit(true); }
-    else if (v === TEST_PASSWORD) { closePw(); setEdit(true, true); showInfo('test'); }
-    else if (v === TROLL_PASSWORD) { closePw(); showInfo('troll'); }
-    else { pwError.classList.remove('hidden'); pwInput.select(); }
-  };
+  async function submitPw(){
+    if (pwBusy) return;
+    const st = lkState(), v = pwInput.value, q = st.stage === 'q';
+    if (st.until > Date.now()) { renderPw(); return; }
+    if (!v.trim()) return;
+    if (!(window.crypto && crypto.subtle)) { setPwMsg('Trình duyệt không hỗ trợ mã hóa. Hãy mở trang bằng HTTPS.'); return; }
+    pwBusy = true; $('pwOk').disabled = true;
+    let h;
+    try { h = await pbk(q ? v.toLowerCase().replace(/\s+/g, '') : v, q ? AUTH.aSalt : AUTH.salt); }
+    catch(e){ pwBusy = false; $('pwOk').disabled = false; setPwMsg('Không kiểm tra được, hãy thử lại.'); return; }
+    pwBusy = false; pwInput.value = '';
+    if (q) {
+      if (h === (simMode ? AUTH.hSimAns : AUTH.hAns)) { st.stage = 'pw2'; st.q = 0; st.p = 0; st.until = 0; saveLk(st); setPwMsg(''); }
+      else { st.q++; st.until = Date.now() + 120 * st.q * 1000; saveLk(st); setPwMsg('Sai đáp án.'); shakePw(); }
+      renderPw(); return;
+    }
+    if (!simMode && h === AUTH.hPw) { saveLk(LK0()); closePw(); setEdit(true); return; }
+    if (h === AUTH.hTest) { if (simMode) { simSt = LK0(); closePw(); showSimOk(); } else { closePw(); setEdit(true, true); showInfo('test'); } return; }
+    if (h === AUTH.hTroll) { closePw(); showInfo('troll'); return; }
+    if (st.stage === 'pw') { st.f++; if (st.f % 3 === 0) st.until = Date.now() + WAITS[Math.min(st.f / 3, 6) - 1] * 1000; }
+    else { st.p++; st.until = Date.now() + 60 * st.p * 1000; }
+    saveLk(st);
+    setPwMsg(st.stage === 'pw' && st.f % 3 ? 'Sai mật khẩu. Còn ' + (3 - st.f % 3) + ' lần trước khi phải chờ.' : 'Sai mật khẩu.');
+    shakePw(); renderPw();
+  }
   $('pwOk').addEventListener('click', submitPw);
   pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') submitPw(); if (e.key === 'Escape') closePw(); });
 
@@ -464,7 +697,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let db = null;
   try { if (window.firebase) { firebase.initializeApp(FIREBASE_CONFIG); db = firebase.database(); } }
   catch (e) { console.warn('Firebase lỗi:', e); db = null; }
-  const state = { choices:{}, weeks:{} };
+  const state = { choices:{}, weeks:{}, roster:null };
   let loaded = false;
   /* Chữ ký của danh sách tuần (không phụ thuộc thứ tự khóa): để biết dữ liệu có thật sự đổi hay chỉ là "tiếng vọng" của chính mình */
   let lastSig = null;
@@ -474,18 +707,37 @@ document.addEventListener('DOMContentLoaded', () => {
     $('syncStatus').innerHTML = '<i class="fa-solid fa-circle text-[7px] mr-1"></i>' + text;
   };
   setStatus(false, 'Đang kết nối...');
+
+  /* Ghi lên Firebase. Nếu máy chủ từ chối (thường do Rules) thì báo lỗi rõ ràng,
+     vì khi đó Firebase sẽ tự hoàn nguyên dữ liệu và thay đổi trông như "tự biến mất". */
+  function reportWriteError(e){
+    console.warn('Firebase từ chối ghi dữ liệu:', e);
+    const code = (e && (e.code || e.message)) || 'không rõ lỗi';
+    $('errText').textContent = 'Không lưu được lên Firebase (' + code + '). Thay đổi sẽ biến mất khi tải lại trang. ' +
+      'Hãy mở Firebase Console → Realtime Database → Rules, cho phép đọc/ghi (".read": true, ".write": true) ở nhánh "duty" rồi bấm Publish.';
+    show($('errBanner'), true);
+    setStatus(false, 'Lỗi ghi dữ liệu');
+  }
+  $('errClose').addEventListener('click', () => show($('errBanner'), false));
+  function fbSet(path, value){
+    try {
+      const p = db.ref(path).set(value);
+      if (p && p.catch) p.catch(reportWriteError);
+    } catch (e) { reportWriteError(e); }
+  }
+
   const getChoice = k => (testMode && hasOwn(testData.choices, k)) ? testData.choices[k] : (db ? state.choices[k] : store.get(k));
   const saveChoice = (k, v) => {
     if (testMode) { testData.choices[k] = v || ''; return; }   /* TEST: chỉ lưu trong bộ nhớ */
     store.set(k, v || '');
     if (db) {
       if (v) state.choices[k] = v; else delete state.choices[k];
-      db.ref('duty/choices/' + k).set(v || null).catch(e => console.warn(e));
+      fbSet('duty/choices/' + k, v || null);
     }
   };
 
   /* ---------- Danh sách tuần ---------- */
-  let weeks = [], currentId = null, dayFilter = 'all';
+  let weeks = [], currentId = null, dayFilter = 'all', animNext = true, animT = 0;
   const pad = n => String(n).padStart(2, '0');
   const startOfToday = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
   const dayDate = (w, d) => new Date(w.start[0], w.start[1], w.start[2] + (d - 2));
@@ -517,23 +769,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const i = weeks.findIndex(x => x.id === w.id);
     if (i >= 0) weeks[i] = w; else weeks.push(w);
     weeks.sort((a,b) => dayDate(a,2) - dayDate(b,2));
-    if (testMode) { testData.weeks = JSON.parse(JSON.stringify(weeks)); return; }   /* TEST: không ghi ra ngoài */
+    if (testMode) { testData.weeks = clone(weeks); return; }   /* TEST: không ghi ra ngoài */
     if (db) {
       const s = JSON.stringify(w); state.weeks[w.id] = s; lastSig = weeksSig(state.weeks);
-      db.ref('duty/weeks/' + w.id).set(s).catch(e => console.warn(e));
+      fbSet('duty/weeks/' + w.id, s);
     }
     else store.set('weeks_v2', JSON.stringify(weeks));
   }
   function removeWeek(w){
     weeks = weeks.filter(x => x.id !== w.id);
-    if (testMode) { testData.weeks = JSON.parse(JSON.stringify(weeks)); return; }  /* TEST: không ghi ra ngoài */
+    if (testMode) { testData.weeks = clone(weeks); return; }  /* TEST: không ghi ra ngoài */
     if (db) {
       delete state.weeks[w.id]; lastSig = weeksSig(state.weeks);
-      db.ref('duty/weeks/' + w.id).set(null).catch(e => console.warn(e));
+      fbSet('duty/weeks/' + w.id, null);
     }
     else store.set('weeks_v2', JSON.stringify(weeks));
   }
-  function mutate(fn){ const w = JSON.parse(JSON.stringify(cur())); fn(w); saveWeek(w); render(); }
+  function mutate(fn){ const w = clone(cur()); fn(w); saveWeek(w); render(); }
   const clearChoices = (w, d) => { if (Array.isArray(w.days[d])) w.days[d].forEach(p => saveChoice(choiceKey(w,d,p), '')); };
 
   /* Chuyển ngày a sang thứ b (nếu b đã có lịch thì hoán đổi), kèm theo lựa chọn buổi trực của từng người */
@@ -546,6 +798,225 @@ document.addEventListener('DOMContentLoaded', () => {
     if (B === undefined) delete w.days[a]; else w.days[a] = B;
     w.days[b] = A;
   }
+
+  /* ---------- Danh sách lớp (ngăn kéo bên phải) ---------- */
+  let roster = [], rosterDraft = null, rosterOpen = false, rid = 0, msgTimer = 0;
+  const newRid = () => 'r' + Date.now().toString(36) + (rid++);
+  const normRoster = s => ({ id:String(s.id || newRid()), name:String(s.name || ''), role:String(s.role || '') });
+  const drawer = $('rosterDrawer'), overlay = $('rosterOverlay'), rList = $('rosterList');
+
+  function loadRoster(){
+    let list = null;
+    if (testMode) {
+      list = testData.roster;
+    } else if (db) {
+      if (loaded && state.roster) { try { list = JSON.parse(state.roster); } catch(e){} }
+    } else {
+      try { const s = store.get('roster_v1'); if (s) list = JSON.parse(s); } catch(e){}
+    }
+    /* Hỗ trợ cả định dạng cũ ({id,name,role}) và định dạng gọn mới ([tên, chức vụ]) */
+    roster = Array.isArray(list)
+      ? list.map((s, i) => Array.isArray(s) ? normRoster({ id:'r' + (i + 1), name:s[0], role:s[1] }) : normRoster(s || {}))
+      : clone(DEFAULT_ROSTER);
+  }
+  function persistRoster(){
+    if (testMode) { testData.roster = clone(roster); return; }   /* TEST: không ghi ra ngoài */
+    /* Lưu dạng gọn [tên, chức vụ] để chứa được nhiều học sinh hơn trong một khóa */
+    const s = JSON.stringify(roster.map(x => x.role ? [x.name, x.role] : [x.name]));
+    if (db) { state.roster = s; fbSet('duty/roster', s); }
+    else store.set('roster_v1', s);
+  }
+  function renderRoster(){
+    const src = (editMode && rosterDraft) ? rosterDraft : roster;
+    $('rosterCount').textContent = src.length + '/' + MAX_ROSTER + ' học sinh';
+    show($('rosterUnlock'), !editMode);
+    show($('rosterEditNote'), editMode);
+    show($('rosterEditBar'), editMode);
+    if (!src.length) {
+      rList.innerHTML = '<li class="text-xs text-slate-400 italic text-center py-8">Chưa có học sinh nào.' + (editMode ? ' Bấm "Dán danh sách" hoặc "Thêm học sinh" để bắt đầu.' : '') + '</li>';
+      return;
+    }
+    rList.innerHTML = src.map((s, i) => editMode
+      ? `<li class="r-item p-3 rounded-xl bg-slate-800/50 border border-slate-700/50" data-id="${esc(s.id)}">
+          <div class="flex items-center gap-2"><span class="w-6 text-center text-[11px] font-bold text-slate-500 shrink-0">${i + 1}</span>
+            <input type="text" class="field r-name !py-2" value="${esc(s.name)}" data-prev="${esc(s.name)}" placeholder="Họ và tên" aria-label="Họ và tên">
+            <button type="button" class="mini-btn danger" data-ract="rm" title="Xóa học sinh" aria-label="Xóa học sinh"><i class="fa-solid fa-user-minus"></i></button></div>
+          <div class="pl-8 mt-2"><input type="text" class="field r-role !py-1.5 !text-xs italic" value="${esc(s.role)}" placeholder="Chức vụ trong lớp (không bắt buộc)" aria-label="Chức vụ trong lớp"></div>
+        </li>`
+      : `<li class="r-item p-3 rounded-xl bg-slate-800/50 border border-slate-700/50" data-id="${esc(s.id)}">
+          <div class="flex items-center gap-2.5"><span class="w-6 text-center text-[11px] font-bold text-slate-500 shrink-0">${i + 1}</span><span class="text-sm font-semibold text-slate-100 break-words min-w-0">${esc(s.name)}</span></div>
+          ${s.role ? `<div class="r-role-view pl-[2.125rem] mt-0.5">${esc(s.role)}</div>` : ''}
+        </li>`).join('');
+    applyRosterSearch();
+  }
+  function applyRosterSearch(){
+    const term = $('rosterSearch').value.toLowerCase().trim();
+    const src = (editMode && rosterDraft) ? rosterDraft : roster;
+    rList.querySelectorAll('.r-item').forEach(li => {
+      const s = src.find(x => x.id === li.dataset.id);
+      li.style.display = (!term || (s && (s.name + ' ' + s.role).toLowerCase().includes(term))) ? '' : 'none';
+    });
+  }
+  /* Gọi khi bật/tắt chế độ chỉnh sửa: làm mới bản nháp */
+  function refreshRoster(){ rosterDraft = editMode ? clone(roster) : null; renderRoster(); }
+  function setRosterOpen(open){
+    rosterOpen = open;
+    drawer.classList.toggle('closed', !open);
+    overlay.classList.toggle('closed', !open);
+    drawer.inert = !open;
+    $('rosterBtn').setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) { if (editMode && !rosterDraft) rosterDraft = clone(roster); renderRoster(); rList.classList.add('enter'); rList.querySelectorAll('.r-item').forEach((li, i) => li.style.setProperty('--i', Math.min(i, 12))); setTimeout(() => rList.classList.remove('enter'), 800); setTimeout(() => $('rosterClose').focus(), 320); }
+    else $('rosterBtn').focus({ preventScroll:true });
+  }
+  const flashMsg = (t, ms = 2500) => {
+    const m = $('rosterMsg'); m.textContent = t; m.classList.remove('hidden');
+    clearTimeout(msgTimer); msgTimer = setTimeout(() => m.classList.add('hidden'), ms);
+  };
+  $('rosterBtn').addEventListener('click', () => setRosterOpen(!rosterOpen));
+  $('rosterClose').addEventListener('click', () => setRosterOpen(false));
+  overlay.addEventListener('click', () => setRosterOpen(false));
+  $('rosterUnlock').addEventListener('click', openPw);
+  $('rosterSearch').addEventListener('input', applyRosterSearch);
+  rList.addEventListener('input', e => {
+    if (!editMode || !rosterDraft) return;
+    const t = e.target, li = t.closest('.r-item'); if (!li) return;
+    const s = rosterDraft.find(x => x.id === li.dataset.id); if (!s) return;
+    if (t.classList.contains('r-name')) s.name = t.value;
+    else if (t.classList.contains('r-role')) s.role = t.value;
+  });
+  rList.addEventListener('click', e => {
+    const b = e.target.closest('[data-ract="rm"]');
+    if (!b || !editMode || !rosterDraft) return;
+    const li = b.closest('.r-item'), s = rosterDraft.find(x => x.id === li.dataset.id);
+    if (!s) return;
+    if (s.name.trim() && !confirm('Xóa "' + s.name.trim() + '" khỏi danh sách? (Chỉ áp dụng khi bấm Lưu)')) return;
+    rosterDraft = rosterDraft.filter(x => x.id !== s.id); renderRoster();
+  });
+  $('rosterAdd').addEventListener('click', () => {
+    if (!editMode || !rosterDraft) return;
+    if (rosterDraft.length >= MAX_ROSTER) { flashMsg('Đã đạt tối đa ' + MAX_ROSTER + ' học sinh'); return; }
+    $('rosterSearch').value = '';
+    rosterDraft.push({ id:newRid(), name:'', role:'' }); renderRoster();
+    const inputs = rList.querySelectorAll('.r-name'), last = inputs[inputs.length - 1];
+    if (last) { last.scrollIntoView({ block:'nearest' }); last.focus(); }
+  });
+  $('rosterCancel').addEventListener('click', () => {
+    if (!editMode) return;
+    rosterDraft = clone(roster); renderRoster(); flashMsg('Đã hoàn tác các thay đổi chưa lưu');
+  });
+  $('rosterSave').addEventListener('click', () => {
+    if (!editMode || !rosterDraft) return;
+    const seen = new Set(), list = [];
+    let dup = 0, over = 0;
+    rosterDraft.forEach(s => {
+      const name = s.name.trim(); if (!name) return;
+      const k = nameKey(name);
+      if (seen.has(k)) { dup++; return; }
+      seen.add(k); list.push({ id:s.id, name, role:s.role.trim() });
+    });
+    if (list.length > MAX_ROSTER) { over = list.length - MAX_ROSTER; list.length = MAX_ROSTER; }
+    roster = list;
+    persistRoster();
+    rosterDraft = clone(roster); renderRoster();
+    flashMsg((testMode ? 'Đã lưu (chế độ thử nghiệm, không có tác dụng thật)' : 'Đã lưu danh sách lớp') + (dup ? ', bỏ qua ' + dup + ' tên trùng' : '') + (over ? ', bỏ qua ' + over + ' tên vượt giới hạn ' + MAX_ROSTER : ''));
+  });
+
+  /* ---------- Dán danh sách học sinh hàng loạt ---------- */
+  const bm = $('bulkModal'), bulkText = $('bulkText'), bulkCap = $('bulkCap'), bulkSort = $('bulkSort');
+  const viCol = new Intl.Collator('vi');   /* so sánh theo bảng chữ cái tiếng Việt: a < ă < â ... d < đ, đủ dấu thanh */
+  const nameKey = s => s.normalize('NFC').toLocaleLowerCase('vi').replace(/\s+/g, ' ').trim();
+  const titleCase = s => s.toLocaleLowerCase('vi').replace(/(^|\s)(\S)/gu, (m, a, b) => a + b.toLocaleUpperCase('vi'));
+  /* Lọc tên trùng (không phân biệt hoa/thường) */
+  const dedupeNames = (names, existing = []) => {
+    const seen = new Set(existing.map(nameKey)), out = [];
+    names.forEach(n => { const k = nameKey(n); if (k && !seen.has(k)) { seen.add(k); out.push(n); } });
+    return out;
+  };
+  /* Gõ tay tên trong danh sách lớp: trùng người khác thì bỏ qua (khôi phục tên cũ, hoặc xóa dòng mới thêm) */
+  rList.addEventListener('change', e => {
+    const t = e.target;
+    if (!editMode || !rosterDraft || !t.classList.contains('r-name')) return;
+    const li = t.closest('.r-item'), s = li && rosterDraft.find(x => x.id === li.dataset.id);
+    if (!s) return;
+    const k = nameKey(s.name);
+    if (k && rosterDraft.some(x => x.id !== s.id && nameKey(x.name) === k)) {
+      const typed = s.name.trim(), prev = t.dataset.prev || '';
+      if (prev) s.name = prev; else rosterDraft = rosterDraft.filter(x => x.id !== s.id);
+      renderRoster();
+      flashMsg('"' + typed + '" đã có trong danh sách nên được bỏ qua');
+    } else t.dataset.prev = s.name;
+  });
+
+  /* Tách danh sách tên từ văn bản dán vào.
+     - Mỗi dòng một tên; dán từ Excel thì các ô trong cùng một dòng được ngăn bằng Tab.
+     - Bỏ cột STT (ô chỉ có số), bỏ số thứ tự / gạch đầu dòng ở đầu tên ("1. ", "2) ", "- "). */
+  function parseNames(text, cap){
+    const out = [];
+    String(text).split(/[\r\n;]+/).forEach(line => {
+      const cells = line.split('\t').map(c => c.trim()).filter(c => c && !/^\d+\s*[.)]?$/.test(c));
+      let n = cells.join(' ')
+        .replace(/^["“”'\s]+|["“”'\s]+$/g, '')
+        .replace(/^[-–—•*·]+\s*/, '')
+        .replace(/^\d+\s*[.)\-:]*\s*/, '')
+        .replace(/\s+/g, ' ').trim();
+      if (!n || /^\d+$/.test(n)) return;
+      out.push(cap ? titleCase(n) : n);
+    });
+    return out;
+  }
+
+  /* Sắp xếp A → Z. 'given': theo Tên (từ cuối), rồi tên đệm/họ — đúng cách xếp danh sách lớp ở Việt Nam. 'full': theo họ tên từ chữ đầu. Dòng trống xuống cuối. */
+  function sortRoster(list, mode){
+    const parts = n => { const p = n.trim().split(/\s+/); return { given:p[p.length - 1], rest:p.slice(0, -1).join(' ') }; };
+    return list.map((s, i) => ({ s, i, k:parts(s.name) })).sort((a, b) => {
+      const ea = !a.s.name.trim(), eb = !b.s.name.trim();
+      if (ea || eb) return ea === eb ? a.i - b.i : (ea ? 1 : -1);
+      if (mode === 'given') {
+        const c = viCol.compare(a.k.given, b.k.given) || viCol.compare(a.k.rest, b.k.rest);
+        if (c) return c;
+      }
+      return viCol.compare(a.s.name.trim(), b.s.name.trim()) || a.i - b.i;
+    }).map(x => x.s);
+  }
+
+  const bulkErr = t => { $('bulkError').textContent = t; $('bulkError').classList.toggle('hidden', !t); };
+  function updateBulkCount(){
+    const n = parseNames(bulkText.value, bulkCap.checked).length;
+    const room = rosterDraft ? Math.max(0, MAX_ROSTER - rosterDraft.length) : MAX_ROSTER;
+    $('bulkCount').textContent = n
+      ? 'Nhận diện được ' + n + ' tên (còn chỗ cho ' + room + ' học sinh, tối đa ' + MAX_ROSTER + ')'
+      : 'Còn chỗ cho ' + room + ' học sinh (tối đa ' + MAX_ROSTER + ')';
+    if (n) bulkErr('');
+  }
+  $('rosterBulk').addEventListener('click', () => {
+    if (!editMode || !rosterDraft) return;
+    if (rosterDraft.length >= MAX_ROSTER) { flashMsg('Đã đạt tối đa ' + MAX_ROSTER + ' học sinh'); return; }
+    bulkText.value = ''; bulkErr(''); updateBulkCount();
+    show(bm, true); setTimeout(() => bulkText.focus(), 50);
+  });
+  bulkText.addEventListener('input', updateBulkCount);
+  bulkCap.addEventListener('change', updateBulkCount);
+  $('bulkCancel').addEventListener('click', () => show(bm, false));
+  bm.addEventListener('click', e => { if (e.target === bm) show(bm, false); });
+  $('bulkOk').addEventListener('click', () => {
+    if (!editMode || !rosterDraft) { show(bm, false); return; }
+    const names = parseNames(bulkText.value, bulkCap.checked);
+    if (!names.length) return bulkErr('Chưa có tên nào. Hãy dán danh sách hoặc ghi mỗi tên một dòng.');
+    const seen = new Set(rosterDraft.map(s => nameKey(s.name)).filter(Boolean));
+    const room = Math.max(0, MAX_ROSTER - rosterDraft.length);
+    let added = 0, dup = 0, over = 0;
+    names.forEach(n => {
+      const k = nameKey(n);
+      if (seen.has(k)) { dup++; return; }
+      if (added >= room) { over++; return; }
+      seen.add(k); rosterDraft.push({ id:newRid(), name:n, role:'' }); added++;
+    });
+    rosterDraft = sortRoster(rosterDraft, bulkSort.value);   /* sắp xếp lại cả danh sách; số thứ tự tự đánh lại từ 1 khi vẽ */
+    $('rosterSearch').value = '';
+    show(bm, false); renderRoster(); rList.scrollTop = 0;
+    flashMsg((added ? 'Đã thêm ' + added + ' học sinh' : 'Không có học sinh mới') + (dup ? ', bỏ qua ' + dup + ' tên trùng' : '') + (over ? ', bỏ qua ' + over + ' tên vượt giới hạn ' + MAX_ROSTER : '') + '. Đã sắp xếp A → Z. Nhớ bấm "Lưu" để áp dụng.', 5000);
+  });
 
   const dn = ['Chủ Nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
   const now = new Date();
@@ -561,7 +1032,7 @@ document.addEventListener('DOMContentLoaded', () => {
         (w.id === currentId ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white border-transparent shadow-lg'
                             : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border-slate-700/50');
       b.innerHTML = `<i class="fa-regular fa-calendar"></i> ${weekLabel(w)}` + (weekCurrent(w) ? ' <span class="text-[9px] bg-emerald-400 text-black px-1.5 py-0.5 rounded-full">Hiện tại</span>' : '');
-      b.addEventListener('click', () => { currentId = w.id; dayFilter = 'all'; searchInput.value = ''; render(); });
+      b.addEventListener('click', () => { currentId = w.id; dayFilter = 'all'; searchInput.value = ''; animNext = true; render(); });
       tabsEl.appendChild(b);
     });
     const mk = (parent, cls, icon, text, fn) => {
@@ -687,14 +1158,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const r = $('dmReason').value.trim() || 'Nghỉ';
         mutate(x => { x.days[d] = { holiday: r }; });
       } else {
-        const names = $('dmNames').value.split(/[,\n;]/).map(s => s.trim()).filter(Boolean);
+        const names = dedupeNames($('dmNames').value.split(/[,\n;]/).map(s => s.trim()).filter(Boolean));
         mutate(x => { x.days[d] = names.map((n, i) => ({ id:String(i + 1), name:n, type:'list' })); });
       }
     }
     dayFilter = 'all'; show(dm, false); render();
   });
 
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { show(wm, false); show(dm, false); closeInfo(); } });
+  /* Esc: đóng hộp thoại trên cùng trước, ngăn kéo sau cùng */
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    const anyModal = [wm, dm, bm, infoModal, pwModal].some(m => !m.classList.contains('hidden'));
+    show(wm, false); show(dm, false); show(bm, false); closeInfo();
+    if (!anyModal && rosterOpen) setRosterOpen(false);
+  });
 
   /* ---------- Bộ lọc ngày ---------- */
   function renderFilters(){
@@ -706,7 +1183,7 @@ document.addEventListener('DOMContentLoaded', () => {
       b.className = 'px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ' +
         (dayFilter === val ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg' : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50');
       b.textContent = text;
-      b.addEventListener('click', () => { dayFilter = val; renderFilters(); applyFilter(); });
+      b.addEventListener('click', () => { dayFilter = val; renderFilters(); applyFilter(); grid.classList.add('enter'); clearTimeout(animT); animT = setTimeout(() => grid.classList.remove('enter'), 900); });
       filtersEl.appendChild(b);
     };
     mk('all', 'Tất cả');
@@ -812,7 +1289,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     else if (act === 'addperson') {
       const r = prompt('Nhập tên người trực (nhiều người cách nhau bằng dấu phẩy):'); if (!r) return;
-      const names = r.split(/[,\n;]/).map(s => s.trim()).filter(Boolean); if (!names.length) return;
+      const raw = r.split(/[,\n;]/).map(s => s.trim()).filter(Boolean); if (!raw.length) return;
+      const names = dedupeNames(raw, w.days[d].map(p => p.name));
+      if (!names.length) { alert('Tên này đã có trong ngày, đã bỏ qua.'); return; }
       mutate(x => {
         let next = Math.max(0, ...x.days[d].map(p => parseInt(p.id) || 0)) + 1;
         names.forEach(n => x.days[d].push({ id:String(next++), name:n, type:'list' }));
@@ -865,7 +1344,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function render(){
     const w = cur();
     if (!w) {
-      $('headRange').textContent = '—'; $('headPenalty').textContent = '—';
+      $('headRange').textContent = '—';
       $('penSection').classList.add('hidden');
       grid.innerHTML = `<div class="col-span-full glass-panel rounded-2xl p-8 text-center text-slate-400 text-sm">Chưa có tuần nào.${editMode ? ' Bấm "Tạo tuần" để bắt đầu.' : ''}</div>`;
       renderTabs(); renderFilters(); return;
@@ -874,14 +1353,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const pen = w.penalty, hasPen = !!pen.name;
     $('headRange').textContent = weekLabel(w);
     $('penSection').classList.toggle('hidden', !hasPen);
-    $('headPenalty').textContent = hasPen ? pen.name : 'Không có';
     $('penName').textContent = pen.name; $('penLabel').textContent = pen.label; $('penUntil').textContent = pen.until;
     grid.innerHTML = WEEKDAYS.map(d => cardHtml(w, d)).join('');
+    grid.querySelectorAll('.day-card').forEach((c, i) => c.style.setProperty('--i', i));
+    grid.classList.toggle('enter', animNext);
+    if (animNext) { animNext = false; clearTimeout(animT); animT = setTimeout(() => grid.classList.remove('enter'), 900); }
     syncValues(); renderTabs(); renderFilters(); applyFilter(); decorateCards(); applySearch();
   }
 
   /* ---------- Khởi động + đồng bộ thời gian thực ---------- */
-  updateEditBtn(); loadWeeks(); render();
+  updateEditBtn(); loadWeeks(); loadRoster(); render(); refreshRoster();
 
   if (db) {
     db.ref('.info/connected').on('value', s => setStatus(!!s.val(), s.val() ? 'Đã đồng bộ trực tuyến' : 'Mất kết nối'));
@@ -889,20 +1370,23 @@ document.addEventListener('DOMContentLoaded', () => {
       const v = snap.val() || {};
       state.choices = v.choices || {};
       state.weeks = v.weeks || {};
+      state.roster = v.roster || null;
       if (!loaded) {
         loaded = true;
         if (!Object.keys(state.weeks).length) {
-          DEFAULT_WEEKS.forEach(w => { const s = JSON.stringify(normalizeWeek(w)); state.weeks[w.id] = s; db.ref('duty/weeks/' + w.id).set(s); });
+          DEFAULT_WEEKS.forEach(w => { const s = JSON.stringify(normalizeWeek(w)); state.weeks[w.id] = s; fbSet('duty/weeks/' + w.id, s); });
         }
       }
       /* Đang TEST: giữ nguyên bản sao thử nghiệm, không để dữ liệu thật từ máy khác đè lên */
       if (testMode) return;
+      loadRoster();
+      if (!editMode) renderRoster();   /* đang sửa thì giữ nguyên bản nháp, không ghi đè */
       const sig = weeksSig(state.weeks);
       if (sig !== lastSig) { lastSig = sig; loadWeeks(); render(); }
       else syncValues();
     }, err => {
       console.warn('Không đọc được database:', err);
-      db = null; setStatus(false, 'Chưa đồng bộ (kiểm tra Rules)'); loadWeeks(); render();
+      db = null; setStatus(false, 'Chưa đồng bộ (kiểm tra Rules)'); loadWeeks(); loadRoster(); render(); refreshRoster();
     });
   } else {
     setStatus(false, 'Chế độ offline (chỉ lưu trên máy này)');
