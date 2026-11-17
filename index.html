@@ -166,6 +166,7 @@ span.duty-view[data-v="vắng"]{--k:var(--c-rose-400);color:rgb(var(--c-rose-300
 <body class="text-slate-200 font-sans min-h-screen pb-12 antialiased selection:bg-cyan-500 selection:text-black">
 
 <header class="sticky top-0 z-50 glass-panel bf border-b border-slate-800/80 mb-8">
+  <div id="greetBadge" class="hidden absolute top-1 right-3 sm:right-5 items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold whitespace-nowrap"><i class="fa-solid fa-hand"></i><span>Xin chào, Vũ Khánh Linh!</span></div>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
     <div class="flex items-center space-x-4">
       <button id="rosterBtn" type="button" aria-label="Danh sách lớp" aria-controls="rosterDrawer" aria-expanded="false" title="Danh sách lớp" class="h-12 px-3.5 sm:px-4 shrink-0 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-600 flex items-center justify-center gap-2 text-white shadow-neon-cyan font-extrabold text-sm tracking-tight hover:brightness-110 active:scale-95 transition">
@@ -177,6 +178,7 @@ span.duty-view[data-v="vắng"]{--k:var(--c-rose-400);color:rgb(var(--c-rose-300
       </div>
     </div>
     <div class="flex items-center gap-4">
+      <div id="roleTag" class="hidden flex-col items-end leading-tight"><span class="text-xs font-extrabold italic text-emerald-300">Lớp trưởng</span><span class="text-[10px] italic text-slate-400">Người chỉnh sửa</span></div>
       <div class="hidden md:flex items-center space-x-6">
         <div class="glass-panel px-4 py-2 rounded-xl border border-cyan-500/20 flex items-center space-x-3">
           <div class="w-3 h-3 rounded-full bg-emerald-400 animate-ping"></div>
@@ -475,7 +477,8 @@ const RULES = [
   ['amber','book-bookmark','Sổ đầu bài:','Vi phạm nội quy hoặc bị ghi sổ đầu bài sẽ bị phạt trực nhật từ 2 ngày đến 1 tuần.'],
   ['cyan','user','Có thắc mắc:','Liên hệ <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="font-bold text-cyan-300 underline underline-offset-2 hover:text-cyan-200">NgtLong</a>']
 ];
-const AUTH = { hSimAns:'9c288d303aebe66861465279bc09fbd721c1bcb59c4eb0a911654ab249f98011', it:150000, salt:'87748ab118b884f10717c63153daf57e', hPw:'25d64f4ac52b5c3386202f6836abbf98ffd26c68bb8cc4a46c28940889f3336d', hTest:'5d218335874919fc7ac9fc1181862490b610dfd5a77fbddb1426f25fff468c92', hTroll:'538aec078c667d7eaae8c26cc0214ae3a7c6027423df91ce37ae7783897c50b2', aSalt:'d4ffa79fd8d9a3e3eabc117016395049', hAns:'12e7c849b5fb7d54ebc19af66615f16bee105a7764f4811917aab31c40f17261' };
+const F = p => p.slice().sort((a, b) => a[0] - b[0]).map(x => x[1]).join('');   /* ghép các mảnh */
+const AUTH = { hAdm:F([[8,'40889f3336d'],[7,'9'],[2,'4ac52b5c3386202f6'],[3,'836a'],[0,'25d'],[4,'bbf98ffd26c68bb8cc4a'],[1,'64f'],[5,'46c'],[6,'28']]), hMon:F([[0,'6a'],[2,'45'],[6,'5015af4a32b5f3a4b25'],[1,'da34b3e9a40'],[3,'9295bd0d8'],[4,'b'],[5,'aa336673c6d99845ee80']]), hSimAns:F([[5,'1654'],[3,'bd721c1bcb59c4'],[0,'9c288d303aebe'],[7,'b249f98'],[9,'11'],[2,'79bc09f'],[1,'668614652'],[4,'eb0a91'],[6,'a'],[8,'0']]), it:150000, salt:'87748ab118b884f10717c63153daf57e', hPw:F([[8,'8cc4a'],[3,'836abbf98'],[5,'d'],[0,'25d64f4a'],[7,'bb'],[1,'c5'],[4,'ff'],[6,'26c68'],[9,'46c28940889f3336d'],[2,'2b5c3386202f6']]), hTest:F([[6,'25'],[8,'468c92'],[7,'fff'],[5,'0dfd5a77fbddb1426f'],[0,'5d218335874919fc'],[3,'118'],[2,'9fc'],[1,'7ac'],[4,'1862490b61']]), hTroll:F([[3,'e3a7c6027423'],[5,'91ce37ae7783897c50b2'],[0,'538ae'],[4,'df'],[2,'4a'],[1,'c078c667d7eaae8c26cc021']]), aSalt:'d4ffa79fd8d9a3e3eabc117016395049', hAns:F([[0,'12e7c'],[1,'849b5fb7'],[4,'a7764f48119'],[6,'1c40f'],[5,'17aab3'],[2,'d54ebc19'],[3,'af66615f16bee105'],[7,'17261']]) };
 const TROLL_TITLE = 'M var à';
 const TROLL_LINK = 'https://www.youtube.com/watch?v=QDia3e12czc';
 const FIREBASE_CONFIG = {
@@ -538,7 +541,17 @@ document.addEventListener('DOMContentLoaded', () => {
   function showInfo(kind){
     const note = $('imNote');
     note.textContent = '';
-    if (kind === 'test') {
+    if (kind === 'admin') {
+      $('imIconI').className = 'fa-solid fa-user-shield';
+      $('imTitle').textContent = 'Xin chào Nguyễn Tiến Long';
+      const ad = document.createElement('span');
+      ad.className = 'italic'; ad.textContent = 'Admin';
+      note.appendChild(ad);
+    } else if (kind === 'monitor') {
+      $('imIconI').className = 'fa-solid fa-hand';
+      $('imTitle').textContent = 'Xin chào lớp trưởng';
+      note.textContent = 'Bạn được thêm / bớt người và đổi "Trạng thái trực" của ngày hôm nay. Mọi chỉnh sửa khác đã bị khóa.';
+    } else if (kind === 'test') {
       $('imIconI').className = 'fa-solid fa-flask';
       $('imTitle').textContent = 'Đang ở chế độ Thử Nghiệm';
       note.textContent = 'Tất cả các thay đổi không có tác dụng';
@@ -559,6 +572,9 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Mở khóa chỉnh sửa ---------- */
   let editMode = false;
   try { editMode = sessionStorage.getItem('editMode') === '1'; } catch(e){}
+  let monitorMode = false;   /* đăng nhập bằng mật khẩu lớp trưởng */
+  try { monitorMode = editMode && sessionStorage.getItem('monitor') === '1'; } catch(e){}
+  const canEditRoster = () => editMode && !monitorMode;
   const pwModal = $('pwModal'), pwInput = $('pwInput'), pwError = $('pwError');
   /* ---------- Xác thực: băm PBKDF2 + khóa tăng dần ---------- */
   const LK = 'lk_v1', WAITS = [10, 20, 30, 40, 50, 60];
@@ -617,6 +633,8 @@ document.addEventListener('DOMContentLoaded', () => {
   $('pwSkip').addEventListener('click', () => { if (!simMode) return; simSt.until = 0; renderPw(); });
   const closePw = () => { show(pwModal, false); simMode = false; };
   function updateEditBtn(){
+    show($('greetBadge'), monitorMode);
+    show($('roleTag'), monitorMode);
     const base = 'px-3.5 py-2.5 rounded-xl text-xs font-bold border flex items-center gap-2 transition-all ';
     editBtn.className = base + (testMode
       ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/50'
@@ -629,9 +647,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ? '<i class="fa-solid fa-lock-open"></i><span class="hidden sm:inline">Khóa lại</span>'
         : '<i class="fa-solid fa-key"></i><span class="hidden sm:inline">Chỉnh sửa</span>';
   }
-  function setEdit(v, test){
+  function setEdit(v, test, mon){
     const wasTest = testMode;
-    editMode = v;
+    editMode = v; monitorMode = !!(v && mon && !test);
     if (v && test) {
       /* Vào TEST: chụp bản sao danh sách tuần + danh sách lớp hiện tại, mọi sửa đổi chỉ diễn ra trên bản sao này */
       testMode = true;
@@ -642,7 +660,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (wasTest) { if (db) lastSig = weeksSig(state.weeks); loadWeeks(); loadRoster(); }
     }
     /* Chế độ TEST không ghi nhớ phiên: tải lại trang sẽ quay về chế độ xem bình thường */
-    if (!testMode) { try { sessionStorage.setItem('editMode', v ? '1' : '0'); } catch(e){} }
+    if (!testMode) { try { sessionStorage.setItem('editMode', v ? '1' : '0'); sessionStorage.setItem('monitor', monitorMode ? '1' : '0'); } catch(e){} }
     show($('testBanner'), testMode);
     updateEditBtn(); render(); refreshRoster();
   }
@@ -666,6 +684,8 @@ document.addEventListener('DOMContentLoaded', () => {
       renderPw(); return;
     }
     if (!simMode && h === AUTH.hPw) { saveLk(LK0()); closePw(); setEdit(true); return; }
+    if (!simMode && h === AUTH.hMon) { saveLk(LK0()); closePw(); setEdit(true, false, true); showInfo('monitor'); return; }
+    if (!simMode && h === AUTH.hAdm) { saveLk(LK0()); closePw(); setEdit(true); showInfo('admin'); return; }
     if (h === AUTH.hTest) { if (simMode) { simSt = LK0(); closePw(); showSimOk(); } else { closePw(); setEdit(true, true); showInfo('test'); } return; }
     if (h === AUTH.hTroll) { closePw(); showInfo('troll'); return; }
     if (st.stage === 'pw') { st.f++; if (st.f % 3 === 0) st.until = Date.now() + WAITS[Math.min(st.f / 3, 6) - 1] * 1000; }
@@ -758,6 +778,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const weekCurrent = w => { const t = startOfToday(); return dayDate(w,2) <= t && t <= dayDate(w,lastDay(w)); };
   const cur = () => weeks.find(w => w.id === currentId);
   const choiceKey = (w, d, p) => w.prefix + 't' + d + '_' + p.id;
+  /* Admin: sửa mọi ngày. Lớp trưởng: chỉ sửa đúng ngày hôm nay */
+  const canEditDay = (w, d) => editMode && (!monitorMode || dayDate(w, +d).getTime() === startOfToday().getTime());
 
   function loadWeeks(){
     let list = null;
@@ -838,16 +860,16 @@ document.addEventListener('DOMContentLoaded', () => {
     else store.set('roster_v1', s);
   }
   function renderRoster(){
-    const src = (editMode && rosterDraft) ? rosterDraft : roster;
+    const src = (canEditRoster() && rosterDraft) ? rosterDraft : roster;
     $('rosterCount').textContent = src.length + '/' + MAX_ROSTER + ' học sinh';
-    show($('rosterUnlock'), !editMode);
-    show($('rosterEditNote'), editMode);
-    show($('rosterEditBar'), editMode);
+    show($('rosterUnlock'), !canEditRoster());
+    show($('rosterEditNote'), canEditRoster());
+    show($('rosterEditBar'), canEditRoster());
     if (!src.length) {
-      rList.innerHTML = '<li class="text-xs text-slate-400 italic text-center py-8">Chưa có học sinh nào.' + (editMode ? ' Bấm "Dán danh sách" hoặc "Thêm học sinh" để bắt đầu.' : '') + '</li>';
+      rList.innerHTML = '<li class="text-xs text-slate-400 italic text-center py-8">Chưa có học sinh nào.' + (canEditRoster() ? ' Bấm "Dán danh sách" hoặc "Thêm học sinh" để bắt đầu.' : '') + '</li>';
       return;
     }
-    rList.innerHTML = src.map((s, i) => editMode
+    rList.innerHTML = src.map((s, i) => canEditRoster()
       ? `<li class="r-item p-3 rounded-xl bg-slate-800/50 border border-slate-700/50" data-id="${esc(s.id)}">
           <div class="flex items-center gap-2"><span class="w-6 text-center text-[11px] font-bold text-slate-500 shrink-0">${i + 1}</span>
             <input type="text" class="field r-name !py-2" value="${esc(s.name)}" data-prev="${esc(s.name)}" placeholder="Họ và tên" aria-label="Họ và tên">
@@ -862,14 +884,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function applyRosterSearch(){
     const term = $('rosterSearch').value.toLowerCase().trim();
-    const src = (editMode && rosterDraft) ? rosterDraft : roster;
+    const src = (canEditRoster() && rosterDraft) ? rosterDraft : roster;
     rList.querySelectorAll('.r-item').forEach(li => {
       const s = src.find(x => x.id === li.dataset.id);
       li.style.display = (!term || (s && (s.name + ' ' + s.role).toLowerCase().includes(term))) ? '' : 'none';
     });
   }
   /* Gọi khi bật/tắt chế độ chỉnh sửa: làm mới bản nháp */
-  function refreshRoster(){ rosterDraft = editMode ? clone(roster) : null; renderRoster(); }
+  function refreshRoster(){ rosterDraft = canEditRoster() ? clone(roster) : null; renderRoster(); }
   function setRosterOpen(open){
     rosterOpen = open;
     drawer.classList.toggle('closed', !open);
@@ -877,7 +899,7 @@ document.addEventListener('DOMContentLoaded', () => {
     drawer.inert = !open;
     $('rosterBtn').setAttribute('aria-expanded', open ? 'true' : 'false');
     document.body.style.overflow = open ? 'hidden' : '';
-    if (open) { if (editMode && !rosterDraft) rosterDraft = clone(roster); renderRoster(); rList.classList.add('enter'); rList.querySelectorAll('.r-item').forEach((li, i) => li.style.setProperty('--i', Math.min(i, 12))); setTimeout(() => rList.classList.remove('enter'), 800); setTimeout(() => $('rosterClose').focus(), 320); }
+    if (open) { if (canEditRoster() && !rosterDraft) rosterDraft = clone(roster); renderRoster(); rList.classList.add('enter'); rList.querySelectorAll('.r-item').forEach((li, i) => li.style.setProperty('--i', Math.min(i, 12))); setTimeout(() => rList.classList.remove('enter'), 800); setTimeout(() => $('rosterClose').focus(), 320); }
     else $('rosterBtn').focus({ preventScroll:true });
   }
   const flashMsg = (t, ms = 2500) => {
@@ -890,7 +912,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('rosterUnlock').addEventListener('click', openPw);
   $('rosterSearch').addEventListener('input', applyRosterSearch);
   rList.addEventListener('input', e => {
-    if (!editMode || !rosterDraft) return;
+    if (!canEditRoster() || !rosterDraft) return;
     const t = e.target, li = t.closest('.r-item'); if (!li) return;
     const s = rosterDraft.find(x => x.id === li.dataset.id); if (!s) return;
     if (t.classList.contains('r-name')) s.name = t.value;
@@ -898,14 +920,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   rList.addEventListener('click', e => {
     const b = e.target.closest('[data-ract="rm"]');
-    if (!b || !editMode || !rosterDraft) return;
+    if (!b || !canEditRoster() || !rosterDraft) return;
     const li = b.closest('.r-item'), s = rosterDraft.find(x => x.id === li.dataset.id);
     if (!s) return;
     if (s.name.trim() && !confirm('Xóa "' + s.name.trim() + '" khỏi danh sách? (Chỉ áp dụng khi bấm Lưu)')) return;
     rosterDraft = rosterDraft.filter(x => x.id !== s.id); renderRoster();
   });
   $('rosterAdd').addEventListener('click', () => {
-    if (!editMode || !rosterDraft) return;
+    if (!canEditRoster() || !rosterDraft) return;
     if (rosterDraft.length >= MAX_ROSTER) { flashMsg('Đã đạt tối đa ' + MAX_ROSTER + ' học sinh'); return; }
     $('rosterSearch').value = '';
     rosterDraft.push({ id:newRid(), name:'', role:'' }); renderRoster();
@@ -913,11 +935,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (last) { last.scrollIntoView({ block:'nearest' }); last.focus(); }
   });
   $('rosterCancel').addEventListener('click', () => {
-    if (!editMode) return;
+    if (!canEditRoster()) return;
     rosterDraft = clone(roster); renderRoster(); flashMsg('Đã hoàn tác các thay đổi chưa lưu');
   });
   $('rosterSave').addEventListener('click', () => {
-    if (!editMode || !rosterDraft) return;
+    if (!canEditRoster() || !rosterDraft) return;
     const seen = new Set(), list = [];
     let dup = 0, over = 0;
     rosterDraft.forEach(s => {
@@ -947,7 +969,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* Gõ tay tên trong danh sách lớp: trùng người khác thì bỏ qua (khôi phục tên cũ, hoặc xóa dòng mới thêm) */
   rList.addEventListener('change', e => {
     const t = e.target;
-    if (!editMode || !rosterDraft || !t.classList.contains('r-name')) return;
+    if (!canEditRoster() || !rosterDraft || !t.classList.contains('r-name')) return;
     const li = t.closest('.r-item'), s = li && rosterDraft.find(x => x.id === li.dataset.id);
     if (!s) return;
     const k = nameKey(s.name);
@@ -1001,7 +1023,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (n) bulkErr('');
   }
   $('rosterBulk').addEventListener('click', () => {
-    if (!editMode || !rosterDraft) return;
+    if (!canEditRoster() || !rosterDraft) return;
     if (rosterDraft.length >= MAX_ROSTER) { flashMsg('Đã đạt tối đa ' + MAX_ROSTER + ' học sinh'); return; }
     bulkText.value = ''; bulkErr(''); updateBulkCount();
     show(bm, true); setTimeout(() => bulkText.focus(), 50);
@@ -1011,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('bulkCancel').addEventListener('click', () => show(bm, false));
   bm.addEventListener('click', e => { if (e.target === bm) show(bm, false); });
   $('bulkOk').addEventListener('click', () => {
-    if (!editMode || !rosterDraft) { show(bm, false); return; }
+    if (!canEditRoster() || !rosterDraft) { show(bm, false); return; }
     const names = parseNames(bulkText.value, bulkCap.checked);
     if (!names.length) return bulkErr('Chưa có tên nào. Hãy dán danh sách hoặc ghi mỗi tên một dòng.');
     const seen = new Set(rosterDraft.map(s => nameKey(s.name)).filter(Boolean));
@@ -1052,9 +1074,9 @@ document.addEventListener('DOMContentLoaded', () => {
       b.innerHTML = `<i class="fa-solid ${icon}"></i> ${text}`;
       b.addEventListener('click', fn); parent.appendChild(b);
     };
-    if (editMode) mk(tabsEl, 'px-4 py-2.5 rounded-xl text-xs font-bold border border-dashed border-emerald-500/60 text-emerald-300 hover:bg-emerald-500/10 transition-all flex items-center gap-2', 'fa-plus', 'Tạo tuần', () => openWeekModal('create'));
+    if (editMode && !monitorMode) mk(tabsEl, 'px-4 py-2.5 rounded-xl text-xs font-bold border border-dashed border-emerald-500/60 text-emerald-300 hover:bg-emerald-500/10 transition-all flex items-center gap-2', 'fa-plus', 'Tạo tuần', () => openWeekModal('create'));
     toolsEl.innerHTML = '';
-    const showTools = editMode && cur();
+    const showTools = editMode && !monitorMode && cur();
     toolsEl.className = showTools ? 'flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-700/50' : 'hidden';
     if (showTools) {
       const base = 'px-3 py-2 rounded-xl text-xs font-semibold border flex items-center gap-2 transition-all ';
@@ -1209,11 +1231,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function studentLi(w, d, p, c){
     const rose = c === 'rose', pen = p.type === 'penalty', key = choiceKey(w, d, p);
-    const tools = editMode ? `<span class="ml-auto flex gap-1"><button type="button" class="mini-btn" data-act="rename" data-pid="${esc(p.id)}" title="Sửa tên" aria-label="Sửa tên"><i class="fa-solid fa-pen"></i></button><button type="button" class="mini-btn danger" data-act="rmperson" data-pid="${esc(p.id)}" title="Xóa người" aria-label="Xóa người"><i class="fa-solid fa-user-minus"></i></button></span>` : '';
-    const typeEl = editMode
+    const tools = canEditDay(w, d) ? `<span class="ml-auto flex gap-1">${monitorMode ? '' : `<button type="button" class="mini-btn" data-act="rename" data-pid="${esc(p.id)}" title="Sửa tên" aria-label="Sửa tên"><i class="fa-solid fa-pen"></i></button>`}<button type="button" class="mini-btn danger" data-act="rmperson" data-pid="${esc(p.id)}" title="Xóa người" aria-label="Xóa người"><i class="fa-solid fa-user-minus"></i></button></span>` : '';
+    const typeEl = editMode && !monitorMode
       ? `<select class="ptype-select" data-pid="${esc(p.id)}" data-t="${pen ? 'penalty' : 'list'}" aria-label="Hình thức trực của ${esc(p.name)}"><option value="list"${pen ? '' : ' selected'}>Trực theo danh sách</option><option value="penalty"${pen ? ' selected' : ''}>Phạt</option></select>`
       : `<p class="text-[11px] italic mt-0.5 ml-6 ${pen ? 'text-rose-400' : 'text-slate-400'}">${pen ? 'Phạt' : 'Trực theo danh sách'}</p>`;
-    const dutyEl = editMode
+    const dutyEl = canEditDay(w, d)
       ? `<select name="${esc(key)}" data-v="" aria-label="Buổi trực của ${esc(p.name)}" class="duty-select w-full px-2.5 py-1.5 rounded-md bg-transparent text-xs font-semibold text-slate-300 outline-none cursor-pointer focus:ring-2 focus:ring-${c}-500">${Object.keys(DUTY).map(v => `<option value="${v}">${v ? DUTY[v] : '-- Chọn --'}</option>`).join('')}</select>`
       : `<span class="duty-view duty-select block px-2.5 py-1.5 text-xs font-semibold text-slate-300" data-key="${esc(key)}" data-v=""></span>`;
     return `<li class="student-name p-3 rounded-xl ${rose ? 'bg-rose-900/20 border border-rose-500/30' : 'bg-slate-800/50 border border-slate-700/50'}">
@@ -1230,7 +1252,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const attrs = `data-day="${d}" data-ts="${date.getTime()}"`;
     const head = `<span class="text-sm font-extrabold px-3 py-1 rounded-lg bg-${c}-500/20 text-${c}-300 tracking-wider">${label} <span class="text-[10px] font-semibold opacity-70 ml-1">${fmt(date)}</span></span>`;
     if (!data) {
-      if (!editMode || d === 8) return '';
+      if (!editMode || monitorMode || d === 8) return '';
       return `<div class="day-card glass-panel rounded-2xl p-5 flex flex-col gap-4 border-2 border-dashed border-${c}-500/40" ${attrs}>
         <div>${head} <span class="text-xs text-slate-400 ml-2">Chưa có lịch</span></div>
         <div class="flex flex-wrap gap-2">${btn('adddutyday','plus','Thêm ngày trực','emerald')}${btn('addholiday','champagne-glasses','Thêm ngày nghỉ','amber')}</div></div>`;
@@ -1245,7 +1267,8 @@ document.addEventListener('DOMContentLoaded', () => {
         (data.length ? '' : '<div class="text-xs text-slate-400 italic text-center py-3">Chưa có ai trực ngày này</div>');
     const foot = (d === 2 && !isHol)
       ? '<div class="mt-5 pt-3 border-t border-slate-800/80 text-slate-400 italic text-xs"><i class="fa-solid fa-flag text-amber-400 mr-1.5"></i>Nếu có chào cờ sẽ nhắc bê ghế riêng</div>' : '';
-    const editBar = !editMode ? '' : `<div class="flex flex-wrap gap-2 mt-4 pt-3 border-t border-slate-700/50">` +
+    const monBar = monitorMode ? ((canEditDay(w, d) && !isHol) ? `<div class="flex flex-wrap gap-2 mt-4 pt-3 border-t border-slate-700/50">${btn('addperson','user-plus','Thêm người','emerald')}</div>` : '') : null;
+    const editBar = !editMode ? '' : monBar !== null ? monBar : `<div class="flex flex-wrap gap-2 mt-4 pt-3 border-t border-slate-700/50">` +
       (isHol ? btn('edithol','pen','Sửa lý do','slate') + btn('tooduty','broom','Chuyển thành ngày trực','emerald')
              : btn('addperson','user-plus','Thêm người','emerald') + btn('toholiday','champagne-glasses','Đặt ngày nghỉ','amber')) +
       btn('chgday','arrow-right-arrow-left','Sửa thứ','cyan') +
@@ -1280,6 +1303,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const card = b.closest('.day-card'), w = cur();
     if (!card || !w) return;
     const d = card.dataset.day, act = b.dataset.act, pid = b.dataset.pid;
+    if (monitorMode && (!canEditDay(w, d) || (act !== 'addperson' && act !== 'rmperson'))) return;
     if (act === 'chgday') openDayModal('move', parseInt(d, 10));
     else if (act === 'adddutyday' || act === 'tooduty') mutate(x => { x.days[d] = []; });
     else if (act === 'addholiday' || act === 'toholiday') {
@@ -1322,6 +1346,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   grid.addEventListener('change', e => {
     const t = e.target; if (!editMode) return;
+    if (monitorMode) {
+      const _c = t.closest('.day-card');
+      if (!_c || !t.classList.contains('duty-select') || !canEditDay(cur(), _c.dataset.day)) { syncValues(); return; }
+    }
     if (t.classList.contains('duty-select')) { t.dataset.v = t.value; saveChoice(t.name, t.value); }
     else if (t.classList.contains('ptype-select')) {
       const d = t.closest('.day-card').dataset.day, pid = t.dataset.pid;
@@ -1357,7 +1385,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!w) {
       $('headRange').textContent = '—';
       $('penSection').classList.add('hidden');
-      grid.innerHTML = `<div class="col-span-full glass-panel rounded-2xl p-8 text-center text-slate-400 text-sm">Chưa có tuần nào.${editMode ? ' Bấm "Tạo tuần" để bắt đầu.' : ''}</div>`;
+      grid.innerHTML = `<div class="col-span-full glass-panel rounded-2xl p-8 text-center text-slate-400 text-sm">Chưa có tuần nào.${editMode && !monitorMode ? ' Bấm "Tạo tuần" để bắt đầu.' : ''}</div>`;
       renderTabs(); renderFilters(); return;
     }
     if (dayFilter === '8' && !w.days[8]) dayFilter = 'all';
@@ -1391,7 +1419,7 @@ document.addEventListener('DOMContentLoaded', () => {
       /* Đang TEST: giữ nguyên bản sao thử nghiệm, không để dữ liệu thật từ máy khác đè lên */
       if (testMode) return;
       loadRoster();
-      if (!editMode) renderRoster();   /* đang sửa thì giữ nguyên bản nháp, không ghi đè */
+      if (!canEditRoster()) renderRoster();   /* đang sửa thì giữ nguyên bản nháp, không ghi đè */
       const sig = weeksSig(state.weeks);
       if (sig !== lastSig) { lastSig = sig; loadWeeks(); render(); }
       else syncValues();
