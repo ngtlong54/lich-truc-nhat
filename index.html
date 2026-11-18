@@ -486,6 +486,18 @@ html.lite body #rosterList.enter>.r-item{animation-duration:.3s;animation-delay:
 html.lite #rosterDrawer{box-shadow:none!important}
 html.lite .animate-ping{animation:none}
 </style>
+
+<style id="patch-v5">
+#penAttend .pa-chip{display:inline-flex;align-items:center;gap:.375rem;padding:.25rem .65rem;border-radius:999px;font-size:11px;font-weight:700;
+  background:rgb(var(--c-rose-400)/.16);border:1px solid rgb(var(--c-rose-400)/.45);color:rgb(var(--c-rose-200))}
+#penAttend label.pa-chip{cursor:pointer;font-weight:600;transition:background-color .2s ease,border-color .2s ease,opacity .2s ease}
+#penAttend label.pa-chip:has(input:checked){background:rgb(var(--c-rose-400)/.32);border-color:rgb(var(--c-rose-400)/.8);font-weight:800}
+#penAttend label.pa-chip.off{opacity:.45;cursor:not-allowed}
+#penAttend input{accent-color:rgb(var(--c-rose-400));width:.85rem;height:.85rem}
+#penAttend .pa-label{font-size:11px;font-weight:800;color:rgb(var(--c-rose-300))}
+#penAbsent{margin-left:.5rem;vertical-align:middle;padding:.15rem .65rem;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.04em;text-decoration:none;
+  background:rgb(var(--c-rose-400)/.2);border:1px solid rgb(var(--c-rose-400)/.55);color:rgb(var(--c-rose-300))}
+</style>
 </head>
 <body class="text-slate-200 font-sans min-h-screen pb-12 antialiased selection:bg-cyan-500 selection:text-black">
 <!-- Màn hình khóa kiểu Android -->
@@ -600,7 +612,8 @@ html.lite .animate-ping{animation:none}
       <div class="w-12 h-12 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center text-xl shrink-0 pulse-glow"><i class="fa-solid fa-user-xmark"></i></div>
       <div>
         <div class="flex items-center gap-2"><span class="px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-extrabold text-[10px] border border-rose-500/40">Phạt trực nhật</span><span id="penLabel" class="text-xs text-rose-400/80 italic font-semibold"></span></div>
-        <h3 class="text-base font-black text-slate-100 mt-1">Tên: <span id="penName" class="text-rose-400 underline decoration-rose-500/50 underline-offset-4"></span></h3>
+        <h3 class="text-base font-black text-slate-100 mt-1">Tên: <span id="penName" class="text-rose-400 underline decoration-rose-500/50 underline-offset-4"></span><span id="penAbsent" style="display:none">KHÔNG THAM GIA TRỰC</span></h3>
+        <div id="penAttend" class="flex-wrap items-center gap-2 mt-2.5" style="display:none"></div>
       </div>
     </div>
     <div class="px-5 py-2.5 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-200 font-black text-sm flex items-center gap-2.5 shrink-0"><i class="fa-solid fa-gavel text-rose-400 text-base"></i><span id="penUntil"></span></div>
@@ -634,7 +647,7 @@ html.lite .animate-ping{animation:none}
   </div>
 </main>
 
-<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.18-ver.11</p></footer>
+<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.18-ver.12</p></footer>
 
 <!-- Hộp thoại khi chọn sai (ảnh) -->
 <div id="lkImgModal" role="dialog" aria-modal="true" aria-label="Sai rồi" class="hidden fixed inset-0 z-[120] bg-black/70 backdrop-blur-sm items-center justify-center p-4 overflow-y-auto">
@@ -884,6 +897,7 @@ const PT_COLOR = {list:'text-slate-400', penalty:'text-rose-400', sub:'text-ambe
 function normalizeWeek(w){
   const o = JSON.parse(JSON.stringify(w));
   o.penalty = Object.assign({name:'',label:'',until:''}, o.penalty || {});
+  o.penalty.days = Array.isArray(o.penalty.days) ? o.penalty.days.map(Number).filter(d => d >= 2 && d <= 8) : [];
   o.days = o.days || {};
   o.notes = (o.notes && typeof o.notes === 'object') ? o.notes : {};
   Object.keys(o.days).forEach(d => {
@@ -1401,6 +1415,8 @@ window.__lk = { msg, sync, shake, unlock, lock };
     moves.forEach(m => { if (m.v) saveChoice(m.nk, m.v); });
     if (B === undefined) delete w.days[a]; else w.days[a] = B;
     w.days[b] = A;
+    { const pd = (w.penalty && w.penalty.days) || [], na = Number(a), nb = Number(b), ia = pd.indexOf(na) >= 0, ib = pd.indexOf(nb) >= 0;
+      const nd = pd.filter(v => v !== na && v !== nb); if (ib) nd.push(na); if (ia) nd.push(nb); if (w.penalty) w.penalty.days = nd; }
     { const n = w.notes || (w.notes = {}), na = n[a], nb = n[b]; if (nb === undefined) delete n[a]; else n[a] = nb; if (na === undefined) delete n[b]; else n[b] = na; }
   }
 
@@ -1697,7 +1713,7 @@ window.__lk = { msg, sync, shake, unlock, lock };
   wm.addEventListener('click', e => { if (e.target === wm) show(wm, false); });
   $('wmOk').addEventListener('click', () => {
     const penalty = { name:$('wmPenName').value.trim(), label:$('wmPenLabel').value.trim(), until:$('wmPenUntil').value.trim() };
-    if (wmMode === 'edit') { mutate(w => { w.penalty = penalty; }); show(wm, false); return; }
+    if (wmMode === 'edit') { mutate(w => { penalty.days = (w.penalty && w.penalty.name === penalty.name) ? (w.penalty.days || []) : []; w.penalty = penalty; }); show(wm, false); return; }
     const m = mondayOf($('wmDate').value);
     if (!m) return wmErr('Hãy chọn ngày hợp lệ.');
     const start = [m.getFullYear(), m.getMonth(), m.getDate()];
@@ -1910,7 +1926,7 @@ ${esc(raw)}</textarea></div>`;
     }
     else if (act === 'rmday') {
       if (!confirm('Xóa ngày này khỏi tuần?')) return;
-      clearChoices(w, d); mutate(x => { delete x.days[d]; if (x.notes) delete x.notes[d]; });
+      clearChoices(w, d); mutate(x => { delete x.days[d]; if (x.penalty && x.penalty.days) x.penalty.days = x.penalty.days.filter(v => v !== Number(d)); if (x.notes) delete x.notes[d]; });
     }
     else if (act === 'addperson') {
       const r = prompt('Nhập tên người trực (nhiều người cách nhau bằng dấu phẩy):'); if (!r) return;
@@ -1986,6 +2002,39 @@ ${esc(raw)}</textarea></div>`;
   });
   clearBtn.addEventListener('click', () => { searchInput.value = ''; clearTimeout(searchTimer); applySearch(); });
 
+  /* ---------- Điểm danh buổi trực nhật của người bị phạt ---------- */
+  function renderPenAttend(w){
+    const box = $('penAttend'), badge = $('penAbsent');
+    if (!box || !badge) return;
+    const pen = w.penalty, base = (pen.days || []).map(Number);
+    const avail = WEEKDAYS.filter(d => Array.isArray(w.days[d]));   /* chỉ các ngày có lịch trực (không tính ngày nghỉ / ngày trống) */
+    const checked = avail.filter(d => base.indexOf(d) >= 0);
+    badge.style.display = (pen.name && !checked.length) ? 'inline-block' : 'none';
+    const label = '<span class="pa-label"><i class="fa-solid fa-clipboard-user mr-1"></i>Buổi trực nhật:</span>';
+    let html = '';
+    if (editMode && avail.length) {
+      html = label + avail.map(d => {
+        const ok = canEditDay(w, d);
+        return `<label class="pa-chip${ok ? '' : ' off'}" title="${esc(dayName(d))} (${fmt(dayDate(w, d))})"><input type="checkbox" data-pday="${d}"${checked.indexOf(d) >= 0 ? ' checked' : ''}${ok ? '' : ' disabled'}>${esc(dayName(d))}</label>`;
+      }).join('');
+    } else if (checked.length) {
+      html = label + checked.map(d => `<span class="pa-chip">${esc(dayName(d))}</span>`).join('');
+    }
+    box.innerHTML = html;
+    box.style.display = html ? 'flex' : 'none';
+  }
+  $('penAttend').addEventListener('change', e => {
+    const t = e.target, w = cur();
+    if (!w || !t.dataset || !t.dataset.pday) return;
+    const d = Number(t.dataset.pday), on = t.checked;
+    if (!editMode || !canEditDay(w, d)) { renderPenAttend(w); return; }
+    mutate(x => {
+      const s = new Set((x.penalty.days || []).map(Number));
+      if (on) s.add(d); else s.delete(d);
+      x.penalty.days = Array.from(s).sort((a, b) => a - b);
+    });
+  });
+
   /* ---------- Vẽ lại toàn trang ---------- */
   function render(){
     const w = cur();
@@ -2000,6 +2049,7 @@ ${esc(raw)}</textarea></div>`;
     $('headRange').textContent = weekLabel(w);
     $('penSection').classList.toggle('hidden', !hasPen);
     $('penName').textContent = pen.name; $('penLabel').textContent = pen.label; $('penUntil').textContent = pen.until;
+    renderPenAttend(w);
     grid.innerHTML = WEEKDAYS.map(d => cardHtml(w, d)).join('');
     grid.querySelectorAll('.day-card').forEach((c, i) => c.style.setProperty('--i', i));
     grid.classList.toggle('enter', animNext);
