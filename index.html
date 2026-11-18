@@ -1,6 +1,39 @@
 <!DOCTYPE html>
 <html lang="vi" class="dark">
 <head>
+<script id="patch-v4-perf">
+/* Nhận diện máy yếu: chế độ "lite" chỉ bỏ các hiệu ứng nặng (blur nền, backdrop-filter...). Máy mạnh giữ nguyên.
+   Ép tay: localStorage.perf = 'lite' | 'full' */
+(function(){
+  var root = document.documentElement;
+  try {
+    var n = navigator, c = n.connection || {}, f = localStorage.getItem('perf');
+    var weak = (n.hardwareConcurrency && n.hardwareConcurrency <= 4) || (n.deviceMemory && n.deviceMemory <= 3) || c.saveData === true || localStorage.getItem('perf_auto') === 'lite';
+    if (f === 'lite') weak = true; else if (f === 'full') weak = false;
+    if (weak) root.classList.add('lite');
+  } catch (e) {}
+  document.addEventListener('visibilitychange', function(){ root.classList.toggle('tab-hidden', document.hidden); });
+  /* Đo FPS ~1.5 giây sau khi tải: dưới 42 fps thì bật lite (nhớ cho lần sau) */
+  addEventListener('load', function(){
+    try { if (root.classList.contains('lite') || localStorage.getItem('perf') === 'full') return; } catch (e) {}
+    setTimeout(function(){
+      var t0 = 0, last = 0, n = 0, bad = false;
+      function step(t){
+        if (document.hidden || (last && t - last > 400)) return;
+        if (!t0) t0 = t;
+        last = t; n++;
+        if (t - t0 < 1500) { requestAnimationFrame(step); return; }
+        if ((n - 1) / ((t - t0) / 1000) < 42) {
+          root.classList.add('lite');
+          try { localStorage.setItem('perf_auto', 'lite'); } catch (e) {}
+        }
+      }
+      requestAnimationFrame(step);
+    }, 400);
+  });
+})();
+</script>
+
 <!-- BEGIN favicon (added by add_favicon.py) -->
 <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1tMdA3Pghxg7pAjuSYhx4AN8_L_h0Y803=w256-h256">
 <link rel="shortcut icon" href="https://lh3.googleusercontent.com/d/1tMdA3Pghxg7pAjuSYhx4AN8_L_h0Y803=w256-h256">
@@ -423,6 +456,36 @@ html body>header,html body>main,html body>footer{transition:filter 520ms cubic-b
 .lk-avatar{transition:background-color 300ms cubic-bezier(.2,0,0,1),color 300ms cubic-bezier(.2,0,0,1)}
 .lk-card.ok .lk-avatar i{animation:lkPop 400ms cubic-bezier(.34,1.4,.64,1)}
 </style>
+
+<style id="patch-v4">
+/* ===== Trực thay / Trực bù ===== */
+.ptype-select[data-t="sub"]{color:rgb(var(--c-amber-300));border-color:rgba(251,191,36,.5)}
+.ptype-select[data-t="makeup"]{color:rgb(var(--c-emerald-300));border-color:rgba(52,211,153,.5)}
+.psub-select{width:100%;margin-top:.4rem;padding:.3rem .6rem;border-radius:999px;font-size:.7rem;font-weight:600;
+  background:var(--m-s4,rgba(15,23,42,.8));border:1px solid rgba(251,191,36,.5);color:rgb(var(--c-amber-300));outline:none;cursor:pointer}
+html:not(.dark) .psub-select{background:var(--m-s4,rgba(255,255,255,.9))}
+.psub-select option{background:rgb(var(--c-slate-900));color:rgb(var(--c-slate-200))}
+
+/* ===== Ghi chú ngày ===== */
+.note-input{min-height:3.25rem!important;font-size:.75rem!important}
+
+/* ===== Tối ưu hiệu ứng (không đổi giao diện) ===== */
+.r-item{content-visibility:auto;contain-intrinsic-size:auto 76px}
+.day-card{contain:layout style}
+body::before{transform:translateZ(0)}
+html.tab-hidden *,html.tab-hidden *::before,html.tab-hidden *::after{animation-play-state:paused!important}
+
+/* ===== Chế độ lite (chỉ bật trên máy yếu) ===== */
+@keyframes lkLeaveLite{to{opacity:0;transform:scale(1.06)}}
+html.lite.locked body>header,html.lite.locked body>main,html.lite.locked body>footer{filter:none!important;transform:none!important;animation:none!important;opacity:.18!important}
+html.lite .lk-card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--m-s2)!important;box-shadow:0 4px 16px rgb(0 0 0/.25)!important}
+html.lite #lockScreen.leaving{animation:lkLeaveLite .25s ease forwards}
+html.lite .backdrop-blur-sm{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html.lite body #cardsGrid.enter .day-card{animation-duration:.4s;animation-delay:calc(var(--i,0)*25ms)}
+html.lite body #rosterList.enter>.r-item{animation-duration:.3s;animation-delay:calc(var(--i,0)*15ms)}
+html.lite #rosterDrawer{box-shadow:none!important}
+html.lite .animate-ping{animation:none}
+</style>
 </head>
 <body class="text-slate-200 font-sans min-h-screen pb-12 antialiased selection:bg-cyan-500 selection:text-black">
 <!-- Màn hình khóa kiểu Android -->
@@ -571,7 +634,7 @@ html body>header,html body>main,html body>footer{transition:filter 520ms cubic-b
   </div>
 </main>
 
-<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.17.23-ver.10+</p></footer>
+<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.18-ver.11</p></footer>
 
 <!-- Hộp thoại khi chọn sai (ảnh) -->
 <div id="lkImgModal" role="dialog" aria-modal="true" aria-label="Sai rồi" class="hidden fixed inset-0 z-[120] bg-black/70 backdrop-blur-sm items-center justify-center p-4 overflow-y-auto">
@@ -815,15 +878,19 @@ const ESC_MAP = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
 const esc = s => String(s).replace(/[&<>"']/g, ch => ESC_MAP[ch]);
 
 /* Mỗi người = {id, name, type}; type là 'list' (theo danh sách) hoặc 'penalty' (phạt). */
+const PT_KEYS = ['list','penalty','sub','makeup'];
+const PT_LABEL = {list:'Trực theo danh sách', penalty:'Phạt', sub:'Trực thay', makeup:'Trực bù'};
+const PT_COLOR = {list:'text-slate-400', penalty:'text-rose-400', sub:'text-amber-400', makeup:'text-emerald-400'};
 function normalizeWeek(w){
   const o = JSON.parse(JSON.stringify(w));
   o.penalty = Object.assign({name:'',label:'',until:''}, o.penalty || {});
   o.days = o.days || {};
+  o.notes = (o.notes && typeof o.notes === 'object') ? o.notes : {};
   Object.keys(o.days).forEach(d => {
     const v = o.days[d];
     if (Array.isArray(v)) o.days[d] = v.map((p,i) => typeof p === 'string'
       ? {id:String(i+1), name:p, type:'list'}
-      : {id:String(p.id), name:p.name, type:p.type === 'penalty' ? 'penalty' : 'list'});
+      : {id:String(p.id), name:p.name, type:PT_KEYS.indexOf(p.type) >= 0 ? p.type : 'list', sub:p.type === 'sub' ? String(p.sub || '') : ''});
   });
   return o;
 }
@@ -1215,7 +1282,7 @@ window.__lk = { msg, sync, shake, unlock, lock };
       try { localStorage.setItem('theme', toDark ? 'dark' : 'light'); } catch(e){}
     };
     root.classList.add('theme-switching');
-    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (!document.startViewTransition || root.classList.contains('lite') || matchMedia('(prefers-reduced-motion: reduce)').matches) {
       apply(); done(); return;   /* khong co hieu ung: doi ngay lap tuc */
     }
     const r = themeBtn.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
@@ -1334,6 +1401,7 @@ window.__lk = { msg, sync, shake, unlock, lock };
     moves.forEach(m => { if (m.v) saveChoice(m.nk, m.v); });
     if (B === undefined) delete w.days[a]; else w.days[a] = B;
     w.days[b] = A;
+    { const n = w.notes || (w.notes = {}), na = n[a], nb = n[b]; if (nb === undefined) delete n[a]; else n[a] = nb; if (na === undefined) delete n[b]; else n[b] = na; }
   }
 
   /* ---------- Danh sách lớp (ngăn kéo bên phải) ---------- */
@@ -1736,9 +1804,16 @@ window.__lk = { msg, sync, shake, unlock, lock };
   function studentLi(w, d, p, c){
     const rose = c === 'rose', pen = p.type === 'penalty', key = choiceKey(w, d, p);
     const tools = canEditDay(w, d) ? `<span class="ml-auto flex gap-1">${monitorMode ? '' : `<button type="button" class="mini-btn" data-act="rename" data-pid="${esc(p.id)}" title="Sửa tên" aria-label="Sửa tên"><i class="fa-solid fa-pen"></i></button>`}<button type="button" class="mini-btn danger" data-act="rmperson" data-pid="${esc(p.id)}" title="Xóa người" aria-label="Xóa người"><i class="fa-solid fa-user-minus"></i></button></span>` : '';
+    const ptype = PT_KEYS.indexOf(p.type) >= 0 ? p.type : 'list', subName = p.sub || '';
+    let subSelect = '';
+    if (ptype === 'sub') {
+      const names = roster.map(r => r.name).filter(n => n && n !== p.name);
+      if (subName && names.indexOf(subName) < 0) names.unshift(subName);
+      subSelect = `<select class="psub-select" data-pid="${esc(p.id)}" aria-label="Trực thay cho ai"><option value="">-- Trực thay cho ai? --</option>${names.map(n => `<option value="${esc(n)}"${n === subName ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select>`;
+    }
     const typeEl = editMode && !monitorMode
-      ? `<select class="ptype-select" data-pid="${esc(p.id)}" data-t="${pen ? 'penalty' : 'list'}" aria-label="Hình thức trực của ${esc(p.name)}"><option value="list"${pen ? '' : ' selected'}>Trực theo danh sách</option><option value="penalty"${pen ? ' selected' : ''}>Phạt</option></select>`
-      : `<p class="text-[11px] italic mt-0.5 ml-6 ${pen ? 'text-rose-400' : 'text-slate-400'}">${pen ? 'Phạt' : 'Trực theo danh sách'}</p>`;
+      ? `<select class="ptype-select" data-pid="${esc(p.id)}" data-t="${ptype}" aria-label="Hình thức trực của ${esc(p.name)}">${PT_KEYS.map(k => `<option value="${k}"${k === ptype ? ' selected' : ''}>${PT_LABEL[k]}</option>`).join('')}</select>${subSelect}`
+      : `<p class="text-[11px] italic mt-0.5 ml-6 ${PT_COLOR[ptype]}">${PT_LABEL[ptype]}${ptype === 'sub' ? ': <span class="font-bold not-italic">' + (subName ? esc(subName) : 'chưa chọn người') + '</span>' : ''}</p>`;
     const dutyEl = canEditDay(w, d)
       ? `<select name="${esc(key)}" data-v="" aria-label="Buổi trực của ${esc(p.name)}" class="duty-select w-full px-2.5 py-1.5 rounded-md bg-transparent text-xs font-semibold text-slate-300 outline-none cursor-pointer focus:ring-2 focus:ring-${c}-500">${Object.keys(DUTY).map(v => `<option value="${v}">${v ? DUTY[v] : '-- Chọn --'}</option>`).join('')}</select>`
       : `<span class="duty-view duty-select block px-2.5 py-1.5 text-xs font-semibold text-slate-300" data-key="${esc(key)}" data-v=""></span>`;
@@ -1749,6 +1824,17 @@ window.__lk = { msg, sync, shake, unlock, lock };
         <span class="text-[10px] font-bold block ${rose ? 'text-rose-400/80' : 'text-slate-400'} mb-1">Trạng thái trực:</span>
         <div class="bg-slate-900/60 p-1.5 rounded-lg border ${rose ? 'border-rose-500/30' : 'border-slate-700/40'}">${dutyEl}</div>
       </div></li>`;
+  }
+
+  /* Ghi chú / nhận xét của ngày: người sửa được thấy ô nhập; khách chỉ thấy khi có nội dung */
+  function noteHtml(w, d){
+    const raw = (w.notes && w.notes[d]) || '', txt = String(raw).trim();
+    if (canEditDay(w, d)) {
+      return `<div class="day-note mt-4 pt-3 border-t border-slate-700/50"><label class="text-[10px] font-bold block text-slate-400 mb-1.5"><i class="fa-regular fa-note-sticky mr-1 text-amber-400"></i>Ghi chú / nhận xét</label><textarea class="field note-input" rows="2" maxlength="500" data-note="${d}" placeholder="Ghi chú hoặc nhận xét cho ngày này..." aria-label="Ghi chú ngày">
+${esc(raw)}</textarea></div>`;
+    }
+    if (!txt) return '';
+    return `<div class="day-note mt-4 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30"><div class="text-[10px] font-bold text-amber-300 mb-1"><i class="fa-regular fa-note-sticky mr-1"></i>Ghi chú / nhận xét</div><div class="text-xs text-slate-200 whitespace-pre-wrap break-words">${esc(txt)}</div></div>`;
   }
 
   function cardHtml(w, d){
@@ -1781,7 +1867,7 @@ window.__lk = { msg, sync, shake, unlock, lock };
       <div>
         <div class="flex items-center justify-between mb-4 border-b border-slate-800 pb-3">
           <span>${head}</span><span class="flex items-center gap-2"><span class="status-badge"></span>${right}</span>
-        </div>${body}${editBar}
+        </div>${body}${noteHtml(w, d)}${editBar}
       </div>${foot}</div>`;
   }
 
@@ -1824,7 +1910,7 @@ window.__lk = { msg, sync, shake, unlock, lock };
     }
     else if (act === 'rmday') {
       if (!confirm('Xóa ngày này khỏi tuần?')) return;
-      clearChoices(w, d); mutate(x => { delete x.days[d]; });
+      clearChoices(w, d); mutate(x => { delete x.days[d]; if (x.notes) delete x.notes[d]; });
     }
     else if (act === 'addperson') {
       const r = prompt('Nhập tên người trực (nhiều người cách nhau bằng dấu phẩy):'); if (!r) return;
@@ -1857,7 +1943,24 @@ window.__lk = { msg, sync, shake, unlock, lock };
     if (t.classList.contains('duty-select')) { t.dataset.v = t.value; saveChoice(t.name, t.value); }
     else if (t.classList.contains('ptype-select')) {
       const d = t.closest('.day-card').dataset.day, pid = t.dataset.pid;
-      mutate(x => { x.days[d].find(q => q.id === pid).type = t.value === 'penalty' ? 'penalty' : 'list'; });
+      mutate(x => { const q = x.days[d].find(q => q.id === pid); q.type = PT_KEYS.indexOf(t.value) >= 0 ? t.value : 'list'; if (q.type !== 'sub') q.sub = ''; });
+    }
+  });
+
+  /* Ghi chú ngày + chọn người được trực thay */
+  grid.addEventListener('change', e => {
+    const t = e.target, w = cur();
+    if (!t.classList || !w || !editMode) return;
+    if (t.classList.contains('note-input')) {
+      const d = t.dataset.note;
+      if (!canEditDay(w, d)) return;
+      const v = t.value.trim().slice(0, 500);
+      if (v === String((w.notes && w.notes[d]) || '')) return;
+      mutate(x => { x.notes = x.notes || {}; if (v) x.notes[d] = v; else delete x.notes[d]; });
+    } else if (t.classList.contains('psub-select') && !monitorMode) {
+      const card = t.closest('.day-card'); if (!card) return;
+      const d = card.dataset.day, pid = t.dataset.pid, val = t.value;
+      mutate(x => { const q = x.days[d].find(q => q.id === pid); if (q) q.sub = val; });
     }
   });
 
