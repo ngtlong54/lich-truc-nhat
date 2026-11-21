@@ -2531,7 +2531,7 @@ ${esc(raw)}</textarea></div>`;
 
   function syncValues(){
     grid.querySelectorAll('select.duty-select').forEach(el => { el.value = getChoice(el.name) || ''; el.dataset.v = el.value; });
-    grid.querySelectorAll('span.duty-view').forEach(el => { const v = getChoice(el.dataset.key) || ''; el.dataset.v = v; el.textContent = DUTY[v] || v; });
+    grid.querySelectorAll('span.duty-view').forEach(el => { const v = getChoice(el.dataset.key) || ''; el.dataset.v = v; el.textContent = v ? (DUTY[v] || v) : 'Chưa điểm danh'; });
   }
 
   /* ---------- Thao tác chỉnh sửa trong thẻ ---------- */
