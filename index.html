@@ -42,6 +42,11 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- BEGIN pwa-head (added by patch_pwa.py) -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#121316">
+<meta name="mobile-web-app-capable" content="yes">
+<!-- END pwa-head -->
 <title>Lịch Trực Nhật 12A1 Bản Web</title>
 <meta name="description" content="Lịch trực nhật lớp 12A1: xem ai trực ngày nào, danh sách lớp và quy định.">
 <meta property="og:type" content="website">
@@ -498,6 +503,32 @@ html.lite .animate-ping{animation:none}
 #penAbsent{margin-left:.5rem;vertical-align:middle;padding:.15rem .65rem;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.04em;text-decoration:none;
   background:rgb(var(--c-rose-400)/.2);border:1px solid rgb(var(--c-rose-400)/.55);color:rgb(var(--c-rose-300))}
 </style>
+<style id="patch-draft-css">
+/* patch-draft-v1 */
+#draftBar{position:fixed;left:0;right:0;margin-inline:auto;width:max-content;max-width:calc(100vw - 20px);bottom:max(14px,env(safe-area-inset-bottom));z-index:95;display:none;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;padding:10px 12px 10px 18px;border-radius:28px;background:var(--m-s3,#292a2f);color:var(--m-on,#e3e2e6);box-shadow:0 8px 32px rgb(0 0 0/.35);font-size:12px;font-weight:600}
+#draftBar.show{display:flex;animation:rise .5s var(--spring,ease) backwards}
+#dbInfo{display:inline-flex;align-items:center;gap:6px;padding-right:4px}
+#dbInfo b{font-weight:800}
+.db-warn{color:rgb(var(--c-amber-300));font-weight:800}
+.db-btn{height:40px;padding:0 14px;border-radius:999px;border:0;font-family:inherit;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap}
+.db-btn[hidden]{display:none}
+.db-btn:disabled{opacity:.38;cursor:not-allowed}
+.db-save{background:rgb(var(--m-p,168 199 250));color:rgb(var(--m-on-p,6 46 111))}
+.db-cancel{background:rgb(var(--m-pc,40 71 120));color:rgb(var(--m-on-pc,211 227 253))}
+.db-ghost{background:transparent;color:var(--m-on-v,#c4c6d0);box-shadow:inset 0 0 0 1px var(--m-outline,#44474e)}
+.db-hot{background:rgb(var(--c-amber-400));color:#000;box-shadow:none}
+@media (max-width:520px){#dbInfo{flex:1 1 100%;justify-content:center;padding:0}}
+html.draft-on body{padding-bottom:8.5rem}
+#updChip{position:fixed;left:0;right:0;margin-inline:auto;width:max-content;max-width:calc(100vw - 24px);bottom:max(14px,env(safe-area-inset-bottom));z-index:94;display:none;align-items:center;gap:8px;height:44px;padding:0 18px;border:0;border-radius:999px;background:rgb(var(--m-p,168 199 250));color:rgb(var(--m-on-p,6 46 111));font-family:inherit;font-size:12px;font-weight:800;box-shadow:0 8px 28px rgb(0 0 0/.35);cursor:pointer}
+#updChip.show{display:inline-flex;animation:rise .5s var(--spring,ease) backwards}
+html.draft-on #updChip,html.roster-open #updChip,html.roster-open #draftBar,html.locked #draftBar{display:none!important}
+#dbToast{position:fixed;left:0;right:0;margin-inline:auto;width:max-content;max-width:calc(100vw - 32px);bottom:calc(max(14px,env(safe-area-inset-bottom)) + 96px);z-index:140;padding:12px 18px;border-radius:999px;background:var(--m-on,#e3e2e6);color:var(--m-bg,#121316);font-size:12px;font-weight:700;text-align:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .25s ease,transform .25s ease}
+#dbToast.show{opacity:1;transform:none}
+#updBadge{display:inline-block;margin-bottom:10px;padding:3px 12px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.06em;background:rgb(var(--c-amber-400)/.2);color:rgb(var(--c-amber-300));border:1px solid rgb(var(--c-amber-400)/.5)}
+#updBadge[hidden],#updList[hidden]{display:none}
+#updList{margin:14px 0 0;padding:0;list-style:none;text-align:left;display:grid;gap:6px}
+#updList li{padding:8px 12px;border-radius:14px;font-size:11.5px;background:rgb(var(--m-p,168 199 250)/.1);color:var(--m-on,#e3e2e6);word-break:break-word}
+</style>
 </head>
 <body class="text-slate-200 font-sans min-h-screen pb-12 antialiased selection:bg-cyan-500 selection:text-black">
 <!-- Màn hình khóa kiểu Android -->
@@ -647,7 +678,60 @@ html.lite .animate-ping{animation:none}
   </div>
 </main>
 
-<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.18-ver.12</p></footer>
+<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.21-ver.13</p></footer>
+
+<!-- patch-draft-v1: thanh Lưu / Hủy, hộp thoại cập nhật, xem trước -->
+<div id="draftBar" role="region" aria-label="Lưu thay đổi">
+  <span id="dbInfo"></span>
+  <button id="dbPreview" type="button" class="db-btn db-ghost" hidden><i class="fa-regular fa-eye"></i> Xem trước</button>
+  <button id="dbCancel" type="button" class="db-btn db-cancel" disabled><i class="fa-solid fa-rotate-left"></i> Hủy</button>
+  <button id="dbSave" type="button" class="db-btn db-save" disabled><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
+  <button id="dbReload" type="button" class="db-btn db-ghost"><i class="fa-solid fa-arrows-rotate"></i> Tải lại web</button>
+</div>
+<button id="updChip" type="button"><i class="fa-solid fa-arrows-rotate"></i> Có bản cập nhật mới · Tải lại</button>
+<div id="dbToast" role="status" aria-live="polite"></div>
+
+<!-- Hộp thoại: có cập nhật mới (gửi tới mọi người đang mở web) -->
+<div id="updModal" role="dialog" aria-modal="true" aria-labelledby="updTitle" class="hidden fixed inset-0 z-[130] bg-black/70 backdrop-blur-sm items-center justify-center p-4 overflow-y-auto">
+  <div class="glass-panel rounded-2xl p-6 w-full max-w-sm text-center my-8">
+    <span id="updBadge" hidden>XEM TRƯỚC</span>
+    <div class="lk-ok-ico" style="background:rgb(var(--m-p,168 199 250)/.18);color:rgb(var(--m-p,168 199 250))"><i class="fa-solid fa-arrows-rotate"></i></div>
+    <h3 id="updTitle" class="text-lg font-extrabold text-slate-100 mt-4">Có cập nhật mới</h3>
+    <p id="updText" class="text-sm text-slate-300 mt-1"></p>
+    <ul id="updList" hidden></ul>
+    <button id="updReload" type="button" class="lk-primary" style="margin-top:20px"><i class="fa-solid fa-arrows-rotate"></i> Tải lại ngay</button>
+    <button id="updLater" type="button" class="lk-link">Để sau</button>
+  </div>
+</div>
+
+<!-- Hộp thoại: xem trước (chỉ ở chế độ Thử Nghiệm) -->
+<div id="pvModal" role="dialog" aria-modal="true" aria-labelledby="pvTitle" class="hidden fixed inset-0 z-[125] bg-black/70 backdrop-blur-sm items-center justify-center p-4 overflow-y-auto">
+  <div class="glass-panel rounded-2xl p-5 w-full max-w-lg my-8 border border-amber-500/40">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0"><i class="fa-regular fa-eye"></i></div>
+      <div><h3 id="pvTitle" class="text-base font-extrabold text-slate-100">Xem trước khi lưu</h3><p class="text-xs text-slate-400">Chế độ thử nghiệm: không có gì được ghi lên máy chủ</p></div>
+    </div>
+    <div class="text-[11px] font-bold text-slate-400 mb-1.5">1. Các thay đổi sẽ được lưu (<span id="pvCount">0</span>)</div>
+    <ul id="pvList" class="space-y-1.5 text-xs text-slate-200 max-h-56 overflow-y-auto mb-4"></ul>
+    <div class="text-[11px] font-bold text-slate-400 mb-1.5">2. Mọi người đang mở web/app sẽ nhận hộp thông báo này</div>
+    <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-700/50 mb-4 text-center">
+      <div class="text-sm font-extrabold text-slate-100"><i class="fa-solid fa-arrows-rotate mr-1.5 text-cyan-400"></i>Có cập nhật mới</div>
+      <div id="pvNoticeText" class="text-xs text-slate-300 mt-1"></div>
+    </div>
+    <div class="text-[11px] font-bold text-slate-400 mb-1.5">3. Điều gì xảy ra khi bấm Lưu</div>
+    <ol class="text-xs text-slate-300 space-y-1 list-decimal pl-5 mb-4">
+      <li>Mọi thay đổi được ghi lên máy chủ cùng một lúc.</li>
+      <li>Mọi thiết bị đang mở web/app nhận hộp thoại và bấm "Tải lại ngay" để xem nội dung mới.</li>
+      <li>Ai chọn "Để sau" vẫn thấy dữ liệu cũ, kèm nút "Tải lại" ở cuối màn hình.</li>
+      <li>Người đang chỉnh sửa khác cũng nhận thông báo; bản nháp chưa lưu của họ chỉ mất khi họ tải lại.</li>
+    </ol>
+    <div class="flex flex-wrap justify-end gap-2">
+      <button id="pvClose" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700/60">Đóng</button>
+      <button id="pvNotice" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold border border-slate-600/60 text-slate-200 hover:bg-slate-700/40"><i class="fa-regular fa-bell mr-1"></i> Xem hộp thoại của người khác</button>
+      <button id="pvSim" type="button" class="px-4 py-2 rounded-xl text-xs font-bold border border-amber-500/50 text-amber-300 hover:bg-amber-500/10"><i class="fa-solid fa-flask mr-1"></i> Giả lập lưu</button>
+    </div>
+  </div>
+</div>
 
 <!-- Hộp thoại khi chọn sai (ảnh) -->
 <div id="lkImgModal" role="dialog" aria-modal="true" aria-label="Sai rồi" class="hidden fixed inset-0 z-[120] bg-black/70 backdrop-blur-sm items-center justify-center p-4 overflow-y-auto">
@@ -1055,6 +1139,7 @@ document.addEventListener('DOMContentLoaded', () => {
         : '<i class="fa-solid fa-key"></i><span class="hidden sm:inline">Chỉnh sửa</span>';
   }
   function setEdit(v, test, mon){
+    if (!v && editMode && typeof draftBeforeLeave === 'function' && draftBeforeLeave() === false) return;
     if (v && window.__lk) window.__lk.unlock();
     const wasTest = testMode;
     editMode = v; monitorMode = !!(v && mon && !test);
@@ -1062,6 +1147,7 @@ document.addEventListener('DOMContentLoaded', () => {
       /* Vào TEST: chụp bản sao danh sách tuần + danh sách lớp hiện tại, mọi sửa đổi chỉ diễn ra trên bản sao này */
       testMode = true;
       testData = { weeks: clone(weeks), roster: clone(roster), choices: {} };
+      testData.base = { weeks: clone(weeks), roster: clone(roster), choices: clone(state.choices) };
     } else {
       testMode = false; testData = null;
       /* Thoát TEST: bỏ bản sao, nạp lại dữ liệu thật */
@@ -1335,7 +1421,7 @@ window.__lk = { msg, sync, shake, unlock, lock };
     setStatus(false, 'Lỗi ghi dữ liệu');
   }
   $('errClose').addEventListener('click', () => show($('errBanner'), false));
-  function fbSet(path, value){
+  function fbSetNow(path, value){
     try {
       const p = db.ref(path).set(value);
       if (p && p.catch) p.catch(reportWriteError);
@@ -1481,7 +1567,7 @@ window.__lk = { msg, sync, shake, unlock, lock };
   /* Gọi khi bật/tắt chế độ chỉnh sửa: làm mới bản nháp */
   function refreshRoster(){ rosterDraft = canEditRoster() ? clone(roster) : null; renderRoster(); }
   function setRosterOpen(open){
-    rosterOpen = open;
+    rosterOpen = open; document.documentElement.classList.toggle('roster-open', open);
     drawer.classList.toggle('closed', !open);
     overlay.classList.toggle('closed', !open);
     drawer.inert = !open;
@@ -1540,7 +1626,7 @@ window.__lk = { msg, sync, shake, unlock, lock };
     roster = list;
     persistRoster();
     rosterDraft = clone(roster); renderRoster();
-    flashMsg((testMode ? 'Đã lưu (chế độ thử nghiệm, không có tác dụng thật)' : 'Đã lưu danh sách lớp') + (dup ? ', bỏ qua ' + dup + ' tên trùng' : '') + (over ? ', bỏ qua ' + over + ' tên vượt giới hạn ' + MAX_ROSTER : ''));
+    flashMsg((testMode ? 'Đã lưu (chế độ thử nghiệm, không có tác dụng thật)' : (db ? 'Đã lưu vào bản nháp. Đóng danh sách rồi bấm "Lưu" ở thanh dưới màn hình để áp dụng cho mọi người' : 'Đã lưu danh sách lớp')) + (dup ? ', bỏ qua ' + dup + ' tên trùng' : '') + (over ? ', bỏ qua ' + over + ' tên vượt giới hạn ' + MAX_ROSTER : ''), 6500);
   });
 
   /* ---------- Dán danh sách học sinh hàng loạt ---------- */
@@ -2037,6 +2123,7 @@ ${esc(raw)}</textarea></div>`;
 
   /* ---------- Vẽ lại toàn trang ---------- */
   function render(){
+    setTimeout(drTick, 0);
     const w = cur();
     if (!w) {
       $('headRange').textContent = '—';
@@ -2057,6 +2144,265 @@ ${esc(raw)}</textarea></div>`;
     syncValues(); renderTabs(); renderFilters(); applyFilter(); decorateCards(); applySearch();
   }
 
+  /* patch-draft-v1: Lưu / Hủy thay đổi, thông báo cập nhật cho mọi người, xem trước ở chế độ thử nghiệm */
+  let drPending = {}, drServer = null, drFrozen = false, drKnown = '', drMy = '', drLastId = '', drInit = false, drBusy = false, drPreviewing = false, drToastT = 0, drSig = '';
+  const drHas = () => Object.keys(drPending).length;
+  const drLive = () => editMode && !testMode && !!db;
+  const drOps = () => testMode ? drTestOps() : drPending;
+  const drCanon = o => JSON.stringify(o, (k, v) => (v && typeof v === 'object' && !Array.isArray(v)) ? Object.keys(v).sort().reduce((a, x) => { a[x] = v[x]; return a; }, {}) : v);
+  const drParseWeek = s => { try { return normalizeWeek(JSON.parse(s)); } catch (e) { return null; } };
+  const drRosterCompact = list => JSON.stringify((list || []).map(x => x.role ? [x.name, x.role] : [x.name]));
+  function drRosterOf(s){
+    let list = null;
+    if (s) { try { list = JSON.parse(s); } catch (e) {} }
+    if (!Array.isArray(list)) return DEFAULT_ROSTER.map(x => ({ name: x.name, role: x.role }));
+    return list.map(x => Array.isArray(x)
+      ? { name: String(x[0] || ''), role: String(x[1] || '') }
+      : { name: String((x || {}).name || ''), role: String((x || {}).role || '') });
+  }
+
+  /* Ghi lên Firebase: khi đang chỉnh sửa thì chỉ xếp vào hàng chờ, chỉ ghi thật khi bấm "Lưu" */
+  function fbSet(path, value){
+    if (editMode && !testMode) { drPending[path] = (value === undefined ? null : value); setTimeout(drTick, 0); return; }
+    fbSetNow(path, value);
+  }
+
+  function drToast(t){
+    const el = $('dbToast'); el.textContent = t; el.classList.add('show');
+    clearTimeout(drToastT); drToastT = setTimeout(() => el.classList.remove('show'), 3600);
+  }
+
+  /* ----- So sánh để liệt kê "có gì thay đổi" ----- */
+  function drTestOps(){
+    const ops = {}, b = testData && testData.base;
+    if (!b) return ops;
+    const bw = {}, cw = {};
+    b.weeks.forEach(w => { bw[w.id] = normalizeWeek(w); });
+    testData.weeks.forEach(w => { cw[w.id] = normalizeWeek(w); });
+    Object.keys(cw).forEach(id => { if (!bw[id] || drCanon(bw[id]) !== drCanon(cw[id])) ops['duty/weeks/' + id] = JSON.stringify(cw[id]); });
+    Object.keys(bw).forEach(id => { if (!cw[id]) ops['duty/weeks/' + id] = null; });
+    if (drRosterCompact(b.roster) !== drRosterCompact(testData.roster)) ops['duty/roster'] = drRosterCompact(testData.roster);
+    const bc = b.choices || {}, cc = testData.choices || {};
+    Object.keys(cc).forEach(k => { const nv = cc[k] || '', ov = bc[k] || ''; if (nv !== ov) ops['duty/choices/' + k] = nv || null; });
+    return ops;
+  }
+  function drBaseOf(){
+    if (testMode) {
+      const b = testData && testData.base;
+      if (!b) return { weeks: {}, roster: null, choices: {} };
+      const w = {}; b.weeks.forEach(x => { w[x.id] = JSON.stringify(x); });
+      return { weeks: w, roster: drRosterCompact(b.roster), choices: b.choices || {} };
+    }
+    const s = drServer || {};
+    return { weeks: s.weeks || {}, roster: s.roster || null, choices: s.choices || {} };
+  }
+  function drDiffWeek(ow, nw, out){
+    if (!ow && !nw) return;
+    if (!ow) { out.push('Tạo tuần ' + weekLabel(nw)); return; }
+    if (!nw) { out.push('Xóa tuần ' + weekLabel(ow)); return; }
+    const L = 'Tuần ' + weekLabel(nw) + ' · ', op = ow.penalty, np = nw.penalty;
+    if (op.name !== np.name || op.label !== np.label || op.until !== np.until) out.push(L + 'người bị phạt: "' + (op.name || 'không có') + '" → "' + (np.name || 'không có') + '"');
+    if ((op.days || []).join() !== (np.days || []).join()) out.push(L + 'buổi trực nhật của người bị phạt: ' + ((np.days || []).map(dayName).join(', ') || 'không có'));
+    WEEKDAYS.forEach(d => {
+      const a = ow.days[d], b = nw.days[d], aA = Array.isArray(a), bA = Array.isArray(b), D = L + dayName(d) + ' (' + fmt(dayDate(nw, d)) + ') · ';
+      if (a === undefined && b === undefined) return;
+      if (a === undefined) out.push(D + (bA ? 'thêm ngày trực (' + b.length + ' người)' : 'thêm ngày nghỉ "' + b.holiday + '"'));
+      else if (b === undefined) out.push(D + 'xóa ngày');
+      else if (aA && !bA) out.push(D + 'đặt ngày nghỉ "' + b.holiday + '"');
+      else if (!aA && bA) out.push(D + 'chuyển thành ngày trực');
+      else if (!aA && !bA) { if (a.holiday !== b.holiday) out.push(D + 'đổi lý do nghỉ: "' + b.holiday + '"'); }
+      else {
+        const am = {}, bm = {};
+        a.forEach(p => { am[p.id] = p; }); b.forEach(p => { bm[p.id] = p; });
+        b.forEach(p => { if (!am[p.id]) out.push(D + 'thêm "' + p.name + '"'); });
+        a.forEach(p => { if (!bm[p.id]) out.push(D + 'bỏ "' + p.name + '"'); });
+        b.forEach(p => {
+          const o = am[p.id]; if (!o) return;
+          if (o.name !== p.name) out.push(D + 'đổi tên "' + o.name + '" → "' + p.name + '"');
+          if (o.type !== p.type || (o.sub || '') !== (p.sub || '')) out.push(D + '"' + p.name + '": ' + PT_LABEL[p.type] + (p.type === 'sub' && p.sub ? ' cho ' + p.sub : ''));
+        });
+      }
+      if (b !== undefined) {
+        const x = String((ow.notes || {})[d] || ''), y = String((nw.notes || {})[d] || '');
+        if (x !== y) out.push(D + 'ghi chú: ' + (y ? '"' + y.slice(0, 40) + (y.length > 40 ? '…' : '') + '"' : 'đã xóa'));
+      }
+    });
+  }
+  function drRosterLines(newStr, base, out){
+    const o = drRosterOf(base.roster), n = drRosterOf(newStr), key = s => s.name.trim().toLowerCase(), om = {}, nm = {}, L = 'Danh sách lớp · ';
+    o.forEach(x => { om[key(x)] = x; }); n.forEach(x => { nm[key(x)] = x; });
+    const add = n.filter(x => !om[key(x)]), rm = o.filter(x => !nm[key(x)]);
+    if (add.length > 3) out.push(L + 'thêm ' + add.length + ' học sinh'); else add.forEach(x => out.push(L + 'thêm "' + x.name + '"'));
+    if (rm.length > 3) out.push(L + 'bỏ ' + rm.length + ' học sinh'); else rm.forEach(x => out.push(L + 'bỏ "' + x.name + '"'));
+    n.forEach(x => { const p = om[key(x)]; if (p && p.role !== x.role) out.push(L + 'chức vụ của "' + x.name + '": "' + (p.role || 'không có') + '" → "' + (x.role || 'không có') + '"'); });
+    if (!add.length && !rm.length && o.map(key).join('|') !== n.map(key).join('|')) out.push(L + 'sắp xếp lại thứ tự');
+  }
+  function drChoiceLine(key, nv, base){
+    const m = /^(.*)t([2-8])_([^_]+)$/.exec(key); if (!m) return null;
+    const w = weeks.find(x => x.prefix === m[1]); if (!w) return null;
+    const arr = w.days[m[2]]; if (!Array.isArray(arr)) return null;
+    const p = arr.find(q => String(q.id) === m[3]); if (!p) return null;
+    const ov = (base.choices || {})[key] || '', nn = nv || '';
+    if (ov === nn) return null;
+    return 'Trạng thái trực · ' + dayName(+m[2]) + ' (' + fmt(dayDate(w, +m[2])) + ') · ' + p.name + ': ' + (DUTY[ov] || 'Chưa chọn') + ' → ' + (DUTY[nn] || 'Chưa chọn');
+  }
+  function drDescribe(ops, base){
+    const out = [];
+    Object.keys(ops).forEach(path => {
+      const val = ops[path]; let m;
+      if ((m = /^duty\/weeks\/(.+)$/.exec(path))) {
+        const os = (base.weeks || {})[m[1]];
+        drDiffWeek(os ? drParseWeek(os) : null, val ? drParseWeek(val) : null, out);
+      } else if (path === 'duty/roster') drRosterLines(val, base, out);
+      else if ((m = /^duty\/choices\/(.+)$/.exec(path))) { const l = drChoiceLine(m[1], val, base); if (l) out.push(l); }
+    });
+    return out;
+  }
+  function drLinesOf(ops){
+    if (!Object.keys(ops).length) return [];
+    const l = drDescribe(ops, drBaseOf());
+    return l.length ? l : ['Một vài thay đổi nhỏ'];
+  }
+  const drSum = lines => lines.slice(0, 4).map(s => s.length > 90 ? s.slice(0, 89) + '…' : s);
+
+  /* ----- Hộp thoại "Có cập nhật mới" ----- */
+  function drNoticeText(r){
+    let t = (r && r.by === 'monitor' ? 'Lớp trưởng' : 'Quản trị viên') + ' vừa cập nhật lịch trực';
+    if (r && r.t) { const d = new Date(+r.t); if (!isNaN(d.getTime())) t += ' lúc ' + pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+    return t + '. Hãy tải lại web/app để xem nội dung mới.';
+  }
+  function drShowUpdate(r, preview){
+    drPreviewing = !!preview;
+    $('updText').textContent = drNoticeText(r);
+    const sum = r && r.sum ? (Array.isArray(r.sum) ? r.sum : Object.keys(r.sum).map(k => r.sum[k])) : [];
+    const ul = $('updList'); ul.innerHTML = sum.map(s => '<li>' + esc(s) + '</li>').join(''); ul.hidden = !sum.length;
+    $('updBadge').hidden = !preview;
+    show($('updModal'), true);
+  }
+
+  /* Cổng đặt trước bộ lắng nghe Firebase: trả về true = bỏ qua bản dữ liệu này (đã có thông báo cập nhật, hoặc đang có bản nháp) */
+  function draftGate(v){
+    drServer = clone(v);
+    const r = v.rev || null, id = r && r.id ? String(r.id) : '';
+    if (!drInit) { drInit = true; drKnown = id; return false; }
+    if (drFrozen) {
+      if (id && id !== drLastId && id !== drMy) { drLastId = id; drShowUpdate(r); }
+      return true;
+    }
+    if (id && id !== drKnown) {
+      if (id === drMy) drKnown = id;
+      else { drFrozen = true; drLastId = id; drShowUpdate(r); drTick(); return true; }
+    }
+    return drHas() > 0;
+  }
+
+  /* ----- Thanh Lưu / Hủy / Tải lại ----- */
+  function drTick(){
+    const bar = $('draftBar'); if (!bar) return;
+    const on = !!(editMode && (testMode || db));
+    bar.classList.toggle('show', on);
+    document.documentElement.classList.toggle('draft-on', on);
+    $('updChip').classList.toggle('show', drFrozen);
+    if (!on) return;
+    const ops = drOps(), n = Object.keys(ops).length, cnt = n ? drLinesOf(ops).length : 0;
+    const info = (testMode ? '<i class="fa-solid fa-flask"></i> Thử nghiệm · ' : '') + (cnt ? '<b>' + cnt + '</b> thay đổi chưa lưu' : 'Chưa có thay đổi') + (drFrozen ? ' · <span class="db-warn">Có bản cập nhật mới</span>' : '');
+    const sig = info + '|' + n + '|' + drBusy + '|' + testMode;
+    if (sig === drSig) return;
+    drSig = sig;
+    $('dbInfo').innerHTML = info;
+    $('dbSave').disabled = !n || drBusy;
+    $('dbCancel').disabled = !n && !drFrozen;
+    $('dbPreview').hidden = !testMode;
+    $('dbReload').classList.toggle('db-hot', drFrozen);
+  }
+
+  function drSave(){
+    if (testMode) { drSimSave(); return; }
+    if (!drLive() || drBusy || !drHas()) return;
+    if (drFrozen && !confirm('Có bản cập nhật mới từ người khác mà bạn chưa tải. Lưu bây giờ sẽ ghi đè các mục bạn đã sửa. Tiếp tục?')) return;
+    const lines = drLinesOf(drPending), id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6), payload = {};
+    Object.keys(drPending).forEach(k => { payload[k] = drPending[k]; });
+    payload['duty/rev'] = { id: id, by: monitorMode ? 'monitor' : 'admin', n: Math.max(lines.length, 1), sum: drSum(lines), t: firebase.database.ServerValue.TIMESTAMP };
+    drMy = id; drPending = {}; drBusy = true; drSig = ''; drTick();
+    let p;
+    try { p = db.ref().update(payload); } catch (e) { drBusy = false; drMy = ''; reportWriteError(e); drTick(); return; }
+    p.then(() => { drBusy = false; drKnown = id; drToast('Đã lưu. Mọi người đang mở web sẽ nhận thông báo cập nhật.'); drSig = ''; drTick(); })
+     .catch(e => { drBusy = false; reportWriteError(e); drSig = ''; drTick(); });
+  }
+
+  /* Bỏ bản nháp: nạp lại dữ liệu mới nhất từ máy chủ */
+  function drDiscard(){
+    drPending = {};
+    const v = drServer || {};
+    state.choices = clone(v.choices || {}); state.weeks = clone(v.weeks || {}); state.roster = v.roster || null;
+    if (drFrozen) { drFrozen = false; drKnown = (v.rev && v.rev.id) ? String(v.rev.id) : drKnown; show($('updModal'), false); }
+    lastSig = weeksSig(state.weeks);
+    drSig = '';
+    loadWeeks(); loadRoster(); render(); refreshRoster();
+  }
+  function drCancel(){
+    if (testMode) {
+      if (!testData || !testData.base) return;
+      testData.weeks = clone(testData.base.weeks); testData.roster = clone(testData.base.roster); testData.choices = {};
+      drSig = ''; loadWeeks(); loadRoster(); render(); refreshRoster(); drToast('Đã hủy các thay đổi thử nghiệm');
+      return;
+    }
+    if (!drLive()) return;
+    if (drHas() && !confirm('Hủy ' + drHas() + ' mục chưa lưu?')) return;
+    drDiscard(); drToast(drHas() ? '' : 'Đã hủy thay đổi và nạp lại dữ liệu mới nhất');
+  }
+  /* Gọi từ setEdit(false): có bản nháp chưa lưu thì hỏi trước khi thoát chỉnh sửa */
+  function draftBeforeLeave(){
+    if (testMode || !drHas()) return true;
+    if (!confirm('Còn ' + drHas() + ' mục chưa lưu. Thoát chế độ chỉnh sửa sẽ hủy chúng. Tiếp tục?')) return false;
+    drDiscard(); return true;
+  }
+
+  /* ----- Xem trước (chế độ Thử Nghiệm) ----- */
+  function drPreview(){
+    const ops = drOps(), has = Object.keys(ops).length, lines = drLinesOf(ops);
+    $('pvCount').textContent = String(has ? lines.length : 0);
+    $('pvList').innerHTML = has
+      ? lines.slice(0, 80).map(t => '<li class="p-2.5 rounded-xl bg-slate-900/60 border border-slate-700/50 break-words">' + esc(t) + '</li>').join('') + (lines.length > 80 ? '<li class="text-slate-400 italic">… và ' + (lines.length - 80) + ' thay đổi khác</li>' : '')
+      : '<li class="text-slate-400 italic">Chưa có thay đổi nào. Hãy sửa thử rồi bấm Xem trước lại.</li>';
+    $('pvNoticeText').textContent = drNoticeText({ by: 'admin', t: Date.now() });
+    $('pvSim').disabled = !has;
+    show($('pvModal'), true);
+  }
+  function drSimSave(){
+    if (!testMode || !testData || !testData.base) return;
+    const ops = drOps();
+    if (!Object.keys(ops).length) { drToast('Chưa có thay đổi nào để lưu'); return; }
+    const lines = drLinesOf(ops), ch = Object.assign({}, testData.base.choices || {}, testData.choices || {});
+    Object.keys(ch).forEach(k => { if (!ch[k]) delete ch[k]; });
+    testData.base = { weeks: clone(testData.weeks), roster: clone(testData.roster), choices: ch };
+    show($('pvModal'), false);
+    drShowUpdate({ by: 'admin', t: Date.now(), n: lines.length, sum: drSum(lines) }, true);
+    drSig = ''; drTick();
+  }
+
+  $('dbSave').addEventListener('click', drSave);
+  $('dbCancel').addEventListener('click', drCancel);
+  $('dbPreview').addEventListener('click', drPreview);
+  $('dbReload').addEventListener('click', () => {
+    if (!testMode && drHas() && !confirm('Còn ' + drHas() + ' mục chưa lưu, tải lại sẽ mất chúng. Tiếp tục?')) return;
+    location.reload();
+  });
+  $('updReload').addEventListener('click', () => {
+    if (drPreviewing) { drPreviewing = false; show($('updModal'), false); drToast('Xem trước: ở bản thật, trang sẽ tải lại ngay'); return; }
+    location.reload();
+  });
+  $('updLater').addEventListener('click', () => { drPreviewing = false; show($('updModal'), false); });
+  $('updChip').addEventListener('click', () => location.reload());
+  $('pvClose').addEventListener('click', () => show($('pvModal'), false));
+  $('pvNotice').addEventListener('click', () => drShowUpdate({ by: 'admin', t: Date.now(), sum: drSum(drLinesOf(drOps())) }, true));
+  $('pvSim').addEventListener('click', drSimSave);
+  $('pvModal').addEventListener('click', e => { if (e.target === $('pvModal')) show($('pvModal'), false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') show($('pvModal'), false); });
+  window.addEventListener('beforeunload', e => { if (!testMode && drHas()) { e.preventDefault(); e.returnValue = ''; } });
+  setInterval(() => { if (editMode && !document.hidden) drTick(); }, 700);
+  drTick();
+
   /* ---------- Khởi động + đồng bộ thời gian thực ---------- */
   updateEditBtn(); loadWeeks(); loadRoster(); render(); refreshRoster();
 
@@ -2064,13 +2410,14 @@ ${esc(raw)}</textarea></div>`;
     db.ref('.info/connected').on('value', s => setStatus(!!s.val(), s.val() ? 'Đã đồng bộ trực tuyến' : 'Mất kết nối'));
     db.ref('duty').on('value', snap => {
       const v = snap.val() || {};
+      if (draftGate(v)) return;
       state.choices = v.choices || {};
       state.weeks = v.weeks || {};
       state.roster = v.roster || null;
       if (!loaded) {
         loaded = true;
         if (!Object.keys(state.weeks).length) {
-          DEFAULT_WEEKS.forEach(w => { const s = JSON.stringify(normalizeWeek(w)); state.weeks[w.id] = s; fbSet('duty/weeks/' + w.id, s); });
+          DEFAULT_WEEKS.forEach(w => { const s = JSON.stringify(normalizeWeek(w)); state.weeks[w.id] = s; fbSetNow('duty/weeks/' + w.id, s); });
         }
       }
       /* Đang TEST: giữ nguyên bản sao thử nghiệm, không để dữ liệu thật từ máy khác đè lên */
@@ -2104,5 +2451,16 @@ document.addEventListener('pointerdown', function(e){
   s.addEventListener('animationend', function(){ s.remove(); });
 }, { passive: true });
 </script>
+<!-- BEGIN pwa-sw (added by patch_pwa.py) -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function (err) {
+      console.warn('Không đăng ký được service worker:', err);
+    });
+  });
+}
+</script>
+<!-- END pwa-sw -->
 </body>
 </html>
