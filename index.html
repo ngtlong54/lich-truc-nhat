@@ -1,38 +1,15 @@
 <!DOCTYPE html>
 <html lang="vi" class="dark">
 <head>
-<script id="patch-v4-perf">
-/* Nhận diện máy yếu: chế độ "lite" chỉ bỏ các hiệu ứng nặng (blur nền, backdrop-filter...). Máy mạnh giữ nguyên.
-   Ép tay: localStorage.perf = 'lite' | 'full' */
-(function(){
-  var root = document.documentElement;
-  try {
-    var n = navigator, c = n.connection || {}, f = localStorage.getItem('perf');
-    var weak = (n.hardwareConcurrency && n.hardwareConcurrency <= 4) || (n.deviceMemory && n.deviceMemory <= 3) || c.saveData === true || localStorage.getItem('perf_auto') === 'lite';
-    if (f === 'lite') weak = true; else if (f === 'full') weak = false;
-    if (weak) root.classList.add('lite');
-  } catch (e) {}
-  document.addEventListener('visibilitychange', function(){ root.classList.toggle('tab-hidden', document.hidden); });
-  /* Đo FPS ~1.5 giây sau khi tải: dưới 42 fps thì bật lite (nhớ cho lần sau) */
-  addEventListener('load', function(){
-    try { if (root.classList.contains('lite') || localStorage.getItem('perf') === 'full') return; } catch (e) {}
-    setTimeout(function(){
-      var t0 = 0, last = 0, n = 0, bad = false;
-      function step(t){
-        if (document.hidden || (last && t - last > 400)) return;
-        if (!t0) t0 = t;
-        last = t; n++;
-        if (t - t0 < 1500) { requestAnimationFrame(step); return; }
-        if ((n - 1) / ((t - t0) / 1000) < 42) {
-          root.classList.add('lite');
-          try { localStorage.setItem('perf_auto', 'lite'); } catch (e) {}
-        }
-      }
-      requestAnimationFrame(step);
-    }, 400);
-  });
-})();
+<meta charset="UTF-8">
+<script id="patch-v8-head">
+try{var __s=sessionStorage,__la=+__s.getItem('lastAct')||0;if(__s.getItem('editMode')==='1'&&__la&&Date.now()-__la>6e5){__s.setItem('editMode','0');__s.setItem('monitor','0');}}catch(e){}
 </script>
+<script id="patch-v7-head">
+/* Nếu JS chính lỗi, không để trang bị khóa vĩnh viễn */
+setTimeout(function(){ if (!window.__lk) document.documentElement.classList.remove("locked"); }, 6000);
+</script>
+<script id="patch-v4-perf">(function(){var r=document.documentElement;try{var n=navigator,c=n.connection||{},f=localStorage.getItem('perf');var weak=(n.hardwareConcurrency&&n.hardwareConcurrency<=4)||(n.deviceMemory&&n.deviceMemory<=3)||c.saveData===true;if(f==='lite')weak=true;else if(f==='full')weak=false;if(weak)r.classList.add('lite')}catch(e){}document.addEventListener('visibilitychange',function(){r.classList.toggle('tab-hidden',document.hidden)})})();</script>
 
 <!-- BEGIN favicon (added by add_favicon.py) -->
 <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1tMdA3Pghxg7pAjuSYhx4AN8_L_h0Y803=w256-h256">
@@ -40,11 +17,10 @@
 <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1tMdA3Pghxg7pAjuSYhx4AN8_L_h0Y803=w256-h256">
 <!-- END favicon -->
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <!-- BEGIN pwa-head (added by patch_pwa.py) -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#121316">
+<meta name="theme-color" content="#141412">
 <meta name="mobile-web-app-capable" content="yes">
 <!-- END pwa-head -->
 <title>Lịch Trực Nhật 12A1 Bản Web</title>
@@ -72,6 +48,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" onerror="this.onerror=null;this.media='all';this.href='https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css'">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -242,7 +219,7 @@ html:not(.dark){
   --sb-track:transparent;--sb-thumb:#c4c6d0;
 }
 
-html body{font-family:'Google Sans Flex','Google Sans','Plus Jakarta Sans',system-ui,sans-serif!important;background-color:var(--bg);color:var(--m-on)}
+html body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif!important;background-color:var(--bg);color:var(--m-on)}
 html body::before{display:block!important;content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
   background:radial-gradient(60% 50% at 0% 0%,rgb(var(--m-p)/.14),transparent 70%),
              radial-gradient(50% 45% at 100% 8%,rgb(var(--c-purple-400)/.10),transparent 70%),
@@ -316,7 +293,7 @@ html body .theme-ico{transition:transform .6s var(--spring),opacity .35s var(--e
 /* ===================== Màn hình khóa ===================== */
 #lockScreen{display:none;position:fixed;inset:0;z-index:105;flex-direction:column;align-items:center;justify-content:center;
   padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));overflow-y:auto;color:var(--m-on);
-  background:color-mix(in srgb,var(--m-bg) 40%,transparent);font-family:'Google Sans Flex','Google Sans','Plus Jakarta Sans',system-ui,sans-serif}
+  background:color-mix(in srgb,var(--m-bg) 40%,transparent);font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
 html.locked #lockScreen,#lockScreen.leaving{display:flex}
 html.locked #lockScreen:not(.leaving){animation:lkEnter .8s var(--emph-dec) backwards}
 #lockScreen.leaving{pointer-events:none;animation:lkLeave .7s var(--emph-acc) forwards}
@@ -529,12 +506,653 @@ html.draft-on #updChip,html.roster-open #updChip,html.roster-open #draftBar,html
 #updList{margin:14px 0 0;padding:0;list-style:none;text-align:left;display:grid;gap:6px}
 #updList li{padding:8px 12px;border-radius:14px;font-size:11.5px;background:rgb(var(--m-p,168 199 250)/.1);color:var(--m-on,#e3e2e6);word-break:break-word}
 </style>
+
+<style id="patch-v6">
+/* ===== Bản vá 6: cân đối giao diện máy tính + điện thoại ===== */
+html body{overflow-x:hidden}
+html body main{padding-bottom:1rem}
+html body footer{padding-bottom:2rem}
+
+/* --- Mọi cỡ màn hình: thẻ ngày cao đều nhau, đầu thẻ không bị tràn --- */
+html body #cardsGrid{align-items:stretch}
+html body #cardsGrid .day-card{height:100%}
+html body .day-card>div:first-child>div:first-child{flex-wrap:wrap;gap:.5rem}
+html body .pname{word-break:break-word;min-width:0}
+html body .student-name .flex{min-width:0}
+html body .lg\:col-span-2,html body main>.grid>section{align-self:stretch}
+
+/* --- Máy tính (>=1024px): khoảng cách đều, thanh trên cân đối --- */
+@media (min-width:1024px){
+  html body main{gap:0}
+  html body main.space-y-8>:not([hidden])~:not([hidden]){margin-top:1.75rem!important}
+  html body .day-card{padding:1.5rem}
+  html body #weekTabs{gap:.6rem}
+}
+
+/* --- Máy tính bảng / điện thoại lớn (<1024px) --- */
+@media (max-width:1023px){
+  html body header.glass-panel{margin-bottom:1.25rem}
+}
+
+/* --- Điện thoại (<640px) --- */
+@media (max-width:639px){
+  html body header.glass-panel{margin-bottom:1rem;border-radius:0 0 24px 24px!important}
+  html body header>div{height:60px!important;padding-left:.75rem;padding-right:.75rem}
+  /* hai nhóm trong thanh trên: trái (danh sách + tiêu đề), phải (nút tiện ích) */
+  html body header .space-x-4{gap:.6rem;min-width:0;flex:1 1 auto}
+  html body header .space-x-4>*{margin-left:0!important}
+  html body header .space-x-4>div{min-width:0}
+  html body header .flex.items-center.gap-4{gap:.4rem;flex:0 0 auto}
+  html body header h1{font-size:1.02rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  html body header h1+p,html body #headRange{font-size:.68rem}
+  /* các nút cùng một cỡ 40x40, thẳng hàng */
+  html body #rosterBtn,html body #themeBtn,html body #lockBtn,html body #editBtn{width:40px;height:40px;min-width:40px;padding:0!important;justify-content:center;border-radius:14px!important}
+  html body #editBtn i,html body #rosterBtn i{font-size:.95rem}
+
+  /* khoảng cách giữa các khối */
+  html body main{padding-left:.75rem;padding-right:.75rem}
+  html body main.space-y-8>:not([hidden])~:not([hidden]){margin-top:1rem!important}
+  html body main>.grid.gap-8,html body #cardsGrid{gap:1rem}
+  html body .glass-panel:where(:not(#penSection,#testBanner,#errBanner)){border-radius:22px!important}
+  html body .day-card{border-radius:22px!important;padding:1rem}
+  html body main>section.p-6{padding:1.1rem}
+  html body main>section.p-4,html body main>section.p-3{padding:.9rem}
+
+  /* hàng chọn tuần và bộ lọc ngày: cuộn ngang một dòng, không rớt dòng lộn xộn */
+  html body #weekTabs,html body #dayFilters{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;gap:.5rem;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-inline:-.1rem;padding:.1rem}
+  html body #weekTabs::-webkit-scrollbar,html body #dayFilters::-webkit-scrollbar{display:none}
+  html body #weekTabs>button,html body #dayFilters>button{flex:0 0 auto;white-space:nowrap}
+  html body #dayFilters{width:100%}
+  html body #searchInput{padding-top:.7rem;padding-bottom:.7rem}
+
+  /* khối phạt trực nhật: căn đều, nút thời hạn full chiều ngang */
+  html body #penSection{align-items:stretch;gap:.75rem;padding:1rem;border-radius:22px!important}
+  html body #penSection>div:first-child{align-items:flex-start;gap:.75rem;min-width:0}
+  html body #penSection>div:first-child>div:first-child{width:2.75rem;height:2.75rem;font-size:1.05rem}
+  html body #penSection h3{font-size:.95rem;word-break:break-word}
+  html body #penSection>div:last-child{width:100%;justify-content:center;padding:.65rem .9rem;font-size:.8rem;text-align:center}
+
+  /* việc cần làm + chú thích */
+  html body #tasks{grid-template-columns:1fr 1fr;gap:.6rem}
+  html body #tasks>div{padding:.65rem .75rem;gap:.5rem}
+  html body #tasks span{font-size:.75rem;line-height:1.25}
+  html body #rules>li{padding:.75rem}
+  html body .mini-btn{width:2rem;height:2rem}
+
+  /* thanh lưu nháp không che nội dung */
+  html body #draftBar{left:10px;right:10px;width:auto;max-width:none;margin-inline:0;border-radius:24px}
+  html body #draftBar .db-btn{flex:1 1 auto;justify-content:center}
+}
+
+/* --- Điện thoại rất nhỏ (<380px) --- */
+@media (max-width:379px){
+  html body header h1{font-size:.92rem}
+  html body #rosterBtn,html body #themeBtn,html body #lockBtn,html body #editBtn{width:36px;height:36px;min-width:36px}
+  html body #tasks{grid-template-columns:1fr}
+}
+
+/* --- Màn hình khóa: cân đối trên điện thoại --- */
+@media (max-width:639px){
+  .lk-top{margin-bottom:20px}
+  .lk-card{padding:24px 18px 18px;border-radius:28px}
+  .lk-foot{margin-top:14px}
+}
+</style>
+
+<style id="patch-v7">
+/* ===== Bản vá 7 ===== */
+/* Khoảng cách đều, không bị dư do banner ẩn */
+html body main.space-y-8{display:flex;flex-direction:column;gap:1.75rem}
+html body main.space-y-8>:not([hidden])~:not([hidden]):not(#v7){margin-top:0!important}
+@media (max-width:639px){html body main.space-y-8{gap:1rem}}
+
+/* Banner mới */
+html body #noWeekBanner{background:rgb(var(--c-amber-500)/.14)!important}
+html body #offBanner{background:rgb(var(--c-rose-500)/.14)!important}
+
+/* Chip điểm danh cho trình duyệt không có :has() */
+#penAttend label.pa-chip.on{background:rgb(var(--c-rose-400)/.32);border-color:rgb(var(--c-rose-400)/.8);font-weight:800}
+
+/* Vùng an toàn (tai thỏ) */
+html body{padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+html body header.glass-panel{padding-top:env(safe-area-inset-top,0px)}
+
+/* Chữ nhỏ dễ đọc hơn */
+html body .text-\[9px\]{font-size:10.5px}
+html body .text-\[10px\]{font-size:11.5px}
+html body .text-\[11px\]{font-size:12px}
+
+/* Light mode: chữ phụ đủ tương phản */
+html:not(.dark) body .text-slate-400:not(i),html:not(.dark) body .text-slate-500:not(i){color:#585b63}
+html:not(.dark) body .r-role-view{color:#585b63}
+
+/* Màn hình cảm ứng: 16px chống iOS tự zoom, nút bấm to hơn */
+@media (pointer:coarse){
+  html body input:not([type=checkbox]):not([type=radio]),html body select,html body textarea,
+  html body .field,html body .field.note-input,html body #searchInput{font-size:16px!important}
+  html body .mini-btn{width:2.25rem;height:2.25rem}
+  html body #dayFilters>button,html body #weekTabs>button{min-height:40px}
+  #penAttend label.pa-chip{padding:.4rem .8rem}
+}
+
+/* Toast không đè thanh Lưu */
+html.draft-on #dbToast{bottom:calc(max(14px,env(safe-area-inset-bottom)) + 120px)}
+@media (max-width:520px){
+  html.draft-on body{padding-bottom:11rem}
+  html.draft-on #dbToast{bottom:calc(max(14px,env(safe-area-inset-bottom)) + 160px)}
+}
+</style>
+
+<style id="patch-v8">
+/* ===== Bản vá 8: tối giản, nhẹ ===== */
+html body::before{display:none!important}
+html body .animate-ping{animation:none!important}
+html body .m-ripple{display:none!important}
+html body #cardsGrid.enter .day-card,html body #rosterList.enter>.r-item,
+html body #testBanner:not(.hidden),html body #errBanner:not(.hidden),html body #penSection:not(.hidden){animation:none!important}
+html body .shadow-neon-cyan,html body .shadow-neon-rose{box-shadow:none!important}
+html body .backdrop-blur-sm,html body .lk-card{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html body .lk-card{background:var(--m-s2)!important}
+
+/* Bo góc và khoảng cách gọn, đồng đều */
+html body header.glass-panel{border-radius:0 0 20px 20px!important}
+html body .glass-panel:where(:not(#penSection,#testBanner,#errBanner)){border-radius:20px!important}
+html body .day-card{border-radius:20px!important;padding:1.1rem;transition:opacity .2s ease!important}
+html body .day-card:hover{transform:none!important}
+html body li.student-name{padding:.7rem .8rem;border-radius:16px!important}
+html body main.space-y-8{gap:1.25rem}
+html body #cardsGrid,html body main>.grid.gap-8{gap:1rem}
+@media (max-width:639px){html body main.space-y-8{gap:.9rem}}
+html body main>section.p-6{padding:1.25rem}
+
+/* Bớt trang trí */
+html body .w-9.h-9.rounded-lg{display:none}
+html body span.duty-view[data-v]:not([data-v=""]){box-shadow:none!important}
+html body #rules>li{background:var(--m-s3)!important;border-color:transparent!important}
+html:not(.dark) body .justify-center[class*="-500/"]{background-image:none!important;box-shadow:none!important}
+
+/* Chuyển động nhanh, không nảy */
+html body button{transition:background-color .15s ease,color .15s ease,opacity .15s ease,transform .1s ease!important}
+html body button:active:not(:disabled){transform:scale(.97)}
+</style>
+<style id="patch-v11-calm">
+:root{--c-cyan-100:220 239 232;--c-cyan-200:191 224 212;--c-cyan-300:163 209 193;--c-cyan-400:134 192 173;--c-cyan-500:106 174 152;--c-cyan-600:79 149 128;--c-emerald-100:226 238 216;--c-emerald-200:202 222 188;--c-emerald-300:178 206 162;--c-emerald-400:152 190 136;--c-emerald-500:126 170 110;--c-emerald-600:100 148 88;--c-purple-100:234 229 242;--c-purple-200:215 207 232;--c-purple-300:197 186 220;--c-purple-400:178 165 208;--c-purple-500:158 144 192;--c-purple-600:136 122 172;--c-blue-100:223 232 244;--c-blue-200:199 214 236;--c-blue-300:174 196 226;--c-blue-400:148 176 214;--c-blue-500:122 156 200;--c-blue-600:100 136 184;--c-amber-100:246 237 214;--c-amber-200:238 222 176;--c-amber-300:228 206 142;--c-amber-400:216 189 112;--c-amber-500:200 169 86;--c-amber-600:178 147 64;--c-orange-100:246 228 216;--c-orange-200:238 208 188;--c-orange-300:228 185 158;--c-orange-400:216 163 130;--c-orange-500:200 141 106;--c-orange-600:178 119 86;--c-rose-100:246 227 227;--c-rose-200:238 205 205;--c-rose-300:228 180 180;--c-rose-400:216 152 152;--c-rose-500:200 124 124;--c-rose-600:178 100 100;--c-rose-900:92 42 42;--c-rose-950:62 28 28;--c-slate-100:236 234 229;--c-slate-200:222 219 212;--c-slate-300:198 194 186;--c-slate-400:152 148 140;--c-slate-500:152 148 140;--c-slate-600:104 101 94;--c-slate-700:66 64 60;--c-slate-800:46 45 42;--c-slate-900:30 30 28}
+html:not(.dark){--c-cyan-100:18 58 48;--c-cyan-200:26 80 66;--c-cyan-300:36 100 84;--c-cyan-400:47 111 94;--c-cyan-500:61 128 108;--c-cyan-600:36 100 84;--c-emerald-100:30 54 22;--c-emerald-200:42 76 32;--c-emerald-300:54 96 42;--c-emerald-400:66 112 52;--c-emerald-500:82 128 66;--c-emerald-600:54 96 42;--c-purple-100:44 36 68;--c-purple-200:62 52 94;--c-purple-300:82 70 120;--c-purple-400:102 88 142;--c-purple-500:118 104 158;--c-purple-600:82 70 120;--c-blue-100:26 46 76;--c-blue-200:36 64 102;--c-blue-300:46 84 130;--c-blue-400:62 104 154;--c-blue-500:78 120 168;--c-blue-600:46 84 130;--c-amber-100:66 46 10;--c-amber-200:92 66 14;--c-amber-300:120 86 20;--c-amber-400:150 108 28;--c-amber-500:170 124 40;--c-amber-600:120 86 20;--c-orange-100:70 34 18;--c-orange-200:98 48 26;--c-orange-300:126 64 34;--c-orange-400:154 80 46;--c-orange-500:174 96 60;--c-orange-600:126 64 34;--c-rose-100:76 28 28;--c-rose-200:104 38 38;--c-rose-300:138 50 50;--c-rose-400:166 64 64;--c-rose-500:184 82 82;--c-rose-600:138 50 50;--c-rose-900:170 70 70;--c-rose-950:140 52 52;--c-slate-100:31 29 26;--c-slate-200:52 50 46;--c-slate-300:84 80 74;--c-slate-400:111 106 97;--c-slate-500:111 106 97;--c-slate-600:156 151 142;--c-slate-700:200 196 188;--c-slate-800:230 227 220;--c-slate-900:244 242 238}
+html:not(.dark) body i[class*="text-cyan-"]{color:rgb(var(--c-cyan-400))!important}
+html:not(.dark) body i[class*="text-emerald-"]{color:rgb(var(--c-emerald-400))!important}
+html:not(.dark) body i[class*="text-purple-"]{color:rgb(var(--c-purple-400))!important}
+html:not(.dark) body i[class*="text-blue-"]{color:rgb(var(--c-blue-400))!important}
+html:not(.dark) body i[class*="text-amber-"]{color:rgb(var(--c-amber-400))!important}
+html:not(.dark) body i[class*="text-orange-"]{color:rgb(var(--c-orange-400))!important}
+html:not(.dark) body i[class*="text-rose-"]{color:rgb(var(--c-rose-400))!important}
+
+/* ===== Bản vá 11: tối giản, hiện đại, dịu mắt (đặt cuối cùng) ===== */
+
+/* ---------- Biến màu ---------- */
+:root{
+  --bg:#141412;--surface:#1c1c1a;--surface-2:#242421;--surface-3:#2d2c28;--seg-on:#37352f;
+  --line:#2f2e2a;--text:#e8e6e1;--muted:#9a968d;
+  --ac:134 192 173;--on-ac:18 36 30;--ac-soft:38 62 55;--on-ac-soft:205 232 222;
+  --ease:cubic-bezier(.22,.8,.24,1);
+  --m-bg:var(--bg);--m-s1:var(--surface);--m-s2:var(--surface);--m-s3:var(--surface-2);--m-s4:var(--surface-3);
+  --m-on:var(--text);--m-on-v:var(--muted);--m-outline:var(--line);
+  --m-p:var(--ac);--m-on-p:var(--on-ac);--m-pc:var(--ac-soft);--m-on-pc:var(--on-ac-soft);
+  --glass:var(--surface);--glass-b:var(--line);--sb-thumb:#3a3934;--accent:rgb(134 192 173)}
+html:not(.dark){
+  --bg:#f6f5f2;--surface:#ffffff;--surface-2:#f2f0ec;--surface-3:#e9e6e0;--seg-on:#ffffff;
+  --line:#e6e3dc;--text:#1f1d1a;--muted:#6f6a61;
+  --ac:47 111 94;--on-ac:255 255 255;--ac-soft:221 236 229;--on-ac-soft:22 66 54;
+  --sb-thumb:#d2cec5;--accent:rgb(47 111 94)}
+
+/* ---------- Nền, chữ ---------- */
+html body{background:var(--bg)!important;color:var(--text)!important;font-size:15px;line-height:1.55;
+  font-family:'Inter','Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif!important;
+  -webkit-font-smoothing:antialiased;letter-spacing:-.003em}
+html body::before{display:none!important}
+html:not(.lite) body::before{display:block!important;content:""!important;position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(60% 38% at 50% -8%,rgb(var(--ac)/.07),transparent 70%)}
+html body *::selection,html body::selection{background:rgb(var(--ac)/.3)!important;color:inherit!important}
+html body .text-slate-400,html body .text-slate-500,html body .r-role-view{color:var(--muted)!important}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--sb-thumb);border-radius:8px}
+html body :is(button,a,input,select,textarea):focus-visible{outline:2px solid rgb(var(--ac)/.75)!important;outline-offset:2px}
+html body .rounded-md{border-radius:8px!important}
+html body .rounded-lg{border-radius:10px!important}
+html body .rounded-xl{border-radius:14px!important}
+html body .rounded-2xl{border-radius:20px!important}
+
+/* ---------- Thanh trên cùng: mỏng, chỉ có biểu tượng ---------- */
+html body header.glass-panel{position:sticky;top:0;z-index:50;margin:0 0 26px!important;padding:0!important;
+  background:color-mix(in srgb,var(--bg) 88%,transparent)!important;border:0!important;
+  border-bottom:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important}
+html:not(.lite) body header.glass-panel{backdrop-filter:saturate(1.4) blur(12px)!important;-webkit-backdrop-filter:saturate(1.4) blur(12px)!important}
+html body header>div{max-width:920px!important;height:auto!important;min-height:60px;padding:10px 20px!important;
+  display:flex;flex-wrap:nowrap;align-items:center;gap:4px}
+html body header>div>div:first-child,html body header>div>div:last-child{display:contents!important}
+html body header>div>div:first-child>div{order:1;flex:1 1 auto;min-width:0}
+html body header .md\:flex{order:2;margin-right:6px}
+html body #rosterBtn{order:3}
+html body #themeBtn{order:4}
+html body #lockBtn{order:5}
+html body #editBtn{order:6}
+html body header h1{font-size:17px!important;line-height:1.2;font-weight:700!important;letter-spacing:-.01em;
+  text-transform:lowercase;background:none!important;-webkit-text-fill-color:currentColor!important;
+  color:var(--text)!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html body header h1::first-letter{text-transform:uppercase}
+html body header h1+p{font-size:12px!important;font-weight:500!important;color:var(--muted)!important;margin-top:1px}
+html body header h1+p i{display:none}
+html body header .md\:flex>.glass-panel{background:transparent!important;border:0!important;border-radius:0!important;padding:0!important}
+html body header .md\:flex>.glass-panel>div:last-child{display:flex;align-items:baseline;gap:6px}
+html body header .md\:flex .text-slate-400{font-size:12px!important;font-weight:500!important}
+html body #todayDisplay{color:var(--text)!important;font-size:12px!important;font-weight:600!important}
+html body header .animate-ping{animation:none!important;width:6px!important;height:6px!important;background:rgb(var(--ac))!important}
+html body #rosterBtn,html body #themeBtn,html body #lockBtn,
+html:not(.dark) body #rosterBtn{width:40px;height:40px;min-width:40px;padding:0!important;display:inline-flex;align-items:center;justify-content:center;
+  background:transparent!important;background-image:none!important;border:0!important;border-radius:12px!important;color:var(--muted)!important}
+html body #rosterBtn:hover,html body #themeBtn:hover,html body #lockBtn:hover{background:var(--surface-2)!important;color:var(--text)!important}
+html body #rosterBtn span{display:none!important}
+html body #rosterBtn i,html body #themeBtn i,html body #lockBtn i,html:not(.dark) body #rosterBtn i,
+html:not(.dark) body .theme-ico.sun{color:currentColor!important;font-size:15px!important}
+html body #editBtn:not([class*="emerald"],[class*="amber"]){height:40px;padding:0 14px!important;border-radius:999px!important;
+  background:transparent!important;border:1px solid var(--line)!important;color:var(--text)!important;font-size:13px}
+html body #editBtn[class*="emerald"],html body #editBtn[class*="amber"]{height:40px;padding-top:0!important;padding-bottom:0!important;border-radius:999px!important}
+html body #editBtn:not([class*="emerald"],[class*="amber"]):hover{background:var(--surface-2)!important}
+
+/* ---------- Trang: một cột ---------- */
+html body main{max-width:920px!important;padding:0 20px 72px!important}
+html body main.space-y-8{display:flex;flex-direction:column;gap:24px}
+html body #testBanner,html body #errBanner,html body #noWeekBanner,html body #offBanner{border-radius:16px!important}
+html body .glass-panel:where(:not(#penSection,#testBanner,#errBanner)){
+  background:var(--surface)!important;border:1px solid var(--line)!important;border-radius:20px!important;box-shadow:none!important}
+
+/* Chọn tuần + lọc ngày + tìm kiếm: không khung, chỉ khoảng trắng */
+html body main>section:nth-of-type(1),html body main>section:nth-of-type(2){
+  background:transparent!important;border:0!important;border-radius:0!important;padding:0!important}
+html body main>section:nth-of-type(2){margin-top:-8px}
+html body main>section:nth-of-type(1)>div:first-child{margin-bottom:10px;font-size:12px;font-weight:600;color:var(--muted)!important}
+html body main>section:nth-of-type(1)>div:first-child>i{display:none}
+html body #weekTabs{flex-wrap:nowrap!important;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px;margin:0 -2px;-webkit-overflow-scrolling:touch}
+html body #weekTabs::-webkit-scrollbar,html body #dayFilters::-webkit-scrollbar{display:none}
+html body #weekTabs>button{flex:0 0 auto;white-space:nowrap;height:38px;padding:0 16px!important;border-radius:999px!important;
+  background:transparent!important;color:var(--muted)!important;border:1px solid var(--line)!important;font-size:13px!important;font-weight:600;box-shadow:none!important}
+html body #weekTabs>button:hover{background:var(--surface-2)!important;color:var(--text)!important}
+html body #weekTabs>button[class*="from-cyan-500"]{background:rgb(var(--ac))!important;color:rgb(var(--on-ac))!important;border-color:transparent!important}
+html body #weekTabs>button.border-dashed{border-style:dashed!important}
+html body #weekTabs>button i{display:none}
+html body #weekTabs>button.border-dashed i{display:inline}
+html body main>section:nth-of-type(2)>div{gap:12px!important}
+html body #searchInput{height:42px;border-radius:999px!important;background:var(--surface-2)!important;border:1px solid transparent!important;color:var(--text)!important}
+html body #searchInput:focus{border-color:rgb(var(--ac)/.6)!important;box-shadow:0 0 0 3px rgb(var(--ac)/.18)!important}
+html body #dayFilters{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;gap:2px!important;padding:3px;border-radius:999px;background:var(--surface-2);max-width:100%}
+html body #dayFilters>button{flex:0 0 auto;white-space:nowrap;height:34px;padding:0 14px!important;border-radius:999px!important;
+  background:transparent!important;border:0!important;color:var(--muted)!important;font-size:13px!important;font-weight:600;box-shadow:none!important}
+html body #dayFilters>button:hover{color:var(--text)!important}
+html body #dayFilters>button[class*="from-cyan-500"]{background:var(--seg-on)!important;color:var(--text)!important;box-shadow:0 1px 3px rgb(0 0 0/.14)!important}
+@media (max-width:767px){html body #dayFilters{width:100%}}
+
+/* Nhãn nhỏ (Hiện tại / Hôm nay) */
+html body span[class*="text-black"]{background:rgb(var(--ac)/.18)!important;color:rgb(var(--ac))!important;
+  font-size:10.5px!important;font-weight:700;padding:2px 8px!important;border-radius:999px!important}
+html body button[class*="from-cyan-500"] span[class*="text-black"]{background:rgb(var(--on-ac)/.2)!important;color:rgb(var(--on-ac))!important}
+
+/* Phạt trực nhật: ghi chú nhẹ nhàng */
+html body #penSection{background:rgb(var(--c-rose-500)/.09)!important;border:1px solid rgb(var(--c-rose-500)/.25)!important;
+  border-radius:20px!important;padding:16px 20px!important}
+html body #penSection>div:first-child>div:first-child{width:40px!important;height:40px!important;font-size:16px!important;
+  background:rgb(var(--c-rose-500)/.16)!important;border:0!important;border-radius:12px!important}
+html body #penSection .pulse-glow::after{display:none!important}
+html body #penSection h3{font-size:15px;font-weight:600;color:var(--text)!important}
+html body #penName{color:rgb(var(--c-rose-300))!important;text-decoration:none!important;font-weight:700}
+html body #penSection>div:last-child{background:rgb(var(--c-rose-500)/.14)!important;border:0!important;color:rgb(var(--c-rose-200))!important;
+  font-size:12.5px!important;padding:8px 14px!important;border-radius:999px!important}
+
+/* ---------- Danh sách ngày: mỗi ngày một hàng (agenda) ---------- */
+html body #cardsGrid{display:flex!important;flex-direction:column;gap:14px}
+html body #cardsGrid .day-card{height:auto!important}
+html body .day-card{padding:20px!important;border-radius:24px!important;background:var(--surface)!important;
+  border:1px solid var(--line)!important;box-shadow:none!important}
+html body .day-card[data-day="7"]{background:var(--surface)!important}
+html body .day-card.ring-2{border-color:rgb(var(--ac)/.55)!important;outline:0!important;
+  background:linear-gradient(180deg,rgb(var(--ac)/.07),transparent 170px),var(--surface)!important}
+html body .day-card.border-dashed{border:1.5px dashed var(--line)!important;background:transparent!important}
+html body .day-card>div:first-child>div:first-child{border:0!important;margin-bottom:14px!important;padding:0!important}
+html body .day-card span[class*="rounded-lg"]{display:inline-flex!important;flex-direction:row;align-items:baseline;gap:8px;
+  padding:0!important;background:transparent!important;font-size:12px!important;font-weight:700!important;letter-spacing:.1em!important}
+html body .day-card span[class*="rounded-lg"]>span{font-size:22px!important;font-weight:700!important;letter-spacing:-.02em!important;
+  margin:0!important;opacity:1!important;color:var(--text)!important}
+html body .day-card ul.space-y-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+html body .day-card ul>li{margin-top:0!important}
+html body .day-card div.text-center[class*="bg-amber-500/10"]{display:flex;align-items:center;gap:12px;text-align:left!important;
+  padding:16px 18px!important;border-radius:16px!important;background:rgb(var(--c-amber-500)/.12)!important;border:0!important}
+html body .day-card div.text-center[class*="bg-amber-500/10"] i{font-size:20px!important;margin:0!important}
+html body .day-card div.text-center[class*="bg-amber-500/10"]>div{font-size:15px!important;font-weight:600!important}
+html body .day-card .italic.text-center{text-align:left!important;font-style:normal}
+html body .day-note>div[class*="bg-"],html body div.day-note[class*="bg-amber"]{border-radius:14px!important;border:0!important;background:rgb(var(--c-amber-500)/.1)!important}
+html body .day-card button[data-act]{background:transparent!important;border:1px solid var(--line)!important;color:var(--muted)!important;
+  border-radius:999px!important;padding:6px 12px!important;font-size:12px!important}
+html body .day-card button[data-act]:hover{background:var(--surface-2)!important;color:var(--text)!important}
+html body .day-card button[data-act="rmday"]:hover{color:rgb(var(--c-rose-400))!important;border-color:rgb(var(--c-rose-500)/.45)!important}
+html body .day-card [class*="border-t"]{border-color:var(--line)!important}
+html body .day-card .fa-flag{color:var(--muted)!important}
+
+/* Mỗi người: ô nhỏ gọn */
+html body li.student-name{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 10px;
+  padding:12px 14px!important;background:var(--surface-2)!important;border:0!important;border-radius:16px!important}
+html body li.student-name[class*="rose-900"]{background:rgb(var(--c-rose-500)/.1)!important}
+html body li.student-name:has(.ptype-select){display:flex;flex-direction:column;align-items:stretch}
+html body li.student-name>div:first-child{grid-column:1/-1;display:flex;align-items:center;gap:8px;min-width:0}
+html body li.student-name>div:first-child>i{display:none}
+html body li.student-name>div:first-child::before{content:"";flex:0 0 6px;height:6px;border-radius:50%;background:var(--muted);opacity:.55}
+html body li.student-name[class*="rose-900"]>div:first-child::before{background:rgb(var(--c-rose-400));opacity:1}
+html body .pname{font-size:14.5px!important;font-weight:600!important;color:var(--text)!important}
+html body li.student-name[class*="rose-900"] .pname{color:rgb(var(--c-rose-300))!important}
+html body li.student-name>p{grid-column:1;margin:0!important;font-size:12px!important}
+html body li.student-name>div:last-child{grid-column:2;margin:0!important;padding:0!important;border:0!important;text-align:right}
+html body li.student-name>div:last-child>span{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);border:0;white-space:nowrap}
+html body li.student-name>div:last-child>div{background:transparent!important;border:0!important;padding:0!important;display:inline-block;border-radius:0!important}
+html body li.student-name:has(.ptype-select)>div:last-child{text-align:left}
+html body li.student-name:has(.ptype-select)>div:last-child>div{display:block}
+html body span.duty-view{display:inline-block!important;padding:4px 12px!important;border-radius:999px!important;font-size:12px!important;font-weight:600!important;
+  border:0!important;background:var(--surface-3)!important;color:var(--muted)!important;box-shadow:none!important}
+html body span.duty-view[data-v="sáng"]{background:rgb(var(--c-amber-500)/.16)!important;color:rgb(var(--c-amber-300))!important}
+html body span.duty-view[data-v="chiều"]{background:rgb(var(--c-blue-500)/.16)!important;color:rgb(var(--c-blue-300))!important}
+html body span.duty-view[data-v="cả hai"]{background:rgb(var(--c-emerald-500)/.16)!important;color:rgb(var(--c-emerald-300))!important}
+html body span.duty-view[data-v="miễn"]{background:rgb(var(--c-purple-500)/.16)!important;color:rgb(var(--c-purple-300))!important}
+html body span.duty-view[data-v="vắng"]{background:rgb(var(--c-rose-500)/.16)!important;color:rgb(var(--c-rose-300))!important}
+html body select.duty-select,html body .ptype-select,html body .psub-select{width:100%;margin:0!important;padding:7px 12px!important;
+  border-radius:12px!important;background:var(--surface-3)!important;border:0!important;font-size:12.5px!important}
+html body .mini-btn,html:not(.dark) body .mini-btn{width:28px;height:28px;border-radius:9px!important;background:transparent!important;
+  border:0!important;color:var(--muted)!important}
+html body .mini-btn:hover{background:var(--surface-3)!important;color:var(--text)!important}
+html body .mini-btn.danger:hover{color:rgb(var(--c-rose-400))!important}
+
+/* ---------- Việc cần làm + Chú thích: thoáng, không khung ---------- */
+html body main>div.grid{grid-template-columns:minmax(0,1fr)!important;gap:30px}
+html body main>div.grid>section{background:transparent!important;border:0!important;border-radius:0!important;padding:0!important}
+html body main>div.grid>section>div:first-child{border:0!important;margin-bottom:14px!important;padding:0!important}
+html body main>div.grid h2{font-size:12px!important;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)!important}
+html body #tasks{display:flex!important;flex-wrap:wrap;gap:8px}
+html body #tasks>div{flex:0 0 auto;padding:8px 14px!important;border-radius:999px!important;background:var(--surface-2)!important;border:0!important}
+html body #tasks i{width:auto!important;color:var(--muted)!important}
+html body #tasks span{font-size:13px!important;color:var(--text)!important;font-weight:500}
+html body main>div.grid .pulse-glow{margin-top:16px!important;padding:14px 16px!important;border-radius:16px!important;
+  background:rgb(var(--c-rose-500)/.09)!important;border:1px solid rgb(var(--c-rose-500)/.22)!important}
+html body main>div.grid .pulse-glow>div:first-child>div{width:34px!important;height:34px!important;font-size:14px!important;border-radius:10px!important}
+html body main>div.grid .pulse-glow span.font-extrabold{font-size:13.5px;font-weight:600}
+html body main>div.grid span[class*="bg-rose-500"]{background:rgb(var(--c-rose-500)/.18)!important;color:rgb(var(--c-rose-300))!important;
+  font-size:11px!important;padding:3px 12px!important}
+html body #rules{display:block!important}
+html body #rules>li{display:flex;gap:12px;align-items:flex-start;margin:0!important;padding:13px 0!important;background:transparent!important;
+  border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;font-size:13.5px;color:var(--muted)}
+html body #rules>li:last-child{border-bottom:0!important}
+html body #rules>li>div>span.font-bold{color:var(--text)!important}
+html body #rules a{color:rgb(var(--ac))!important}
+html body footer{border:0!important;margin-top:8px;color:var(--muted)}
+
+@media (min-width:720px){
+  html body .day-card{padding:24px 26px!important}
+  html body .day-card>div:first-child:has(>div.border-b){display:grid;grid-template-columns:150px minmax(0,1fr);column-gap:28px;align-items:start}
+  html body .day-card>div:first-child:has(>div.border-b)>div:first-child{grid-column:1;grid-row:1/span 8;display:flex;flex-direction:column!important;
+    align-items:flex-start!important;justify-content:flex-start!important;gap:10px;margin:0!important}
+  html body .day-card>div:first-child:has(>div.border-b)>:not(:first-child){grid-column:2}
+  html body .day-card>div:not(:first-child){margin-left:178px}
+  html body .day-card span[class*="rounded-lg"]{flex-direction:column;align-items:flex-start;gap:4px}
+  html body .day-card span[class*="rounded-lg"]>span{font-size:38px!important;line-height:1;letter-spacing:-.035em!important}
+}
+@media (min-width:860px){
+  html body main>div.grid{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)!important;gap:44px}
+}
+@media (max-width:639px){
+  html body main{padding:0 16px 64px!important}
+  html body header>div{padding:8px 12px!important;min-height:56px}
+  html body header h1{font-size:16px!important}
+  html body #editBtn,html body #editBtn:not([class*="emerald"],[class*="amber"]){width:40px!important;min-width:40px;padding:0!important;justify-content:center}
+  html body .day-card{padding:18px!important}
+  html body #penSection{padding:14px 16px!important}
+}
+
+/* ---------- Danh sách lớp (ngăn kéo) ---------- */
+html body #rosterDrawer{background:var(--surface)!important;border:0!important;border-left:1px solid var(--line)!important;
+  border-radius:24px 0 0 24px!important;box-shadow:-24px 0 56px -28px rgb(0 0 0/.4)!important}
+html body #rosterDrawer>div:first-child{border-color:var(--line)!important}
+html body #rosterEditBar{border-color:var(--line)!important}
+html body #rosterList .r-item{background:var(--surface-2)!important;border:0!important;border-radius:16px!important}
+html body #rosterOverlay{background:rgb(10 10 8/.5)!important}
+html body #rosterDrawer [class*="from-cyan-500"],html body #rosterSave{background:rgb(var(--ac))!important;color:rgb(var(--on-ac))!important}
+
+/* ---------- Nút, ô nhập, hộp thoại ---------- */
+html body [class*="from-cyan-500"],
+html body #pwOk,html body #wmOk,html body #dmOk,html body #bulkOk,html body #imOk,html body #rosterSave{
+  background:rgb(var(--ac))!important;background-image:none!important;color:rgb(var(--on-ac))!important;box-shadow:none!important}
+html body .field{background:var(--surface-2)!important;border:1px solid transparent!important;border-radius:14px!important;color:var(--text)!important}
+html body .field:focus{border-color:rgb(var(--ac)/.6)!important;box-shadow:0 0 0 3px rgb(var(--ac)/.18)!important}
+html body div[role="dialog"]{background:rgb(12 12 10/.5)!important}
+html body div[role="dialog"]>.glass-panel{background:var(--surface)!important;border:1px solid var(--line)!important;
+  border-radius:24px!important;box-shadow:0 24px 64px -24px rgb(0 0 0/.5)!important}
+html body #draftBar{background:var(--surface-3);border:1px solid var(--line);border-radius:22px;box-shadow:0 14px 40px -14px rgb(0 0 0/.45)}
+html body .db-btn{border-radius:999px}
+html body #updChip{border-radius:999px;box-shadow:0 10px 28px -10px rgb(0 0 0/.45)}
+html body #dbToast{border-radius:999px}
+
+/* ---------- Màn hình khóa: sạch, không blur ---------- */
+html body #lockScreen{background:var(--bg)!important}
+html.locked body>:is(header,main,footer),html.lite.locked body>:is(header,main,footer){
+  visibility:hidden;filter:none!important;transform:none!important;opacity:1!important;animation:none!important}
+html body .lk-card{background:var(--surface)!important;border:1px solid var(--line);border-radius:28px;
+  box-shadow:0 24px 60px -30px rgb(0 0 0/.45);backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html body .lk-card.ok{transform:none}
+html body .lk-clock{color:var(--text);font-weight:300;letter-spacing:-.04em}
+html body .lk-clock .sec,html body .lk-date,html body .lk-hint,html body .lk-foot{color:var(--muted)}
+html body .lk-avatar{background:var(--surface-2)!important;color:var(--muted)!important}
+html body .lk-card.ok .lk-avatar{background:rgb(var(--c-emerald-500)/.2)!important;color:rgb(var(--c-emerald-400))!important}
+html body .lk-field{background:var(--surface-2);height:54px}
+html body .lk-field .lead,html body .lk-field .lk-ibtn{color:var(--muted)!important}
+html body .lk-field .lk-go{background:rgb(var(--ac))!important;color:rgb(var(--on-ac))!important}
+html body .lk-tonal{background:var(--surface-2)!important;color:var(--text)!important}
+html body .lk-tonal i,html:not(.dark) body .lk-tonal i{color:var(--muted)!important}
+html body #lkTheme{background:transparent;color:var(--muted)!important}
+
+/* ===================== HIỆU ỨNG (nhẹ, êm) ===================== */
+@keyframes v11-in{from{opacity:0;transform:translateY(10px)}}
+@keyframes v11-out{to{opacity:0}}
+@keyframes v11-pop{from{opacity:0;transform:translateY(8px) scale(.98)}}
+@keyframes v11-pop-out{to{opacity:0;transform:translateY(6px) scale(.98)}}
+@media (prefers-reduced-motion:no-preference){
+  html:not(.lite) body main>section:nth-of-type(1),html:not(.lite) body main>section:nth-of-type(2),
+  html:not(.lite) body #penSection:not(.hidden),html:not(.lite) body main>div.grid{
+    animation:v11-in .55s var(--ease) backwards!important}
+  html:not(.lite) body main>section:nth-of-type(2){animation-delay:.06s!important}
+  html:not(.lite) body #penSection:not(.hidden){animation-delay:.1s!important}
+  html:not(.lite) body main>div.grid{animation-delay:.3s!important}
+  html:not(.lite) body #cardsGrid.enter .day-card{animation:v11-in .6s var(--ease) backwards!important;
+    animation-delay:calc(var(--i,0)*70ms)!important}
+  html:not(.lite) body .day-card{transition:border-color .25s ease,opacity .25s ease!important}
+  html:not(.lite) body li.student-name{transition:background-color .2s ease!important}
+  html:not(.lite) body button,html:not(.lite) body .field,html:not(.lite) body select{
+    transition:background-color .18s ease,color .18s ease,border-color .18s ease,opacity .18s ease,transform .18s ease!important}
+  html:not(.lite) body button:active:not(:disabled){transform:scale(.97)!important}
+  @media (hover:hover){html:not(.lite) body .day-card:hover{border-color:rgb(var(--ac)/.3)!important}}
+  html:not(.lite) body div[role="dialog"]:not(.hidden){animation:v11-in .2s ease backwards!important;animation-name:none!important}
+  html:not(.lite) body div[role="dialog"]:not(.hidden)>div{animation:v11-pop .28s var(--ease) backwards!important}
+  html:not(.lite) body div[role="dialog"].closing>div{animation:v11-pop-out .18s ease forwards!important}
+  html:not(.lite) body #rosterDrawer{transition:transform .45s var(--ease)!important}
+  html:not(.lite) body #rosterDrawer.closed{transition:transform .32s cubic-bezier(.4,0,1,1)!important}
+  html:not(.lite) body #lockScreen.leaving{animation:v11-out .35s ease forwards!important}
+}
+</style>
+<!-- BEGIN patch-v12-responsive (added by patch_v12_responsive.py) -->
+<style id="patch-v12-responsive">
+/* ===== Bản vá 12: tối ưu điện thoại + máy tính (đặt SAU patch-v11-calm) =====
+   Mọi selector có tiền tố "html:root body" để thắng độ ưu tiên của các bản vá trước. */
+
+/* ---------- Biến bố cục ---------- */
+:root{--wrap:920px;--gut:16px;--hgut:12px;--hdr-h:60px}
+@media (min-width:640px){:root{--gut:20px;--hgut:20px}}
+@media (min-width:1024px){:root{--gut:32px;--hgut:32px}}
+@media (min-width:1200px){:root{--wrap:1100px}}
+@media (min-width:1600px){:root{--wrap:1240px}}
+
+/* ---------- Chung cho mọi thiết bị ---------- */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:calc(var(--hdr-h) + 16px)}
+html:root body{-webkit-tap-highlight-color:transparent;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html:root body :is(button,select,label,input,textarea){touch-action:manipulation}
+html:root body :is(.pname,.student-name,#penName,.r-item,#rules>li,#tasks span){overflow-wrap:anywhere}
+
+/* Khung + thanh trên cùng: rộng dần theo màn hình, tránh tai thỏ / thanh trạng thái */
+html:root body header.glass-panel{padding-top:env(safe-area-inset-top,0px)!important}
+html:root body header>div{max-width:var(--wrap)!important;padding-left:var(--hgut)!important;padding-right:var(--hgut)!important}
+html:root body main{max-width:var(--wrap)!important;padding-left:var(--gut)!important;padding-right:var(--gut)!important}
+html:root body footer{padding-left:var(--gut);padding-right:var(--gut);padding-bottom:max(2rem,env(safe-area-inset-bottom,0px))}
+
+/* Banner: nút trong banner không bị bóp méo */
+html:root body :is(#testBanner,#errBanner){flex-wrap:wrap}
+
+/* Hộp thoại: nội dung cao hơn màn hình vẫn cuộn được, không bị cắt phần đầu */
+html:root body div[role="dialog"].flex{
+  align-items:flex-start!important;overscroll-behavior:contain;
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+html:root body div[role="dialog"].flex>div{margin:auto!important}
+
+/* Ngăn kéo danh sách lớp */
+html:root body #rosterDrawer>div:first-child{padding-top:calc(1.25rem + env(safe-area-inset-top,0px))}
+html:root body #rosterEditBar{padding-bottom:calc(1rem + env(safe-area-inset-bottom,0px))}
+html:root body #rosterList{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+
+/* Lưới người trực trong thẻ ngày (điện thoại lớn: 2 cột, máy tính: tự chia cột) */
+html:root body #cardsGrid .day-card ul.space-y-3{grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr))}
+@media (min-width:720px){
+  html:root body #cardsGrid .day-card ul.space-y-3{grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))}
+}
+
+/* ---------- Điện thoại (<= 639px) ---------- */
+@media (max-width:639px){
+  html:root body header.glass-panel{margin-bottom:14px!important}
+  html:root body main.space-y-8{gap:16px}
+  html:root body #cardsGrid{gap:12px}
+  /* thanh chọn tuần: cuộn ngang, có mép mờ bên phải để biết còn nữa */
+  html:root body #weekTabs{scroll-snap-type:x proximity;padding-right:24px;
+    -webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 24px),transparent);
+    mask-image:linear-gradient(90deg,#000 calc(100% - 24px),transparent)}
+  html:root body #weekTabs>button,html:root body #dayFilters>button{scroll-snap-align:center}
+  html:root body #dayFilters{scroll-snap-type:x proximity}
+}
+@media (max-width:479px){
+  html:root body #rosterDrawer{max-width:none!important;border-radius:0!important;border-left:0!important}
+  html:root body #simPwBtn{width:100%;justify-content:center;margin-left:0}
+}
+/* Điện thoại rất nhỏ (<= 380px): nút thanh trên cùng gọn hơn */
+@media (max-width:380px){
+  html:root body header>div{gap:2px}
+  html:root body #rosterBtn,html:root body #themeBtn,html:root body #lockBtn{width:36px!important;height:36px!important;min-width:36px!important}
+  html:root body #editBtn,html:root body #editBtn:not([class*="emerald"],[class*="amber"]),
+  html:root body #editBtn[class*="emerald"],html:root body #editBtn[class*="amber"]{width:36px!important;min-width:36px!important;height:36px!important}
+  html:root body header h1{font-size:15px!important}
+}
+
+/* ---------- Màn hình cảm ứng: ô chọn/nhập 16px (iOS không tự zoom), vùng chạm lớn ---------- */
+@media (pointer:coarse){
+  html:root body :is(select.duty-select,.ptype-select,.psub-select,textarea.field,.field,#searchInput,#lkInput){font-size:16px!important}
+  html:root body :is(select.duty-select,.ptype-select,.psub-select){min-height:40px}
+  html:root body #weekTabs>button{height:42px!important}
+  html:root body #dayFilters>button{height:38px!important}
+  html:root body .day-card button[data-act]{min-height:38px}
+  html:root body #penAttend label.pa-chip{min-height:36px}
+  /* nút nhỏ: giữ cỡ hiển thị, nới vùng chạm bằng phần tử ảo */
+  html:root body .mini-btn{width:32px;height:32px;position:relative;overflow:visible!important}
+  html:root body .mini-btn::after{content:'';position:absolute;inset:-6px}
+}
+
+/* ---------- Máy tính bảng (720px - 1023px): nhãn thứ thu nhỏ, chừa chỗ cho danh sách ---------- */
+@media (min-width:720px) and (max-width:1023px){
+  html:root body .day-card>div:first-child:has(>div.border-b){grid-template-columns:120px minmax(0,1fr)!important;column-gap:20px!important}
+  html:root body .day-card>div:not(:first-child){margin-left:140px!important}
+  html:root body .day-card span[class*="rounded-lg"]>span{font-size:32px!important}
+}
+
+/* ---------- Máy tính (>= 1024px) ---------- */
+@media (min-width:1024px){
+  html:root body header>div{min-height:68px}
+  html:root body main.space-y-8{gap:28px}
+  html:root body #cardsGrid{gap:16px}
+  html:root body .day-card{padding:26px 30px!important}
+  html:root body #cardsGrid .day-card ul.space-y-3{gap:12px}
+  html:root body #rosterDrawer{max-width:30rem!important}
+}
+
+/* Tìm kiếm + lọc thứ: dính dưới header khi cuộn (chỉ màn hình đủ rộng và đủ cao) */
+@media (min-width:768px) and (min-height:560px){
+  html:root body main>section:nth-of-type(2){
+    position:sticky;top:var(--hdr-h);z-index:40;padding:10px 0!important;margin-top:-8px;margin-bottom:-4px;
+    background:color-mix(in srgb,var(--bg) 90%,transparent)!important}
+  html:not(.lite):root body main>section:nth-of-type(2){backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  html.lite:root body main>section:nth-of-type(2){background:var(--bg)!important}
+}
+
+/* ---------- Điện thoại xoay ngang (thấp) ---------- */
+@media (max-height:500px) and (orientation:landscape){
+  html:root body header>div{min-height:48px!important;padding-top:4px!important;padding-bottom:4px!important}
+  html:root body header.glass-panel{margin-bottom:12px!important}
+  html:root body :is(#rosterBtn,#themeBtn,#lockBtn){width:36px!important;height:36px!important;min-width:36px!important}
+  /* màn hình khóa: đồng hồ bên trái, ô mật khẩu bên phải */
+  html:root body #lockScreen{padding-top:max(10px,env(safe-area-inset-top,0px));padding-bottom:max(10px,env(safe-area-inset-bottom,0px))}
+  html:root body .lk-wrap{flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px 36px}
+  html:root body .lk-top{margin:0}
+  html:root body .lk-clock{font-size:clamp(44px,18vh,84px)}
+  html:root body .lk-card{width:min(360px,46%);padding:16px 16px 12px}
+  html:root body .lk-avatar{display:none}
+  html:root body .lk-or{margin:10px 0}
+  html:root body .lk-foot{flex-basis:100%;text-align:center;margin-top:0}
+}
+
+/* ---------- In ấn: sạch, một cột, không nút ---------- */
+@media print{
+  html:root body{background:#fff!important;font-size:12px}
+  html:root body::before{display:none!important}
+  html:root body header.glass-panel{position:static!important;margin-bottom:12px!important}
+  html:root body :is(#rosterBtn,#themeBtn,#lockBtn,#editBtn,#lockScreen,#draftBar,#updChip,#dbToast,#rosterDrawer,#rosterOverlay,
+    #testBanner,#errBanner,#noWeekBanner,#offBanner,#syncStatus,.mini-btn,.day-card button[data-act],main>section:nth-of-type(1),main>section:nth-of-type(2)){display:none!important}
+  html:root body #cardsGrid .day-card{break-inside:avoid;page-break-inside:avoid;padding:12px 14px!important;animation:none!important}
+  html:root body main{max-width:none!important;padding-bottom:0!important}
+}
+</style>
+<script id="patch-v12-js">
+(function(){
+  var root = document.documentElement;
+
+  /* Đo chiều cao thanh trên cùng để thanh tìm kiếm dính ngay bên dưới */
+  function setHdr(){
+    var h = document.querySelector('body>header');
+    if (h && h.offsetHeight) root.style.setProperty('--hdr-h', h.offsetHeight + 'px');
+  }
+  function init(){
+    setHdr();
+    var h = document.querySelector('body>header');
+    if (h && window.ResizeObserver) { try { new ResizeObserver(setHdr).observe(h); } catch (e) {} }
+    window.addEventListener('resize', setHdr);
+    window.addEventListener('orientationchange', function(){ setTimeout(setHdr, 250); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(setHdr);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+
+  /* In ấn: tạm chuyển sang giao diện sáng để bản in rõ chữ, in xong trả lại như cũ */
+  var printing = false, wasDark = false;
+  function beforePrint(){ if (printing) return; printing = true; wasDark = root.classList.contains('dark'); root.classList.remove('dark'); }
+  function afterPrint(){ if (!printing) return; printing = false; if (wasDark) root.classList.add('dark'); }
+  window.addEventListener('beforeprint', beforePrint);
+  window.addEventListener('afterprint', afterPrint);
+  try {
+    var mq = window.matchMedia('print');
+    if (mq.addEventListener) mq.addEventListener('change', function(e){ if (e.matches) beforePrint(); else afterPrint(); });
+  } catch (e) {}
+})();
+</script>
+<!-- END patch-v12-responsive -->
 </head>
 <body class="text-slate-200 font-sans min-h-screen pb-12 antialiased selection:bg-cyan-500 selection:text-black">
 <!-- Màn hình khóa kiểu Android -->
 <div id="lockScreen" aria-label="Màn hình khóa">
   <button id="lkTheme" type="button" class="lk-ibtn" aria-label="Chuyển giao diện sáng / tối" title="Chuyển giao diện sáng / tối"><i class="fa-solid fa-circle-half-stroke"></i></button>
-  <button id="lkTwo" type="button" class="lk-two" aria-label="2">2</button>
   <div class="lk-wrap">
     <div class="lk-top">
       <div class="lk-date" id="lkDate"></div>
@@ -553,19 +1171,6 @@ html.draft-on #updChip,html.roster-open #updChip,html.roster-open #draftBar,html
       <p class="lk-msg" id="lkMsg" role="alert"></p>
       <div class="lk-or"><span>hoặc</span></div>
       <button id="lkGuest" type="button" class="lk-tonal"><i class="fa-regular fa-user"></i> Truy cập ẩn danh</button>
-    </div>
-    <div class="lk-card" id="lkQuiz" hidden>
-      <div class="lk-avatar"><i class="fa-solid fa-circle-question"></i></div>
-      <p class="lk-q" id="lkQ">Trả lời câu hỏi để tiếp tục:</p>
-      <div class="lk-eq">1 + 1 = ?</div>
-      <div class="lk-choices" role="group" aria-label="Đáp án">
-        <button type="button" class="lk-choice" data-v="3" aria-pressed="false">3</button>
-        <button type="button" class="lk-choice" data-v="6" aria-pressed="false">6</button>
-      </div>
-      <div class="lk-reveal" id="lkConfirmWrap" inert><div>
-        <button id="lkConfirm" type="button" class="lk-primary"><i class="fa-solid fa-check"></i> Xác nhận đáp án</button>
-      </div></div>
-      <button id="lkBack" type="button" class="lk-link"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
     </div>
     <div class="lk-foot">12A1 - MC I</div>
   </div>
@@ -621,8 +1226,10 @@ html.draft-on #updChip,html.roster-open #updChip,html.roster-open #draftBar,html
     <button id="errClose" type="button" aria-label="Đóng thông báo" class="mini-btn"><i class="fa-solid fa-xmark"></i></button>
   </div>
 
+  <div id="noWeekBanner" role="status" class="hidden glass-panel rounded-2xl p-3.5 items-center gap-3"><i class="fa-solid fa-calendar-xmark text-amber-400"></i><span id="noWeekText" class="text-xs font-semibold text-amber-200"></span></div>
+  <div id="offBanner" role="alert" class="hidden glass-panel rounded-2xl p-3.5 items-center gap-3"><i class="fa-solid fa-wifi text-rose-400"></i><span class="text-xs font-semibold text-rose-200">Không kết nối được máy chủ: dữ liệu có thể đã cũ và thay đổi chỉ lưu trên máy này, người khác sẽ không thấy.</span></div>
   <section class="glass-panel p-3 sm:p-4 rounded-2xl">
-    <div class="flex items-center gap-2 mb-2 text-[11px] font-bold text-slate-400"><i class="fa-solid fa-layer-group text-cyan-400"></i> Chọn tuần <span id="syncStatus" class="ml-auto font-semibold text-slate-500"></span></div>
+    <div class="flex items-center gap-2 mb-2 text-[11px] font-bold text-slate-400"><i class="fa-solid fa-layer-group text-cyan-400"></i> Chọn tuần <button id="monToggle" type="button" class="hidden"></button><span id="syncStatus" class="ml-auto font-semibold text-slate-500"></span></div>
     <div id="weekTabs" class="flex flex-wrap gap-2"></div>
     <div id="weekTools" class="hidden"></div>
   </section>
@@ -678,7 +1285,7 @@ html.draft-on #updChip,html.roster-open #updChip,html.roster-open #draftBar,html
   </div>
 </main>
 
-<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.21-ver.13+</p></footer>
+<footer class="mt-16 text-center text-xs text-slate-500 border-t border-slate-800/60 pt-6"><p>© <a href="https://www.facebook.com/ntlong5409/" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:underline underline-offset-2">Nguyễn Tiến Long</a> - 12A1 - MC I</p><p id="appVersion" class="mt-1.5 text-[11px] text-slate-500"><i class="fa-solid fa-wrench mr-1.5"></i>Phiên bản 2026.11.22-ver.16</p></footer>
 
 <!-- patch-draft-v1: thanh Lưu / Hủy, hộp thoại cập nhật, xem trước -->
 <div id="draftBar" role="region" aria-label="Lưu thay đổi">
@@ -730,27 +1337,6 @@ html.draft-on #updChip,html.roster-open #updChip,html.roster-open #draftBar,html
       <button id="pvNotice" type="button" class="px-4 py-2 rounded-xl text-xs font-semibold border border-slate-600/60 text-slate-200 hover:bg-slate-700/40"><i class="fa-regular fa-bell mr-1"></i> Xem hộp thoại của người khác</button>
       <button id="pvSim" type="button" class="px-4 py-2 rounded-xl text-xs font-bold border border-amber-500/50 text-amber-300 hover:bg-amber-500/10"><i class="fa-solid fa-flask mr-1"></i> Giả lập lưu</button>
     </div>
-  </div>
-</div>
-
-<!-- Hộp thoại khi chọn sai (ảnh) -->
-<div id="lkImgModal" role="dialog" aria-modal="true" aria-label="Sai rồi" class="hidden fixed inset-0 z-[120] bg-black/70 backdrop-blur-sm items-center justify-center p-4 overflow-y-auto">
-  <div class="glass-panel rounded-2xl p-4 w-full max-w-sm my-8">
-    <div class="lk-img-wrap">
-      <img id="lkImg" alt="" decoding="async">
-      <div id="lkImgFb" class="lk-img-fb" hidden><i class="fa-solid fa-face-grin-tears"></i>Sai rồi nha =)))</div>
-    </div>
-    <button id="lkImgGo" type="button" class="lk-tonal" style="margin-top:16px">Tiếp tục truy cập =)))</button>
-  </div>
-</div>
-
-<!-- Hộp thoại chúc mừng khi trả lời đúng -->
-<div id="lkOkModal" role="dialog" aria-modal="true" aria-label="Chúc mừng" class="hidden fixed inset-0 z-[120] bg-black/70 backdrop-blur-sm items-center justify-center p-4">
-  <div class="glass-panel rounded-2xl p-6 w-full max-w-sm text-center">
-    <div class="lk-ok-ico"><i class="fa-solid fa-check"></i></div>
-    <h3 class="text-lg font-extrabold text-slate-100 mt-4">Chúc mừng! Bạn trả lời đúng rồi</h3>
-    <p class="text-sm text-slate-300 mt-1">1 + 1 = 2. Quá đỉnh luôn!</p>
-    <button id="lkOkGo" type="button" class="lk-primary" style="margin-top:20px">Tiếp tục truy cập</button>
   </div>
 </div>
 
@@ -858,8 +1444,8 @@ html.draft-on #updChip,html.roster-open #updChip,html.roster-open #draftBar,html
       <div id="wmDateWrap"><label for="wmDate" class="text-[11px] font-bold text-slate-400 block mb-1">Chọn một ngày trong tuần</label><input id="wmDate" type="date" class="field"><p id="wmDateHint" class="text-[11px] text-cyan-400 mt-1"></p></div>
       <div><label for="wmPenName" class="text-[11px] font-bold text-slate-400 block mb-1">Người bị phạt trực nhật</label><input id="wmPenName" type="text" class="field" placeholder="Để trống nếu không có"></div>
       <div class="grid grid-cols-2 gap-3">
-        <div><label for="wmPenLabel" class="text-[11px] font-bold text-slate-400 block mb-1">Nhãn phạt</label><input id="wmPenLabel" type="text" class="field" placeholder="(Trực hết năm 2026)"></div>
-        <div><label for="wmPenUntil" class="text-[11px] font-bold text-slate-400 block mb-1">Thời hạn</label><input id="wmPenUntil" type="text" class="field" placeholder="ĐẾN HẾT NĂM 2026"></div>
+        <div><label for="wmPenLabel" class="text-[11px] font-bold text-slate-400 block mb-1">Nhãn phạt</label><input id="wmPenLabel" type="text" class="field" placeholder="Ví dụ: (Trực 2 ngày)"></div>
+        <div><label for="wmPenUntil" class="text-[11px] font-bold text-slate-400 block mb-1">Thời hạn</label><input id="wmPenUntil" type="text" class="field" placeholder="Ví dụ: ĐẾN HẾT TUẦN"></div>
       </div>
       <label id="wmCopyWrap" class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer"><input id="wmCopy" type="checkbox" class="accent-cyan-500"> Sao chép ngày và người từ tuần đang chọn</label>
     </div>
@@ -1036,7 +1622,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (kind === 'monitor') {
       $('imIconI').className = 'fa-solid fa-hand';
       $('imTitle').textContent = 'Xin chào lớp trưởng';
-      note.textContent = 'Bạn được thêm / bớt người và đổi "Trạng thái trực" của ngày hôm nay. Mọi chỉnh sửa khác đã bị khóa.';
+      note.textContent = 'Bạn được thêm / bớt người, đổi "Trạng thái trực", điểm danh người bị phạt và ghi chú của ngày hôm nay. Mọi chỉnh sửa khác đã bị khóa.';
     } else if (kind === 'test') {
       $('imIconI').className = 'fa-solid fa-flask';
       $('imTitle').textContent = 'Đang ở chế độ Thử Nghiệm';
@@ -1058,6 +1644,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Mở khóa chỉnh sửa ---------- */
   let editMode = false;
   try { editMode = sessionStorage.getItem('editMode') === '1'; } catch(e){}
+  let monitorEnabled = true;   /* admin cho phép lớp trưởng chỉnh sửa */
   let monitorMode = false;   /* đăng nhập bằng mật khẩu lớp trưởng */
   try { monitorMode = editMode && sessionStorage.getItem('monitor') === '1'; } catch(e){}
   const canEditRoster = () => editMode && !monitorMode;
@@ -1143,11 +1730,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (v && window.__lk) window.__lk.unlock();
     const wasTest = testMode;
     editMode = v; monitorMode = !!(v && mon && !test);
+    if (v) { lastAct = Date.now(); warned = false; try { sessionStorage.setItem('lastAct', String(lastAct)); } catch (e) {} }
     if (v && test) {
       /* Vào TEST: chụp bản sao danh sách tuần + danh sách lớp hiện tại, mọi sửa đổi chỉ diễn ra trên bản sao này */
       testMode = true;
       testData = { weeks: clone(weeks), roster: clone(roster), choices: {} };
-      testData.base = { weeks: clone(weeks), roster: clone(roster), choices: clone(state.choices) };
+      testData.base = { weeks: clone(weeks), roster: clone(roster), choices: clone(db ? state.choices : localChoices()) };
     } else {
       testMode = false; testData = null;
       /* Thoát TEST: bỏ bản sao, nạp lại dữ liệu thật */
@@ -1177,8 +1765,11 @@ document.addEventListener('DOMContentLoaded', () => {
       else { st.q++; st.until = Date.now() + 120 * st.q * 1000; saveLk(st); setPwMsg('Sai đáp án.'); shakePw(); }
       renderPw(); return;
     }
-    if (!simMode && h === AUTH.hPw) { saveLk(LK0()); closePw(); setEdit(true); return; }
-    if (!simMode && h === AUTH.hMon) { saveLk(LK0()); closePw(); setEdit(true, false, true); showInfo('monitor'); return; }
+    
+    if (!simMode && h === AUTH.hMon) {
+      if (!monitorEnabled) { setPwMsg('Quyền chỉnh sửa của lớp trưởng đang được admin tắt.'); shakePw(); renderPw(); return; }
+      saveLk(LK0()); closePw(); setEdit(true, false, true); showInfo('monitor'); return;
+    }
     if (!simMode && h === AUTH.hAdm) { saveLk(LK0()); closePw(); setEdit(true); showInfo('admin'); return; }
     if (h === AUTH.hTest) { if (simMode) { simSt = LK0(); closePw(); showSimOk(); } else { closePw(); setEdit(true, true); showInfo('test'); } return; }
     if (h === AUTH.hTroll) { closePw(); showInfo('troll'); return; }
@@ -1271,8 +1862,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function lock(){
+    if (editMode) { setEdit(false); if (editMode) return; }
     try { sessionStorage.removeItem('guest'); } catch (e) {}
-    if (editMode) setEdit(false);
     if (rosterOpen) setRosterOpen(false);
     inp.value = ''; msg(''); reveal = false; resetQuiz();
     on = true; scr.classList.remove('leaving', 'ok'); card.classList.remove('ok');
@@ -1282,71 +1873,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!matchMedia('(pointer:coarse)').matches) setTimeout(() => inp.focus(), 500);
   }
 
-  /* ===== Câu hỏi xác nhận dành cho khách (patch 2) ===== */
-const IMAGES = ["https://lh3.googleusercontent.com/d/1ncskqU1LsNDrvVR6cGYGPX_1E8qHJzWi=w900", "https://lh3.googleusercontent.com/d/1263a4ZhTes8zCJ3FuOumMxlKhKsJMpsG=w900", "https://lh3.googleusercontent.com/d/1gBcCo89Uk9tWwDBrwb9P0PQhrHo2t0jp=w900", "https://lh3.googleusercontent.com/d/1N8FpFOmwHiPhse4aRhjecVeDzXoaKNeN=w900", "https://lh3.googleusercontent.com/d/1yRlMsEOQ3AapU4Uo2WAV8YE6vmoDgbb_=w900", "https://lh3.googleusercontent.com/d/1cB0WEvm6NhMQlAJEj5-IwoxjNMheUQLq=w900"];
-const quiz = $('lkQuiz'), two = $('lkTwo'), themeBtnLk = $('lkTheme'), confWrap = $('lkConfirmWrap'), confBtn = $('lkConfirm');
-const choices = Array.from(quiz.querySelectorAll('.lk-choice'));
-const imgModal = $('lkImgModal'), okModal = $('lkOkModal'), imgEl = $('lkImg'), imgFb = $('lkImgFb');
-let picked = null, quizOpen = false, nextImg = '';
-const CORNERS = ['tl', 'tr', 'bl', 'br'];
-
-function pickCorner(){
-  let prev = '';
-  try { prev = localStorage.getItem('lk_corner') || ''; } catch (e) {}
-  const pool = CORNERS.filter(c => c !== prev), c = pool[Math.floor(Math.random() * pool.length)];
-  try { localStorage.setItem('lk_corner', c); } catch (e) {}
-  return c;
-}
-const pickImage = () => IMAGES.length ? IMAGES[Math.floor(Math.random() * IMAGES.length)] : '';
-
-function setPicked(v){
-  picked = v;
-  choices.forEach(b => { const s = b.dataset.v === v; b.classList.toggle('sel', s); b.setAttribute('aria-pressed', s ? 'true' : 'false'); });
-  confWrap.classList.toggle('show', !!v); confWrap.inert = !v;
-}
-function openQuiz(){
-  if (!on || quizOpen) return;
-  quizOpen = true; setPicked(null);
-  nextImg = pickImage();
-  if (nextImg) { const pre = new Image(); pre.src = nextImg; }   /* tải trước để hiện ngay */
-  card.classList.add('swap-out');
-  setTimeout(() => {
-    if (!quizOpen) return;
-    card.hidden = true; card.classList.remove('swap-out'); quiz.hidden = false;
-    two.className = 'lk-two c-' + pickCorner() + ' show';
-    themeBtnLk.style.display = 'none';
-  }, 220);
-}
-function resetQuiz(){
-  quizOpen = false; setPicked(null);
-  quiz.hidden = true; card.hidden = false; card.classList.remove('swap-out');
-  two.className = 'lk-two'; themeBtnLk.style.display = '';
-  show(imgModal, false); show(okModal, false);
-}
-function backQuiz(){
-  if (!quizOpen) return;
-  quizOpen = false; two.className = 'lk-two';
-  quiz.hidden = true; card.hidden = false; card.classList.remove('swap-out');   /* thẻ chính tự zoom vào lại */
-  setPicked(null); themeBtnLk.style.display = '';
-}
+  function resetQuiz(){}
 function finishGuest(){
   try { sessionStorage.setItem('guest', '1'); } catch (e) {}
-  show(imgModal, false); show(okModal, false);
   unlock();
 }
-
-choices.forEach(b => b.addEventListener('click', () => setPicked(b.dataset.v)));
-confBtn.addEventListener('click', () => {
-  if (!picked) return;
-  if (nextImg) { imgEl.hidden = false; imgFb.hidden = true; imgEl.src = nextImg; }
-  else { imgEl.hidden = true; imgFb.hidden = false; }
-  show(imgModal, true);
-});
-imgEl.addEventListener('error', () => { imgEl.hidden = true; imgFb.hidden = false; });
-two.addEventListener('click', () => { if (quizOpen) show(okModal, true); });
-$('lkImgGo').addEventListener('click', finishGuest);
-$('lkOkGo').addEventListener('click', finishGuest);
-$('lkBack').addEventListener('click', backQuiz);
 
 window.__lk = { msg, sync, shake, unlock, lock };
 
@@ -1358,7 +1889,7 @@ window.__lk = { msg, sync, shake, unlock, lock };
     if (pwInput.type !== 'text') inp.type = reveal ? 'text' : 'password';
     eye.firstElementChild.className = reveal ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
   });
-  $('lkGuest').addEventListener('click', openQuiz);
+  $('lkGuest').addEventListener('click', finishGuest);
   $('lkTheme').addEventListener('click', () => $('themeBtn').click());
   const lb = $('lockBtn'); if (lb) lb.addEventListener('click', lock);
 
@@ -1416,7 +1947,7 @@ window.__lk = { msg, sync, shake, unlock, lock };
     console.warn('Firebase từ chối ghi dữ liệu:', e);
     const code = (e && (e.code || e.message)) || 'không rõ lỗi';
     $('errText').textContent = 'Không lưu được lên Firebase (' + code + '). Thay đổi sẽ biến mất khi tải lại trang. ' +
-      'Hãy mở Firebase Console → Realtime Database → Rules, cho phép đọc/ghi (".read": true, ".write": true) ở nhánh "duty" rồi bấm Publish.';
+      'Hãy kiểm tra Firebase Console → Realtime Database → Rules (nhánh "duty") rồi bấm Publish. Không nên để ".write": true cho tất cả mọi người.';
     show($('errBanner'), true);
     setStatus(false, 'Lỗi ghi dữ liệu');
   }
@@ -1428,10 +1959,11 @@ window.__lk = { msg, sync, shake, unlock, lock };
     } catch (e) { reportWriteError(e); }
   }
 
+  const localChoices = () => { const o = {}; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (/^(.*_)?t[2-8]_[^_]+$/.test(k)) { const v = localStorage.getItem(k); if (v) o[k] = v; } } } catch (e) {} return o; };
   const getChoice = k => (testMode && hasOwn(testData.choices, k)) ? testData.choices[k] : (db ? state.choices[k] : store.get(k));
   const saveChoice = (k, v) => {
     if (testMode) { testData.choices[k] = v || ''; return; }   /* TEST: chỉ lưu trong bộ nhớ */
-    store.set(k, v || '');
+    if (!db) store.set(k, v || '');
     if (db) {
       if (v) state.choices[k] = v; else delete state.choices[k];
       fbSet('duty/choices/' + k, v || null);
@@ -1623,6 +2155,17 @@ window.__lk = { msg, sync, shake, unlock, lock };
       seen.add(k); list.push({ id:s.id, name, role:s.role.trim() });
     });
     if (list.length > MAX_ROSTER) { over = list.length - MAX_ROSTER; list.length = MAX_ROSTER; }
+    const _ren = {};
+    roster.forEach(o => { const n = list.find(x => x.id === o.id); if (n && n.name !== o.name) _ren[o.name] = n.name; });
+    if (Object.keys(_ren).length) setTimeout(() => {
+      let ch = false;
+      weeks.slice().forEach(w0 => {
+        const c = clone(w0); let hit = false;
+        Object.keys(c.days).forEach(d => { if (Array.isArray(c.days[d])) c.days[d].forEach(p => { if (p.type === 'sub' && _ren[p.sub]) { p.sub = _ren[p.sub]; hit = true; } }); });
+        if (hit) { saveWeek(c); ch = true; }
+      });
+      if (ch) render();
+    }, 0);
     roster = list;
     persistRoster();
     rosterDraft = clone(roster); renderRoster();
@@ -1726,6 +2269,9 @@ window.__lk = { msg, sync, shake, unlock, lock };
   });
 
   const dn = ['Chủ Nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'];
+  let dayKey = '';
+  const setToday = () => { const n0 = new Date(); dayKey = n0.toDateString(); $('todayDisplay').textContent = dn[n0.getDay()] + ' (' + n0.getDate() + '/' + (n0.getMonth() + 1) + ')'; };
+  setToday();
   const now = new Date();
   $('todayDisplay').textContent = dn[now.getDay()] + ` (${now.getDate()}/${now.getMonth() + 1})`;
 
@@ -1904,7 +2450,7 @@ window.__lk = { msg, sync, shake, unlock, lock };
     `<button type="button" data-act="${act}" class="px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border border-${color}-500/50 text-${color}-300 hover:bg-${color}-500/10 ${extra}"><i class="fa-solid fa-${icon} mr-1"></i>${text}</button>`;
 
   function studentLi(w, d, p, c){
-    const rose = c === 'rose', pen = p.type === 'penalty', key = choiceKey(w, d, p);
+    const rose = c === 'rose', key = choiceKey(w, d, p);
     const tools = canEditDay(w, d) ? `<span class="ml-auto flex gap-1">${monitorMode ? '' : `<button type="button" class="mini-btn" data-act="rename" data-pid="${esc(p.id)}" title="Sửa tên" aria-label="Sửa tên"><i class="fa-solid fa-pen"></i></button>`}<button type="button" class="mini-btn danger" data-act="rmperson" data-pid="${esc(p.id)}" title="Xóa người" aria-label="Xóa người"><i class="fa-solid fa-user-minus"></i></button></span>` : '';
     const ptype = PT_KEYS.indexOf(p.type) >= 0 ? p.type : 'list', subName = p.sub || '';
     let subSelect = '';
@@ -2095,13 +2641,13 @@ ${esc(raw)}</textarea></div>`;
     const pen = w.penalty, base = (pen.days || []).map(Number);
     const avail = WEEKDAYS.filter(d => Array.isArray(w.days[d]));   /* chỉ các ngày có lịch trực (không tính ngày nghỉ / ngày trống) */
     const checked = avail.filter(d => base.indexOf(d) >= 0);
-    badge.style.display = (pen.name && !checked.length) ? 'inline-block' : 'none';
+    badge.style.display = (pen.name && !checked.length && avail.some(d => dayDate(w, d).getTime() <= startOfToday().getTime())) ? 'inline-block' : 'none';
     const label = '<span class="pa-label"><i class="fa-solid fa-clipboard-user mr-1"></i>Buổi trực nhật:</span>';
     let html = '';
     if (editMode && avail.length) {
       html = label + avail.map(d => {
         const ok = canEditDay(w, d);
-        return `<label class="pa-chip${ok ? '' : ' off'}" title="${esc(dayName(d))} (${fmt(dayDate(w, d))})"><input type="checkbox" data-pday="${d}"${checked.indexOf(d) >= 0 ? ' checked' : ''}${ok ? '' : ' disabled'}>${esc(dayName(d))}</label>`;
+        return `<label class="pa-chip${ok ? '' : ' off'}${checked.indexOf(d) >= 0 ? ' on' : ''}" title="${esc(dayName(d))} (${fmt(dayDate(w, d))})"><input type="checkbox" data-pday="${d}"${checked.indexOf(d) >= 0 ? ' checked' : ''}${ok ? '' : ' disabled'}>${esc(dayName(d))}</label>`;
       }).join('');
     } else if (checked.length) {
       html = label + checked.map(d => `<span class="pa-chip">${esc(dayName(d))}</span>`).join('');
@@ -2122,7 +2668,47 @@ ${esc(raw)}</textarea></div>`;
   });
 
   /* ---------- Vẽ lại toàn trang ---------- */
+  function scrollTabs(){
+    const b = tabsEl.querySelector('button[class*="from-cyan-500"]');
+    if (!b || tabsEl.scrollWidth <= tabsEl.clientWidth) return;
+    tabsEl.scrollLeft += b.getBoundingClientRect().left - tabsEl.getBoundingClientRect().left - (tabsEl.clientWidth - b.offsetWidth) / 2;
+  }
+  function updMonToggle(){
+    const b = $('monToggle'); if (!b) return;
+    const vis = editMode && !monitorMode && !testMode;
+    b.className = (vis ? 'flex ' : 'hidden ') + 'ml-2 px-3 py-1 rounded-full text-[11px] font-bold border items-center gap-1.5 ' +
+      (monitorEnabled ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/50' : 'bg-rose-500/15 text-rose-300 border-rose-500/50');
+    b.innerHTML = '<i class="fa-solid fa-toggle-' + (monitorEnabled ? 'on' : 'off') + '"></i> Lớp trưởng: ' + (monitorEnabled ? 'Bật' : 'Tắt');
+    b.title = monitorEnabled ? 'Bấm để TẮT quyền chỉnh sửa của lớp trưởng' : 'Bấm để BẬT quyền chỉnh sửa của lớp trưởng';
+  }
+  function setMonitor(v){
+    if (!editMode || monitorMode || testMode) return;
+    monitorEnabled = !!v;
+    if (db) fbSetNow('duty/monitorOn', monitorEnabled); else store.set('monitor_on', monitorEnabled ? '1' : '0');
+    updMonToggle();
+    drToast(monitorEnabled ? 'Đã BẬT chỉnh sửa cho lớp trưởng' : 'Đã TẮT chỉnh sửa của lớp trưởng');
+  }
+  function applyMonitorGate(){
+    updMonToggle();
+    if (monitorMode && !monitorEnabled) {
+      drPending = {};
+      setEdit(false);
+      $('imIconI').className = 'fa-solid fa-lock'; $('imTitle').textContent = 'Đã tắt quyền chỉnh sửa';
+      $('imNote').textContent = 'Admin đã tắt quyền chỉnh sửa của lớp trưởng. Hãy liên hệ admin nếu cần chỉnh sửa.';
+      show(infoModal, true);
+    }
+  }
+  function updBanners(){
+    updMonToggle();
+    const nb = $('noWeekBanner');
+    if (weeks.length && !weeks.some(weekCurrent)) {
+      $('noWeekText').textContent = 'Chưa có lịch cho tuần này (hôm nay ' + fmt(startOfToday()) + '). Đang hiển thị tuần ' + (cur() ? weekLabel(cur()) : '—') + '.';
+      show(nb, true);
+    } else show(nb, false);
+    setTimeout(scrollTabs, 0);
+  }
   function render(){
+    updBanners();
     setTimeout(drTick, 0);
     const w = cur();
     if (!w) {
@@ -2302,7 +2888,7 @@ ${esc(raw)}</textarea></div>`;
     const on = !!(editMode && (testMode || db));
     bar.classList.toggle('show', on);
     document.documentElement.classList.toggle('draft-on', on);
-    $('updChip').classList.toggle('show', drFrozen);
+    $('updChip').classList.toggle('show', drFrozen || !!window.__swNew);
     if (!on) return;
     const ops = drOps(), n = Object.keys(ops).length, cnt = n ? drLinesOf(ops).length : 0;
     const info = (testMode ? '<i class="fa-solid fa-flask"></i> Thử nghiệm · ' : '') + (cnt ? '<b>' + cnt + '</b> thay đổi chưa lưu' : 'Chưa có thay đổi') + (drFrozen ? ' · <span class="db-warn">Có bản cập nhật mới</span>' : '');
@@ -2319,15 +2905,18 @@ ${esc(raw)}</textarea></div>`;
   function drSave(){
     if (testMode) { drSimSave(); return; }
     if (!drLive() || drBusy || !drHas()) return;
+    if (!loaded) { drToast('Đang tải dữ liệu từ máy chủ, hãy thử lại sau giây lát'); return; }
     if (drFrozen && !confirm('Có bản cập nhật mới từ người khác mà bạn chưa tải. Lưu bây giờ sẽ ghi đè các mục bạn đã sửa. Tiếp tục?')) return;
     const lines = drLinesOf(drPending), id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6), payload = {};
     Object.keys(drPending).forEach(k => { payload[k] = drPending[k]; });
     payload['duty/rev'] = { id: id, by: monitorMode ? 'monitor' : 'admin', n: Math.max(lines.length, 1), sum: drSum(lines), t: firebase.database.ServerValue.TIMESTAMP };
+    const sent = drPending;
+    const restore = () => { drMy = ''; Object.keys(sent).forEach(k => { if (!(k in drPending)) drPending[k] = sent[k]; }); };
     drMy = id; drPending = {}; drBusy = true; drSig = ''; drTick();
     let p;
-    try { p = db.ref().update(payload); } catch (e) { drBusy = false; drMy = ''; reportWriteError(e); drTick(); return; }
+    try { p = db.ref().update(payload); } catch (e) { drBusy = false; restore(); reportWriteError(e); drTick(); return; }
     p.then(() => { drBusy = false; drKnown = id; drToast('Đã lưu. Mọi người đang mở web sẽ nhận thông báo cập nhật.'); drSig = ''; drTick(); })
-     .catch(e => { drBusy = false; reportWriteError(e); drSig = ''; drTick(); });
+     .catch(e => { drBusy = false; restore(); reportWriteError(e); drSig = ''; drTick(); });
   }
 
   /* Bỏ bản nháp: nạp lại dữ liệu mới nhất từ máy chủ */
@@ -2399,8 +2988,40 @@ ${esc(raw)}</textarea></div>`;
   $('pvSim').addEventListener('click', drSimSave);
   $('pvModal').addEventListener('click', e => { if (e.target === $('pvModal')) show($('pvModal'), false); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') show($('pvModal'), false); });
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (!pwModal.classList.contains('hidden')) closePw();
+    if (!$('updModal').classList.contains('hidden')) { drPreviewing = false; show($('updModal'), false); }
+  });
   window.addEventListener('beforeunload', e => { if (!testMode && drHas()) { e.preventDefault(); e.returnValue = ''; } });
-  setInterval(() => { if (editMode && !document.hidden) drTick(); }, 700);
+  setInterval(() => { if (editMode && !document.hidden) drTick(); }, 2000);
+  const dayCheck = () => { if (new Date().toDateString() !== dayKey) { setToday(); render(); } };
+  setInterval(dayCheck, 30000);
+  $('monToggle').addEventListener('click', () => setMonitor(!monitorEnabled));
+
+  /* Tự thoát sau 10 phút không có thao tác */
+  const IDLE_MS = 600000, WARN_MS = 540000;
+  let lastAct = Date.now(), warned = false, lastSaved = 0;
+  const touchAct = () => {
+    const n = Date.now(); lastAct = n; warned = false;
+    if (editMode && n - lastSaved > 5000) { lastSaved = n; try { sessionStorage.setItem('lastAct', String(n)); } catch (e) {} }
+  };
+  ['pointerdown', 'keydown', 'input', 'change', 'wheel', 'touchstart', 'scroll'].forEach(ev => document.addEventListener(ev, touchAct, { passive: true, capture: true }));
+  function autoLock(){
+    drPending = {}; drSig = '';
+    [wm, dm, bm, infoModal, pwModal, $('pvModal'), $('updModal')].forEach(m => show(m, false));
+    try { sessionStorage.setItem('lastAct', '0'); } catch (e) {}
+    if (window.__lk) { window.__lk.lock(); window.__lk.msg('Đã tự thoát sau 10 phút không hoạt động. Hãy nhập lại mật khẩu.'); } else setEdit(false);
+  }
+  function idleCheck(){
+    if (!editMode) return;
+    const idle = Date.now() - lastAct;
+    if (idle >= IDLE_MS) autoLock();
+    else if (idle >= WARN_MS && !warned) { warned = true; drToast('Sẽ tự thoát sau 1 phút nếu không có thao tác. Thay đổi chưa lưu sẽ bị hủy.'); }
+  }
+  setInterval(idleCheck, 5000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) idleCheck(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) dayCheck(); });
   drTick();
 
   /* ---------- Khởi động + đồng bộ thời gian thực ---------- */
@@ -2410,13 +3031,14 @@ ${esc(raw)}</textarea></div>`;
     db.ref('.info/connected').on('value', s => setStatus(!!s.val(), s.val() ? 'Đã đồng bộ trực tuyến' : 'Mất kết nối'));
     db.ref('duty').on('value', snap => {
       const v = snap.val() || {};
+      monitorEnabled = v.monitorOn !== false; applyMonitorGate();
       if (draftGate(v)) return;
       state.choices = v.choices || {};
       state.weeks = v.weeks || {};
       state.roster = v.roster || null;
       if (!loaded) {
         loaded = true;
-        if (!Object.keys(state.weeks).length) {
+        if (!v.rev && !Object.keys(state.weeks).length) {
           DEFAULT_WEEKS.forEach(w => { const s = JSON.stringify(normalizeWeek(w)); state.weeks[w.id] = s; fbSetNow('duty/weeks/' + w.id, s); });
         }
       }
@@ -2429,38 +3051,37 @@ ${esc(raw)}</textarea></div>`;
       else syncValues();
     }, err => {
       console.warn('Không đọc được database:', err);
-      db = null; setStatus(false, 'Chưa đồng bộ (kiểm tra Rules)'); loadWeeks(); loadRoster(); render(); refreshRoster();
+      db = null; show($('offBanner'), true); setStatus(false, 'Chưa đồng bộ (kiểm tra Rules)'); loadWeeks(); loadRoster(); render(); refreshRoster();
     });
   } else {
-    setStatus(false, 'Chế độ offline (chỉ lưu trên máy này)');
+    setStatus(false, 'Chế độ offline (chỉ lưu trên máy này)'); show($('offBanner'), true); monitorEnabled = store.get('monitor_on') !== '0';
   }
 });
-</script>
-<script>
-/* Hiệu ứng gợn sóng (ripple) kiểu Android khi chạm nút */
-document.addEventListener('pointerdown', function(e){
-  var b = e.target.closest && e.target.closest('button');
-  if (!b || b.disabled || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (getComputedStyle(b).position === 'static') b.style.position = 'relative';
-  var r = b.getBoundingClientRect();
-  var size = Math.hypot(Math.max(e.clientX - r.left, r.right - e.clientX), Math.max(e.clientY - r.top, r.bottom - e.clientY)) * 2;
-  var s = document.createElement('span');
-  s.className = 'm-ripple';
-  s.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + (e.clientX - r.left - size / 2) + 'px;top:' + (e.clientY - r.top - size / 2) + 'px';
-  b.appendChild(s);
-  s.addEventListener('animationend', function(){ s.remove(); });
-}, { passive: true });
 </script>
 <!-- BEGIN pwa-sw (added by patch_pwa.py) -->
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('sw.js').catch(function (err) {
+    navigator.serviceWorker.register('sw.js').then(function (reg) {
+      function flag(){ window.__swNew = true; var c = document.getElementById('updChip'); if (c) c.classList.add('show'); }
+      function watch(w){ w.addEventListener('statechange', function(){ if (w.state === 'installed' && navigator.serviceWorker.controller) flag(); }); }
+      if (reg.waiting && navigator.serviceWorker.controller) flag();
+      reg.addEventListener('updatefound', function(){ if (reg.installing) watch(reg.installing); });
+      document.addEventListener('visibilitychange', function(){ if (!document.hidden) reg.update().catch(function(){}); });
+    }).catch(function (err) {
       console.warn('Không đăng ký được service worker:', err);
     });
   });
 }
 </script>
 <!-- END pwa-sw -->
+<script id="patch-v7-js">
+(function(){
+  var m = document.querySelector('meta[name="theme-color"]'), r = document.documentElement;
+  if (!m) return;
+  function u(){ m.setAttribute('content', r.classList.contains('dark') ? '#141412' : '#f6f5f2'); }
+  u(); new MutationObserver(u).observe(r, { attributes: true, attributeFilter: ['class'] });
+})();
+</script>
 </body>
 </html>
